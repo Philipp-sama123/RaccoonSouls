@@ -12,7 +12,7 @@ namespace Animals
         [SerializeField] private GameObject deathObject;
         [SerializeField] private GameObject successObject;
         [SerializeField] private MEvent enemyDeathEvent;
-
+        [SerializeField] private MEvent preyDied;
         [SerializeField] private MEvent deerReachedGoalEvent;
         [SerializeField] private GameObject[] visibleGameObjects;
         [SerializeField] private GameObject successParticleSystem;
@@ -51,7 +51,7 @@ namespace Animals
 
         private IEnumerator DestroyInstantiateAfterSeconds()
         {
-            if (deathParticleSystem != null)
+            if (deathParticleSystem != null)// ToDo: Improve Null Checks, Maybe go sure its assigned/defined on awake
             {
                 deathParticleSystem.SetActive(true);
             }
@@ -59,12 +59,12 @@ namespace Animals
             yield return new WaitForSeconds(delayTime);
 
 
-            if (enemyDeathEvent != null)
+            if (enemyDeathEvent != null)// ToDo: Improve Null Checks, Maybe go sure its assigned/defined on awake
             {
                 enemyDeathEvent.Invoke();
             }
 
-            if (deathObject != null)
+            if (deathObject != null)// ToDo: Improve Null Checks, Maybe go sure its assigned/defined on awake
             {
                 Vector3 instantiationPosition = transform.position;
                 Instantiate(deathObject, instantiationPosition, Quaternion.identity);
@@ -85,7 +85,7 @@ namespace Animals
                 visibleGameObject.SetActive(false);
             }
 
-            if (successParticleSystem != null)
+            if (successParticleSystem != null)// ToDo: Improve Null Checks, Maybe go sure its assigned/defined on awake
             {
                 successParticleSystem.SetActive(true);
             }
@@ -95,21 +95,26 @@ namespace Animals
 
             if (reachedGoal)
             {
-                if (successObject != null)
+                if (successObject != null)// ToDo: Improve Null Checks, Maybe go sure its assigned/defined on awake
                 {
                     Vector3 instantiationPosition = transform.position;
                     Instantiate(successObject, instantiationPosition, Quaternion.identity);
                 }
 
-                if (deerReachedGoalEvent != null)
-                    deerReachedGoalEvent.Invoke();
+                if (deerReachedGoalEvent != null) // ToDo: Improve Null Checks, Maybe go sure its assigned/defined on awake
+                    deerReachedGoalEvent.Invoke();// ToDo: Malbers Event Raiser
             }
             else
             {
-                if (deathObject != null)
+                if (deathObject != null)// ToDo: Improve Null Checks, Maybe go sure its assigned/defined on awake
                 {
                     Vector3 instantiationPosition = transform.position;
                     Instantiate(deathObject, instantiationPosition, Quaternion.identity);
+                }
+
+                if (preyDied != null)// ToDo: Improve Null Checks, Maybe go sure its assigned/defined on awake
+                {
+                    preyDied.Invoke(); // ToDo: Malbers Event Raiser
                 }
             }
 

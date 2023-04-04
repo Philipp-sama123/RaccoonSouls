@@ -20,7 +20,7 @@ namespace Arena
         private void Start()
         {
             // Enable Camera Recenter onStart
-            ToggleCameraRecenter();
+            // ToggleCameraRecenter();
         }
 
         public void DestroyAllIndestructibleObjects()
@@ -37,7 +37,14 @@ namespace Arena
 
         public void ToggleCameraRecenter()
         {
-            _interactableCameraManager.ToggleCameraRecenter();
+            if (_interactableCameraManager != null)
+            {
+                _interactableCameraManager.ToggleCameraRecenter();
+            }
+            else
+            {
+                Debug.LogWarning("No camera defined!");
+            }
         }
     }
 }
