@@ -12,32 +12,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: de70b54c49296d54e9d66f8b8b4144b1, type: 3}
   m_Name: Dir Dodge 2 Sides
   m_EditorClassIdentifier: 
-  Desc: 'The Dodge will be done with Vertical, Horizontal and Diagonal Sides
+  Desc: 'The Dodge will be done with Horizontal Sides
 
-    Ability 1: Dodge Front
+    Ability 1: Dodge Left
 
-    Ability 2: Dodge Front Left
-
-    Ability 3: Dodge Left
-
-    Ability 4: Dodge Back Left
-
-    Ability 5:Dodge Back
-
-    Ability 6:Dodge Back Right
-
-    Ability 7: Dodge Right
-
-    Ability 8: Dodge Front Right'
-  direction: 2
-  horizontal:
-    UseConstant: 1
-    ConstantValue: 1
-    Variable: {fileID: 0}
-  MoveDodge:
-    UseConstant: 1
-    ConstantValue: 1
-    Variable: {fileID: 0}
+    Ability
+    2: Dodge Right'
+  direction: 0
+  MoveDodge: 1
   DodgeDistance:
     UseConstant: 1
     ConstantValue: 2

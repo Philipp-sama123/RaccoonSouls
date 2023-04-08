@@ -7470,7 +7470,7 @@ MonoBehaviour:
     UseConstant: 1
     ConstantValue:
       serializedVersion: 2
-      m_Bits: 1099956224
+      m_Bits: 1082130432
     Variable: {fileID: 0}
   triggerInteraction: 1
   owner: {fileID: 2647149258349338295}
@@ -7569,7 +7569,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   DebugColor: {r: 1, g: 0.25, b: 0, a: 0.15}
-  Editor_Tabs1: 2
+  Editor_Tabs1: 0
 --- !u!1 &2038495453811475069
 GameObject:
   m_ObjectHideFlags: 0
@@ -7922,12 +7922,12 @@ MonoBehaviour:
       serializedVersion: 2
       m_Bits: 8388608
     Variable: {fileID: 0}
-  SearchRadius: 3
-  Distance: 0.5
+  SearchRadius: 2.5
+  Distance: 0
   TargetMultiplier: 1
-  AlignTime: 0.15
-  LookAtTime: 0.15
-  debugColor: {r: 1, g: 0.80655015, b: 0, a: 0.050980393}
+  AlignTime: 0.25
+  LookAtTime: 0.25
+  debugColor: {r: 1, g: 0.5, b: 0, a: 0.2}
   debug: 0
 --- !u!114 &2746317726434828666
 MonoBehaviour:
@@ -8031,7 +8031,7 @@ Transform:
   - {fileID: 1043174646486333349}
   - {fileID: 4048858291987470524}
   m_Father: {fileID: 0}
-  m_RootOrder: 0
+  m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!95 &1093182445792453582
 Animator:
@@ -8094,12 +8094,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   PivotPosDir: 0
-  SelectedMode: 0
+  SelectedMode: 2
   SelectedState: 1
   SelectedStance: 0
   ShowStateInInspector: 1
   Editor_Tabs1: 3
-  Mode_Tabs1: 1
+  Mode_Tabs1: 0
   Editor_Tabs2: 4
   Ability_Tabs: 4
   Editor_EventTabs: 0
@@ -8954,10 +8954,10 @@ MonoBehaviour:
     hasCoolDown: 1
     Input: Dodge
     ID: {fileID: 11400000, guid: 7888596ce3530b145bc15622fac8a6c4, type: 2}
-    modifier: {fileID: 11400000, guid: 1ba8b65c5247fce45afc51fc5b3c887e, type: 2}
+    modifier: {fileID: 11400000, guid: b976984f0deafd64291eff59f23a0944, type: 2}
     CoolDown:
-      UseConstant: 0
-      ConstantValue: 0
+      UseConstant: 1
+      ConstantValue: 0.5
       Variable: {fileID: 11400000, guid: a7e6a2653b0578342a4a46dff456cd2e, type: 2}
     Abilities:
     - active:
@@ -12104,7 +12104,7 @@ MonoBehaviour:
     name: Defaut
     Vertical:
       UseConstant: 1
-      ConstantValue: 0
+      ConstantValue: 1
       Variable: {fileID: 0}
     position:
       UseConstant: 1
@@ -12112,11 +12112,11 @@ MonoBehaviour:
       Variable: {fileID: 0}
     lerpPosition:
       UseConstant: 1
-      ConstantValue: 0
+      ConstantValue: 4
       Variable: {fileID: 0}
     lerpPosAnim:
       UseConstant: 1
-      ConstantValue: 0
+      ConstantValue: 4
       Variable: {fileID: 0}
     rotation:
       UseConstant: 1
@@ -12124,19 +12124,19 @@ MonoBehaviour:
       Variable: {fileID: 0}
     lerpRotation:
       UseConstant: 1
-      ConstantValue: 0
+      ConstantValue: 4
       Variable: {fileID: 0}
     lerpRotAnim:
       UseConstant: 1
-      ConstantValue: 0
+      ConstantValue: 4
       Variable: {fileID: 0}
     animator:
       UseConstant: 1
-      ConstantValue: 0
+      ConstantValue: 1
       Variable: {fileID: 0}
     lerpAnimator:
       UseConstant: 1
-      ConstantValue: 0
+      ConstantValue: 4
       Variable: {fileID: 0}
     strafeSpeed:
       UseConstant: 1
@@ -12144,7 +12144,7 @@ MonoBehaviour:
       Variable: {fileID: 0}
     lerpStrafe:
       UseConstant: 1
-      ConstantValue: 0
+      ConstantValue: 4
       Variable: {fileID: 0}
   m_gravityDir:
     UseConstant: 1
@@ -12311,7 +12311,7 @@ MonoBehaviour:
     ID: {fileID: 11400000, guid: 8f96533110b305a4792c37a844108d26, type: 2}
     value:
       UseConstant: 1
-      ConstantValue: 200
+      ConstantValue: 150
       Variable: {fileID: 0}
     maxValue:
       UseConstant: 0
@@ -12503,7 +12503,7 @@ MonoBehaviour:
     ID: {fileID: 11400000, guid: d6b3e636d59a6c547a2cad40b69f4432, type: 2}
     value:
       UseConstant: 1
-      ConstantValue: 200
+      ConstantValue: 150
       Variable: {fileID: 0}
     maxValue:
       UseConstant: 0
@@ -14297,7 +14297,7 @@ MonoBehaviour:
         m_Calls:
         - m_Target: {fileID: 341296712889531337}
           m_TargetAssemblyTypeName: MalbersAnimations.Utilities.BlendShape, Assembly-CSharp
-          m_MethodName: LoadPreset
+          m_MethodName: LoadSmoothPreset
           m_Mode: 2
           m_Arguments:
             m_ObjectArgument: {fileID: 11400000, guid: 84b73c21f5ed36b458650f03a9dc219a, type: 2}
@@ -14423,6 +14423,78 @@ MonoBehaviour:
     AdvancedBool: 0
     InvertBool: 0
     multiplier: 1
+  - Event: {fileID: 11400000, guid: 35eab64a7505a4f08a8ae2146a43d24e, type: 2}
+    useInt: 0
+    useFloat: 0
+    useVoid: 1
+    useString: 0
+    useBool: 0
+    useGO: 0
+    useTransform: 0
+    useVector3: 0
+    useVector2: 0
+    useComponent: 0
+    useSprite: 0
+    Response:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 341296712889531337}
+          m_TargetAssemblyTypeName: MalbersAnimations.Utilities.BlendShape, Assembly-CSharp
+          m_MethodName: LoadSmoothPreset
+          m_Mode: 2
+          m_Arguments:
+            m_ObjectArgument: {fileID: 11400000, guid: b9728b08485a3469a8868e8fa2670af2, type: 2}
+            m_ObjectArgumentAssemblyTypeName: MalbersAnimations.Utilities.BlendShapePreset,
+              Assembly-CSharp
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+    ResponseNull:
+      m_PersistentCalls:
+        m_Calls: []
+    ResponseFloat:
+      m_PersistentCalls:
+        m_Calls: []
+    ResponseInt:
+      m_PersistentCalls:
+        m_Calls: []
+    ResponseBool:
+      m_PersistentCalls:
+        m_Calls: []
+    ResponseBoolFalse:
+      m_PersistentCalls:
+        m_Calls: []
+    ResponseBoolTrue:
+      m_PersistentCalls:
+        m_Calls: []
+    ResponseString:
+      m_PersistentCalls:
+        m_Calls: []
+    ResponseGO:
+      m_PersistentCalls:
+        m_Calls: []
+    ResponseTransform:
+      m_PersistentCalls:
+        m_Calls: []
+    ResponseComponent:
+      m_PersistentCalls:
+        m_Calls: []
+    ResponseSprite:
+      m_PersistentCalls:
+        m_Calls: []
+    ResponseVector3:
+      m_PersistentCalls:
+        m_Calls: []
+    ResponseVector2:
+      m_PersistentCalls:
+        m_Calls: []
+    IntEventList: []
+    AdvancedInteger: 0
+    AdvancedBool: 0
+    InvertBool: 0
+    multiplier: 1
 --- !u!114 &9122845737459397836
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -14464,6 +14536,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   specialAbilityParticleSystem: {fileID: 4048858291944338725}
+  attackOneCoolDown: {fileID: 11400000, guid: a7e6a2653b0578342a4a46dff456cd2e, type: 2}
 --- !u!1 &3306867435652555727
 GameObject:
   m_ObjectHideFlags: 0
@@ -14899,7 +14972,7 @@ MonoBehaviour:
     UseConstant: 1
     ConstantValue:
       serializedVersion: 2
-      m_Bits: 1099956224
+      m_Bits: 1082130432
     Variable: {fileID: 11400000, guid: f489db1856e43dc47b175dd125135bdc, type: 2}
   triggerInteraction: 1
   owner: {fileID: 2647149258349338295}
@@ -14998,7 +15071,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   DebugColor: {r: 1, g: 0.25, b: 0, a: 0.15}
-  Editor_Tabs1: 2
+  Editor_Tabs1: 0
 --- !u!1 &4040284244403496282
 GameObject:
   m_ObjectHideFlags: 0
@@ -30445,7 +30518,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   preset: {fileID: 11400000, guid: a50f549f2d9c57447b01010262a4ba0c, type: 2}
-  LoadPresetOnStart: 0
+  LoadPresetOnStart: 1
   mesh: {fileID: 4538558192619075362}
   LODs:
   - {fileID: 217589018764499560}

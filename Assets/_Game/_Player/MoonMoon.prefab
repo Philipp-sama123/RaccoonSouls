@@ -6364,7 +6364,7 @@ Transform:
   - {fileID: 886678250151716206}
   - {fileID: 590875796197365447}
   m_Father: {fileID: 0}
-  m_RootOrder: 1
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!95 &3706340791389080012
 Animator:
@@ -12929,10 +12929,10 @@ MonoBehaviour:
       serializedVersion: 2
       m_Bits: 8388608
     Variable: {fileID: 0}
-  SearchRadius: 2
+  SearchRadius: 2.5
   Distance: 0
   TargetMultiplier: 1
-  AlignTime: 0.35
+  AlignTime: 0.25
   LookAtTime: 0.25
   debugColor: {r: 1, g: 0.5, b: 0, a: 0.2}
   debug: 0
@@ -12963,6 +12963,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   specialAbilityParticleSystem: {fileID: 3692711340282581612}
+  attackOneCoolDown: {fileID: 11400000, guid: a7e6a2653b0578342a4a46dff456cd2e, type: 2}
 --- !u!114 &8497408748074510432
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -13052,7 +13053,7 @@ MonoBehaviour:
     UseConstant: 1
     ConstantValue:
       serializedVersion: 2
-      m_Bits: 1083179008
+      m_Bits: 1082130432
     Variable: {fileID: 11400000, guid: f489db1856e43dc47b175dd125135bdc, type: 2}
   triggerInteraction: 1
   owner: {fileID: 3620384795952891588}
@@ -13151,7 +13152,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   DebugColor: {r: 1, g: 0.25, b: 0, a: 0.15}
-  Editor_Tabs1: 2
+  Editor_Tabs1: 0
 --- !u!1 &3645780405272730743
 GameObject:
   m_ObjectHideFlags: 0

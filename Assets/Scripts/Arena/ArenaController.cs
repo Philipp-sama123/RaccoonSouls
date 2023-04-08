@@ -10,7 +10,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.Serialization;
 
-public class ElkController : MonoBehaviour
+public class ArenaController : MonoBehaviour
 {
     private Zone _zone;
     private AnimalSpawnerFromZone _animalSpawnerFromZone;
@@ -24,19 +24,19 @@ public class ElkController : MonoBehaviour
     [SerializeField] private GameController gameController;
 
     [SerializeField] private GameObject elkCanvas;
-    [SerializeField] private BoxCollider boxCollider;
+    [SerializeField] private Collider starCollider;
     [SerializeField] private GameObject gameSound;
     [SerializeField] private AudioSource spawnSound;
     [SerializeField] private UnityEventRaiser eventRaiser;
 
-    private UnityUtils _unityUtils;
+    [SerializeField] private UnityUtils unityUtils;
     [SerializeField] private TextMeshProUGUI textTime = null;
     [SerializeField] private int timeInSeconds = 0;
 
     private void Awake()
     {
         _zone = GetComponent<Zone>();
-        _unityUtils = GetComponentInChildren<UnityUtils>();
+        unityUtils = GetComponentInChildren<UnityUtils>();
         _animalSpawnerFromZone = GetComponentInChildren<AnimalSpawnerFromZone>();
     }
 
@@ -59,7 +59,7 @@ public class ElkController : MonoBehaviour
         }
     }
 
-   private void TimeCount()
+    private void TimeCount()
     {
         timeInSeconds += 1;
         TimeSpan timeSpan = TimeSpan.FromSeconds(timeInSeconds);
@@ -106,14 +106,14 @@ public class ElkController : MonoBehaviour
 
         if (player != null)
         {
-            _unityUtils.Time_Freeze(true);
+            unityUtils.Time_Freeze(true);
             elkCanvas.SetActive(true);
         }
     }
 
     public void StartMission(bool startMission)
     {
-        _unityUtils.Time_Freeze(false);
+        unityUtils.Time_Freeze(false);
         elkCanvas.SetActive(false);
         SetBoxColliderEnabled(false);
         gameSound.SetActive(true);
@@ -124,6 +124,6 @@ public class ElkController : MonoBehaviour
 
     public void SetBoxColliderEnabled(bool enableCollider)
     {
-        boxCollider.enabled = enableCollider;
+        starCollider.enabled = enableCollider;
     }
 }
