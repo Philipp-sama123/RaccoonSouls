@@ -22,7 +22,7 @@ namespace Arena
         [SerializeField] private GameSoundManager gameSoundManager;
 
 
-        private UnityEventRaiser _unityEventRaiser;
+        [SerializeField]  private UnityEventRaiser _unityEventRaiser;
         private int deerSurvived = 0;
         private int enemiesKilled = 0;
 
@@ -31,7 +31,6 @@ namespace Arena
         {
             _playerManager = FindObjectOfType<PlayerManager>();
             _interactableCameraManager = FindObjectOfType<InteractableCameraManager>();
-            _unityEventRaiser = GetComponent<UnityEventRaiser>();
         }
 
         private void OnEnable()
@@ -64,15 +63,6 @@ namespace Arena
         public void EnemyKilledEvent()
         {
             enemiesKilled++;
-        }
-
-        public void CoinUpdateEvent(int amount)
-        {
-            currentDeerAmount = amount;
-            if (currentDeerAmount >= deerGoalAmount)
-            {
-                LoadGameOverCanvas();
-            }
         }
 
         public void LoadGameOverCanvas()

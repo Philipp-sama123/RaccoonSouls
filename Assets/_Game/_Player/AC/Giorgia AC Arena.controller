@@ -712,8 +712,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   AttackTrigger: 1
   AttackActivation:
-    minValue: 0.17
-    maxValue: 0.52
+    minValue: 0.2
+    maxValue: 0.8
   Multiplier: 1
 --- !u!114 &-7360986068075921524
 MonoBehaviour:
@@ -1203,7 +1203,7 @@ AnimatorState:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: Attack Paw Right
-  m_Speed: 1
+  m_Speed: 1.15
   m_CycleOffset: 0
   m_Transitions:
   - {fileID: -141289524095081020}
@@ -1741,8 +1741,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   AttackTrigger: 1
   AttackActivation:
-    minValue: 0.17
-    maxValue: 0.52
+    minValue: 0.15
+    maxValue: 0.8
   Multiplier: 1
 --- !u!1101 &-5071291694625199728
 AnimatorStateTransition:
@@ -4319,7 +4319,7 @@ MonoBehaviour:
   AttackTrigger: 1
   AttackActivation:
     minValue: 0.2
-    maxValue: 0.65
+    maxValue: 1
   Multiplier: 1
 --- !u!114 &114109877527945726
 MonoBehaviour:
@@ -5137,9 +5137,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   AttackTrigger: 1
   AttackActivation:
-    minValue: 0.2
-    maxValue: 0.62
-  Multiplier: 1
+    minValue: 0.1
+    maxValue: 1
+  Multiplier: 3
 --- !u!114 &114440860322238540
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -5558,8 +5558,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   AttackTrigger: 2
   AttackActivation:
-    minValue: 0.2
-    maxValue: 0.5
+    minValue: 0.1
+    maxValue: 1
   Multiplier: 1
 --- !u!114 &114705397040387956
 MonoBehaviour:
@@ -6144,9 +6144,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   AttackTrigger: 2
   AttackActivation:
-    minValue: 0.2
-    maxValue: 0.5
-  Multiplier: 1
+    minValue: 0.1
+    maxValue: 1
+  Multiplier: 2
 --- !u!1101 &124577817959646782
 AnimatorStateTransition:
   m_ObjectHideFlags: 1
@@ -7077,7 +7077,7 @@ AnimatorState:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: Attack Paw Left
-  m_Speed: 1
+  m_Speed: 1.15
   m_CycleOffset: 0
   m_Transitions:
   - {fileID: -728356160419565831}
@@ -12501,7 +12501,7 @@ AnimatorState:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: Attack Bite Left
-  m_Speed: 1
+  m_Speed: 1.15
   m_CycleOffset: 0
   m_Transitions:
   - {fileID: 1101383077716065104}
@@ -12586,7 +12586,7 @@ AnimatorState:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: Attack Front Bite
-  m_Speed: 1
+  m_Speed: 1.15
   m_CycleOffset: 0
   m_Transitions:
   - {fileID: 1101189121321710324}
@@ -12849,7 +12849,7 @@ AnimatorState:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: Attack Jump
-  m_Speed: 1.3
+  m_Speed: 1.25
   m_CycleOffset: 0
   m_Transitions:
   - {fileID: 1101362574092676558}
@@ -12990,7 +12990,7 @@ AnimatorState:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: Attack Bite Right
-  m_Speed: 1
+  m_Speed: 1.15
   m_CycleOffset: 0
   m_Transitions:
   - {fileID: 1101989118333658002}

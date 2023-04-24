@@ -20,7 +20,7 @@ namespace Arena
         private void Start()
         {
             // Enable Camera Recenter onStart
-            // ToggleCameraRecenter();
+            ToggleCameraRecenter();
         }
 
         public void DestroyAllIndestructibleObjects()

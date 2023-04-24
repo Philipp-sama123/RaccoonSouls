@@ -7981,7 +7981,7 @@ MonoBehaviour:
     modifier: {fileID: 11400000, guid: 6f757d5c1f4fbb941906a3f77727e4bd, type: 2}
     CoolDown:
       UseConstant: 1
-      ConstantValue: 0.5
+      ConstantValue: 1
       Variable: {fileID: 0}
     Abilities:
     - active:
@@ -8448,7 +8448,7 @@ MonoBehaviour:
     OnExitMode:
       m_PersistentCalls:
         m_Calls: []
-    m_Source: {fileID: 0}
+    m_Source: {fileID: 1785551428097468053}
     ActivationTime: 0
   - active: 1
     ignoreLowerModes: 0
@@ -10229,11 +10229,11 @@ MonoBehaviour:
     ID: {fileID: 11400000, guid: d6b3e636d59a6c547a2cad40b69f4432, type: 2}
     value:
       UseConstant: 1
-      ConstantValue: 150
+      ConstantValue: 100
       Variable: {fileID: 0}
     maxValue:
       UseConstant: 1
-      ConstantValue: 150
+      ConstantValue: 100
       Variable: {fileID: 0}
     minValue:
       UseConstant: 1
@@ -10273,7 +10273,7 @@ MonoBehaviour:
       Variable: {fileID: 0}
     InmuneTime:
       UseConstant: 1
-      ConstantValue: 1.5
+      ConstantValue: 0.5
       Variable: {fileID: 0}
     resetTo: 1
     OnStatFull:
@@ -10368,7 +10368,7 @@ MonoBehaviour:
     OnActive:
       m_PersistentCalls:
         m_Calls: []
-    EditorTabs: 1
+    EditorTabs: 0
   PinnedStat:
     active: 1
     ID: {fileID: 0}
@@ -10593,6 +10593,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   specialAbilityParticleSystem: {fileID: 1785551427638417002}
+  attackOneCoolDown: {fileID: 0}
 --- !u!1 &6838314326617052790
 GameObject:
   m_ObjectHideFlags: 0

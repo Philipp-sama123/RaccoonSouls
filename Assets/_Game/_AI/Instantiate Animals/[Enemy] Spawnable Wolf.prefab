@@ -5139,7 +5139,7 @@ MonoBehaviour:
   SelectedState: 0
   SelectedStance: 0
   ShowStateInInspector: 1
-  Editor_Tabs1: 0
+  Editor_Tabs1: 3
   Mode_Tabs1: 0
   Editor_Tabs2: 4
   Ability_Tabs: 3
@@ -5160,7 +5160,7 @@ MonoBehaviour:
   modes:
   - active: 1
     ignoreLowerModes: 1
-    hasCoolDown: 0
+    hasCoolDown: 1
     Input: 
     ID: {fileID: 11400000, guid: b04409080ae7e3c4fa645d8c67b40424, type: 2}
     modifier: {fileID: 11400000, guid: 6f757d5c1f4fbb941906a3f77727e4bd, type: 2}
@@ -7886,6 +7886,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   specialAbilityParticleSystem: {fileID: 1522651703503271274}
+  attackOneCoolDown: {fileID: 0}
 --- !u!1 &4155980964843013192
 GameObject:
   m_ObjectHideFlags: 0

@@ -5113,7 +5113,7 @@ SkinnedMeshRenderer:
   - 0
   - 0
   - 0
-  - 51
+  - 0
   - 0
   m_RootBone: {fileID: 1043174646043247098}
   m_AABB:
@@ -7569,7 +7569,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   DebugColor: {r: 1, g: 0.25, b: 0, a: 0.15}
-  Editor_Tabs1: 0
+  Editor_Tabs1: 3
 --- !u!1 &2038495453811475069
 GameObject:
   m_ObjectHideFlags: 0
@@ -8007,6 +8007,7 @@ GameObject:
   - component: {fileID: 9122845737459397836}
   - component: {fileID: 9122845737459397837}
   - component: {fileID: 9122845737459397875}
+  - component: {fileID: 5356277858725848111}
   m_Layer: 20
   m_Name: Giorgia
   m_TagString: Animal
@@ -8031,7 +8032,7 @@ Transform:
   - {fileID: 1043174646486333349}
   - {fileID: 4048858291987470524}
   m_Father: {fileID: 0}
-  m_RootOrder: 5
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!95 &1093182445792453582
 Animator:
@@ -8094,7 +8095,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   PivotPosDir: 0
-  SelectedMode: 2
+  SelectedMode: 1
   SelectedState: 1
   SelectedStance: 0
   ShowStateInInspector: 1
@@ -8235,13 +8236,13 @@ MonoBehaviour:
   modes:
   - active: 1
     ignoreLowerModes: 1
-    hasCoolDown: 0
+    hasCoolDown: 1
     Input: Attack2
     ID: {fileID: 11400000, guid: 36ebf5306b7174949934aa62255781b1, type: 2}
     modifier: {fileID: 0}
     CoolDown:
-      UseConstant: 0
-      ConstantValue: 0.5
+      UseConstant: 1
+      ConstantValue: 2
       Variable: {fileID: 11400000, guid: a7e6a2653b0578342a4a46dff456cd2e, type: 2}
     Abilities:
     - active:
@@ -8518,7 +8519,7 @@ MonoBehaviour:
     ID: {fileID: 11400000, guid: 1286867ad3c4cdd4baacac3373aff92c, type: 2}
     modifier: {fileID: 0}
     CoolDown:
-      UseConstant: 0
+      UseConstant: 1
       ConstantValue: 0
       Variable: {fileID: 11400000, guid: a7e6a2653b0578342a4a46dff456cd2e, type: 2}
     Abilities:
@@ -13288,7 +13289,7 @@ MonoBehaviour:
     useFloat: 0
     useVoid: 1
     useString: 0
-    useBool: 1
+    useBool: 0
     useGO: 0
     useTransform: 0
     useVector3: 0
@@ -13319,25 +13320,25 @@ MonoBehaviour:
     ResponseInt:
       m_PersistentCalls:
         m_Calls:
-        - m_Target: {fileID: 1147555761194873732}
-          m_TargetAssemblyTypeName: 
-          m_MethodName: Mode_Pin
-          m_Mode: 2
+        - m_Target: {fileID: 5356277858725848111}
+          m_TargetAssemblyTypeName: MalbersAnimations.Controller.ComboManager, Assembly-CSharp
+          m_MethodName: SetBranch
+          m_Mode: 3
           m_Arguments:
-            m_ObjectArgument: {fileID: 11400000, guid: 1286867ad3c4cdd4baacac3373aff92c, type: 2}
-            m_ObjectArgumentAssemblyTypeName: MalbersAnimations.ModeID, Assembly-CSharp
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
             m_IntArgument: 0
             m_FloatArgument: 0
             m_StringArgument: 
             m_BoolArgument: 0
           m_CallState: 2
-        - m_Target: {fileID: 1147555761194873732}
-          m_TargetAssemblyTypeName: 
-          m_MethodName: Mode_Pin_Ability
-          m_Mode: 0
+        - m_Target: {fileID: 5356277858725848111}
+          m_TargetAssemblyTypeName: MalbersAnimations.Controller.ComboManager, Assembly-CSharp
+          m_MethodName: Play
+          m_Mode: 1
           m_Arguments:
             m_ObjectArgument: {fileID: 0}
-            m_ObjectArgumentAssemblyTypeName: 
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
             m_IntArgument: 0
             m_FloatArgument: 0
             m_StringArgument: 
@@ -13345,31 +13346,7 @@ MonoBehaviour:
           m_CallState: 2
     ResponseBool:
       m_PersistentCalls:
-        m_Calls:
-        - m_Target: {fileID: 1147555761194873732}
-          m_TargetAssemblyTypeName: 
-          m_MethodName: Mode_Pin
-          m_Mode: 2
-          m_Arguments:
-            m_ObjectArgument: {fileID: 11400000, guid: 1286867ad3c4cdd4baacac3373aff92c, type: 2}
-            m_ObjectArgumentAssemblyTypeName: MalbersAnimations.ModeID, Assembly-CSharp
-            m_IntArgument: 0
-            m_FloatArgument: 0
-            m_StringArgument: 
-            m_BoolArgument: 0
-          m_CallState: 2
-        - m_Target: {fileID: 1147555761194873732}
-          m_TargetAssemblyTypeName: 
-          m_MethodName: Mode_Pin_Input
-          m_Mode: 0
-          m_Arguments:
-            m_ObjectArgument: {fileID: 0}
-            m_ObjectArgumentAssemblyTypeName: 
-            m_IntArgument: 0
-            m_FloatArgument: 0
-            m_StringArgument: 
-            m_BoolArgument: 0
-          m_CallState: 2
+        m_Calls: []
     ResponseBoolFalse:
       m_PersistentCalls:
         m_Calls: []
@@ -14537,6 +14514,131 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   specialAbilityParticleSystem: {fileID: 4048858291944338725}
   attackOneCoolDown: {fileID: 11400000, guid: a7e6a2653b0578342a4a46dff456cd2e, type: 2}
+--- !u!114 &5356277858725848111
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2647149258349338295}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 408f0460a69d76f4b89139b3979c69f0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  animal: {fileID: 1147555761194873732}
+  Branch: 0
+  combos:
+  - Mode: {fileID: 11400000, guid: 1286867ad3c4cdd4baacac3373aff92c, type: 2}
+    Name: 0
+    CachedMode:
+      active: 0
+      ignoreLowerModes: 0
+      hasCoolDown: 0
+      Input: 
+      ID: {fileID: 0}
+      modifier: {fileID: 0}
+      CoolDown:
+        UseConstant: 0
+        ConstantValue: 0
+        Variable: {fileID: 0}
+      Abilities: []
+      m_AbilityIndex:
+        UseConstant: 0
+        ConstantValue: 0
+        Variable: {fileID: 0}
+      DefaultIndex:
+        UseConstant: 0
+        ConstantValue: 0
+        Variable: {fileID: 0}
+      OnAbilityIndex:
+        m_PersistentCalls:
+          m_Calls: []
+      ResetToDefault: 0
+      allowRotation: 0
+      allowMovement: 0
+      OnEnterMode:
+        m_PersistentCalls:
+          m_Calls: []
+      OnExitMode:
+        m_PersistentCalls:
+          m_Calls: []
+      m_Source: {fileID: 0}
+      ActivationTime: 0
+    CoolDown:
+      UseConstant: 1
+      ConstantValue: 0
+      Variable: {fileID: 0}
+    FinishTime: 0
+    Sequence:
+    - Activation:
+        minValue: 0
+        maxValue: 0
+      PreviewsAbility: 0
+      Ability: 4
+      Branch: 0
+      Used: 0
+      Finisher: 0
+      OnSequencePlay:
+        m_PersistentCalls:
+          m_Calls: []
+    - Activation:
+        minValue: 0
+        maxValue: 1
+      PreviewsAbility: 4
+      Ability: 5
+      Branch: 0
+      Used: 0
+      Finisher: 0
+      OnSequencePlay:
+        m_PersistentCalls:
+          m_Calls: []
+    - Activation:
+        minValue: 0
+        maxValue: 1
+      PreviewsAbility: 5
+      Ability: 1
+      Branch: 0
+      Used: 0
+      Finisher: 0
+      OnSequencePlay:
+        m_PersistentCalls:
+          m_Calls: []
+    - Activation:
+        minValue: 0
+        maxValue: 1
+      PreviewsAbility: 1
+      Ability: 3
+      Branch: 0
+      Used: 0
+      Finisher: 0
+      OnSequencePlay:
+        m_PersistentCalls:
+          m_Calls: []
+    - Activation:
+        minValue: 0
+        maxValue: 1
+      PreviewsAbility: 3
+      Ability: 2
+      Branch: 0
+      Used: 0
+      Finisher: 1
+      OnSequencePlay:
+        m_PersistentCalls:
+          m_Calls: []
+    OnComboFinished:
+      m_PersistentCalls:
+        m_Calls: []
+    OnComboInterrupted:
+      m_PersistentCalls:
+        m_Calls: []
+  ActiveComboIndex:
+    UseConstant: 1
+    ConstantValue: 0
+    Variable: {fileID: 0}
+  DisableOnSleep: 0
+  debug: 0
+  selectedComboEditor: 0
 --- !u!1 &3306867435652555727
 GameObject:
   m_ObjectHideFlags: 0
@@ -15071,7 +15173,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   DebugColor: {r: 1, g: 0.25, b: 0, a: 0.15}
-  Editor_Tabs1: 0
+  Editor_Tabs1: 3
 --- !u!1 &4040284244403496282
 GameObject:
   m_ObjectHideFlags: 0
@@ -30532,6 +30634,8 @@ MonoBehaviour:
   - 0
   - 0
   - 0
+  - 0
+  - 0
   random: 0
   PinnedShape: 0
 --- !u!1 &5443108114829080475
@@ -41196,7 +41300,7 @@ SkinnedMeshRenderer:
   - 0
   - 0
   - 0
-  - 51
+  - 0
   - 0
   m_RootBone: {fileID: 1043174645071002228}
   m_AABB:
