@@ -12,15 +12,12 @@ using UnityEngine.Serialization;
 
 public class ArenaController : MonoBehaviour
 {
-    private Zone _zone;
     private AnimalSpawnerFromZone _animalSpawnerFromZone;
+    public const int MaxAnimalsToSpawn = 15;
     [SerializeField] private float delay = 5f;
-    [SerializeField] private const int MaxAnimalsToSpawn = 15;
     [SerializeField] private int animalsSpawned = 0;
 
-    [SerializeField] private GameObject questionParticleSystem;
     [SerializeField] private AudioSource enableSound;
-    [SerializeField] private TextMeshProUGUI animalsLeftText;
     [SerializeField] private GameController gameController;
 
     [SerializeField] private GameObject elkCanvas;
@@ -35,7 +32,6 @@ public class ArenaController : MonoBehaviour
 
     private void Awake()
     {
-        _zone = GetComponent<Zone>();
         unityUtils = GetComponentInChildren<UnityUtils>();
         _animalSpawnerFromZone = GetComponentInChildren<AnimalSpawnerFromZone>();
     }
@@ -73,17 +69,6 @@ public class ArenaController : MonoBehaviour
         {
             _animalSpawnerFromZone.InstantiateAndActivateAnimal(1);
             animalsSpawned++;
-
-            int animalsLeft = MaxAnimalsToSpawn - animalsSpawned;
-            animalsLeftText.text = animalsLeft.ToString();
-
-
-            questionParticleSystem.SetActive(false);
-            _zone.enabled = false;
-        }
-        else
-        {
-            _zone.enabled = false;
         }
 
         yield return new WaitForSecondsRealtime(delay);
@@ -91,8 +76,6 @@ public class ArenaController : MonoBehaviour
         if (animalsSpawned <= MaxAnimalsToSpawn)
         {
             enableSound.Play();
-            questionParticleSystem.SetActive(true);
-            _zone.enabled = true;
         }
         else
         {
@@ -115,14 +98,14 @@ public class ArenaController : MonoBehaviour
     {
         unityUtils.Time_Freeze(false);
         elkCanvas.SetActive(false);
-        SetBoxColliderEnabled(false);
+        SetBoxColliderActive(false);
         gameSound.SetActive(true);
         spawnSound.Play();
         eventRaiser.OnEnable();
         StartCoroutine(Time());
     }
 
-    public void SetBoxColliderEnabled(bool enableCollider)
+    public void SetBoxColliderActive(bool enableCollider)
     {
         starCollider.enabled = enableCollider;
     }

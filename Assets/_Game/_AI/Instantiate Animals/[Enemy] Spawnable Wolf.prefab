@@ -5048,6 +5048,7 @@ GameObject:
   - component: {fileID: 5281347210861418594}
   - component: {fileID: 2673816099081460048}
   - component: {fileID: 4401159222924042073}
+  - component: {fileID: 2906533742333065649}
   m_Layer: 23
   m_Name: '[Enemy] Spawnable Wolf'
   m_TagString: Enemy
@@ -5065,7 +5066,7 @@ Transform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
+  m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 6318338859873969181}
   - {fileID: 4159971200405177846}
@@ -7887,6 +7888,79 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   specialAbilityParticleSystem: {fileID: 1522651703503271274}
   attackOneCoolDown: {fileID: 0}
+--- !u!114 &2906533742333065649
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4154709981987366138}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 87f68661304a1fc45ad1c61ddd572ec4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  preset: {fileID: 11400000, guid: b750c1b169409e6419164e209e704859, type: 2}
+  Root: {fileID: 4153486301626556940}
+  Filter:
+  - Pivot
+  - Attack
+  - Track
+  - Trigger
+  - Camera
+  - Target
+  - Fire
+  - Debug
+  - AI
+  - Look
+  - Appearance
+  - Interaction
+  - Internal
+  - Mesh
+  - Rotator
+  - Effect
+  - Stamina
+  - Sound
+  - Cinemachine
+  Bones:
+  - {fileID: 4153486301626556940}
+  - {fileID: 8682392140508171754}
+  - {fileID: 8682392140915221345}
+  - {fileID: 5541125614277703256}
+  - {fileID: 8076391891485748068}
+  - {fileID: 502008897675950105}
+  - {fileID: 9763674780201674}
+  - {fileID: 4153452530768409754}
+  - {fileID: 4153461440782519478}
+  - {fileID: 4153842603947572940}
+  - {fileID: 4160085838201318302}
+  - {fileID: 4153584044848403148}
+  - {fileID: 4153697968001947486}
+  - {fileID: 4159731506008420866}
+  - {fileID: 4153929969694749450}
+  - {fileID: 4160179549679776096}
+  - {fileID: 4159880520695835326}
+  - {fileID: 4159921888155941256}
+  - {fileID: 4153521132643379934}
+  - {fileID: 4160050553168870286}
+  - {fileID: 4153855820261625820}
+  - {fileID: 4153508832630021078}
+  - {fileID: 4159944687040567900}
+  - {fileID: 4160086113947937358}
+  - {fileID: 4153594245189577794}
+  - {fileID: 4160029729864847890}
+  - {fileID: 4160082158246149840}
+  - {fileID: 4153567888005689086}
+  - {fileID: 4160056121213900990}
+  - {fileID: 4153797555481767244}
+  - {fileID: 4153605544500745580}
+  - {fileID: 4159971169234257294}
+  - {fileID: 4159896233533100780}
+  - {fileID: 4159897500341527418}
+  - {fileID: 4160027745055697678}
+  - {fileID: 4153728907465345786}
+  - {fileID: 4153537443020213290}
+  - {fileID: 4160048371957805692}
 --- !u!1 &4155980964843013192
 GameObject:
   m_ObjectHideFlags: 0
@@ -8034,15 +8108,15 @@ SkinnedMeshRenderer:
   - {fileID: 4159921888155941256}
   - {fileID: 4160056121213900990}
   m_BlendShapeWeights:
+  - 29
+  - 0
+  - 26.8
+  - 100
+  - 100
   - 100
   - 100
   - 0
-  - 75
   - 100
-  - 0
-  - 100
-  - 0
-  - 0
   m_RootBone: {fileID: 4153452530768409754}
   m_AABB:
     m_Center: {x: -0.17480719, y: 0.00037854165, z: -0.10259284}
@@ -8168,8 +8242,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4156104014789850212}
   m_LocalRotation: {x: -0.0000019753584, y: -0.0000046970154, z: 0.99784464, w: -0.06562137}
-  m_LocalPosition: {x: 0.2443328, y: -0.0051121903, z: -0.00000022255844}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalPosition: {x: 0.22046302, y: -0.035575677, z: -0.00000010068426}
+  m_LocalScale: {x: 0.5054701, y: 0.96199685, z: 0.5864273}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 4153644571665052454}
@@ -8615,15 +8689,15 @@ SkinnedMeshRenderer:
   - {fileID: 4160179549679776096}
   - {fileID: 4153537443020213290}
   m_BlendShapeWeights:
+  - 29
+  - 0
+  - 26.8
+  - 100
+  - 100
   - 100
   - 100
   - 0
-  - 75
   - 100
-  - 0
-  - 100
-  - 0
-  - 0
   m_RootBone: {fileID: 4153461440782519478}
   m_AABB:
     m_Center: {x: 0.13031283, y: 0.16572079, z: 0.0023061186}
@@ -9162,8 +9236,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4156364396652701906}
   m_LocalRotation: {x: 0.000000084920956, y: 0.00000038343703, z: -0.05885345, w: 0.99826664}
-  m_LocalPosition: {x: -0.14455624, y: -0.00011428833, z: -3.335299e-10}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalPosition: {x: -0.15459153, y: -0.00012313842, z: -2.600427e-10}
+  m_LocalScale: {x: 0.5883994, y: 0.55941516, z: 0.77714616}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 4153483911847323828}
@@ -9458,8 +9532,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4156504588350450506}
   m_LocalRotation: {x: 0.00000011091027, y: 0.00000020017688, z: 0.005089472, w: 0.99998707}
-  m_LocalPosition: {x: -0.14454155, y: -0.0001328659, z: -3.9857695e-10}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalPosition: {x: -0.1546274, y: -0.000117034906, z: -3.248715e-10}
+  m_LocalScale: {x: 0.025601903, y: 0.4735403, z: 0.47354037}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 4153483911847323828}
@@ -9706,8 +9780,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4156658300124775152}
   m_LocalRotation: {x: 0.00000009663211, y: 0.00000030964551, z: -0.03299019, w: 0.9994557}
-  m_LocalPosition: {x: -0.14455028, y: -0.00011489868, z: -3.390596e-10}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalPosition: {x: -0.15461257, y: -0.000120773315, z: -3.3571268e-10}
+  m_LocalScale: {x: 1, y: 0.9048285, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 4153624493364924756}
@@ -10638,16 +10712,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 457598144384c694ab09dc093debbc2c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  preset: {fileID: 11400000, guid: a50f549f2d9c57447b01010262a4ba0c, type: 2}
+  preset: {fileID: 11400000, guid: a59271be85ff1b94ab05001ab0c06b9b, type: 2}
   LoadPresetOnStart: 1
   mesh: {fileID: 4054043816897345710}
   LODs:
   - {fileID: 4056802024469237652}
   blendShapes:
-  - 100
-  - 100
+  - 29
   - 0
-  - 75
+  - 26.8
+  - 100
+  - 100
+  - 100
   - 100
   - 0
   - 100
@@ -10833,6 +10909,11 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 562cbc0d7846adf489736048eb5dc158, type: 3}
+--- !u!4 &9763674780201674 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 4776163525601814, guid: 562cbc0d7846adf489736048eb5dc158, type: 3}
+  m_PrefabInstance: {fileID: 14152808792905948}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &13976036449007732 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 1091566395842728, guid: 562cbc0d7846adf489736048eb5dc158, type: 3}

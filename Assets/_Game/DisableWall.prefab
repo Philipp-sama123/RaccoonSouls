@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 1390068782126191265}
   - component: {fileID: 1962246845778630330}
   - component: {fileID: 9196216777447033446}
-  m_Layer: 0
+  m_Layer: 23
   m_Name: DisableWall
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -34,7 +34,7 @@ Transform:
   - {fileID: 7327972540490783518}
   - {fileID: 9183274885427692715}
   m_Father: {fileID: 0}
-  m_RootOrder: 11
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1962246845778630330
 MonoBehaviour:
@@ -285,9 +285,21 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1390068782126191265}
     m_Modifications:
+    - target: {fileID: 1268100329906582, guid: 65932b7368590234d8163da03c2055d8, type: 3}
+      propertyPath: m_Layer
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1851072841808772, guid: 65932b7368590234d8163da03c2055d8, type: 3}
+      propertyPath: m_Layer
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 1879769179923522, guid: 65932b7368590234d8163da03c2055d8, type: 3}
       propertyPath: m_Name
       value: FX_Explosion_01
+      objectReference: {fileID: 0}
+    - target: {fileID: 1879769179923522, guid: 65932b7368590234d8163da03c2055d8, type: 3}
+      propertyPath: m_Layer
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4085816057360858, guid: 65932b7368590234d8163da03c2055d8, type: 3}
       propertyPath: m_RootOrder
@@ -386,7 +398,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 130878, guid: 196b993d2b0354842bd6fa90eb970550, type: 3}
       propertyPath: m_Layer
-      value: 30
+      value: 23
       objectReference: {fileID: 0}
     - target: {fileID: 454930, guid: 196b993d2b0354842bd6fa90eb970550, type: 3}
       propertyPath: m_RootOrder
