@@ -1,6 +1,5 @@
 ﻿using UnityEngine;
   
-
 namespace MalbersAnimations.Conditions
 {
     public enum ComponentCondition {Enabled, ActiveAndEnabled }
@@ -33,9 +32,6 @@ namespace MalbersAnimations.Conditions
         {
             if (target is Behaviour) this.Target = target as Behaviour;
         }
-
-
         private void Reset() => Name = "New Behaviour Condition";
     }
-
 }

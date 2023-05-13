@@ -1,23 +1,26 @@
 ﻿using UnityEngine;
 
-[AddComponentMenu("Malbers/Utilities/Tools/Lock Axis")]
-
-public class LockAxis : MonoBehaviour
+namespace MalbersAnimations
 {
-    public bool LockX = true;
-    public bool LockY = false;
-    public bool LockZ = false;
+    [AddComponentMenu("Malbers/Utilities/Tools/Lock Axis")]
 
-    public Vector3 LockOffset;
-
-    void Update()
+    public class LockAxis : MonoBehaviour
     {
-        Vector3 pos = transform.position;
+        public bool LockX = true;
+        public bool LockY = false;
+        public bool LockZ = false;
 
-        if (LockX) pos.x = LockOffset.x;
-        if (LockY) pos.y = LockOffset.y;
-        if (LockZ) pos.z = LockOffset.z; 
+        public Vector3 LockOffset;
 
-        transform.position = pos;
+        void Update()
+        {
+            Vector3 pos = transform.position;
+
+            if (LockX) pos.x = LockOffset.x;
+            if (LockY) pos.y = LockOffset.y;
+            if (LockZ) pos.z = LockOffset.z;
+
+            transform.position = pos;
+        }
     }
 }

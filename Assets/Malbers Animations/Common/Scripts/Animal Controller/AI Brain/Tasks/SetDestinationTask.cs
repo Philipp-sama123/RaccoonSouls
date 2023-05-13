@@ -37,12 +37,24 @@ namespace MalbersAnimations.Controller.AI
             switch (targetType)
             {
                 case DestinationType.Transform:
+                  
+                    if (TargetT == null)
+                    { Debug.LogError("Set Destination Task is missing the Transform Hook", this); return; }
+                    
                     brain.AIControl.SetDestination(TargetT.Value.position, true);
                     break;
                 case DestinationType.GameObject:
+
+                    if (TargetG == null)
+                    { Debug.LogError("Set Destination Task is missing the GameObject Hook", this); return; }
+
                     brain.AIControl.SetDestination(TargetG.Value.transform.position, true);
                     break;
                 case DestinationType.RuntimeGameObjects:
+                   
+                    if (TargetRG == null)
+                    { Debug.LogError("Set Destination Task is missing the RuntimeSet", this); return; }
+
                     switch (rtype)
                     {
                         case GetRuntimeGameObjects.RuntimeSetTypeGameObject.First:
@@ -65,6 +77,12 @@ namespace MalbersAnimations.Controller.AI
                     }
                     break;
                 case DestinationType.Vector3:
+
+
+                    if (TargetRG == null)
+                    { Debug.LogError("Set Destination Task is missing the Vector Scriptable Variable", this); return; }
+
+
                     brain.AIControl.SetDestination(Destination.Value, true);
                     break;
                 case DestinationType.Name:
@@ -75,7 +93,7 @@ namespace MalbersAnimations.Controller.AI
                     }
                     else
                     {
-                        Debug.Log("Using SetTarget.ByName() but there's no Gameobject with that name",this);
+                        Debug.LogError("Using SetTarget.ByName() but there's no Gameobject with that name",this);
                     }
                     break;
                 default:
@@ -92,7 +110,7 @@ namespace MalbersAnimations.Controller.AI
     [UnityEditor.CustomEditor(typeof(SetDestinationTask))]
     public class SetDestinationTaskEditor : UnityEditor.Editor
     {
-        UnityEditor.SerializedProperty Description, SlowMultiplier, MessageID, targetType, TargetT, TargetG, TargetRG, rtype, RTIndex, RTName, MoveToTarget, Destination;
+        UnityEditor.SerializedProperty Description, WaitForPreviousTask, SlowMultiplier, MessageID, targetType, TargetT, TargetG, TargetRG, rtype, RTIndex, RTName, MoveToTarget, Destination;
 
         private void OnEnable()
         {
@@ -108,6 +126,8 @@ namespace MalbersAnimations.Controller.AI
             RTIndex = serializedObject.FindProperty("RTIndex");
             RTName = serializedObject.FindProperty("RTName");
             MoveToTarget = serializedObject.FindProperty("MoveToTarget");
+            WaitForPreviousTask = serializedObject.FindProperty("WaitForPreviousTask");
+
 
         }
         public override void OnInspectorGUI()
@@ -115,6 +135,7 @@ namespace MalbersAnimations.Controller.AI
             serializedObject.Update();
             UnityEditor.EditorGUILayout.PropertyField(Description);
             UnityEditor.EditorGUILayout.PropertyField(MessageID);
+            UnityEditor.EditorGUILayout.PropertyField(WaitForPreviousTask);
             UnityEditor.EditorGUILayout.Space();
             UnityEditor.EditorGUILayout.HelpBox("All targets must be set at Runtime. Scriptable asset cannot have scenes References", UnityEditor.MessageType.Info);
 

@@ -61,6 +61,9 @@ namespace MalbersAnimations
         /// <summary>Move the Character using a Direction</summary>
         void Move(Vector3 move);
 
+        /// <summary>Stop the Character from moving</summary>
+        void StopMoving();
+
         /// <summary>Sends to the the Raw Input Axis </summary>
         void SetInputAxis(Vector3 inputAxis);
 

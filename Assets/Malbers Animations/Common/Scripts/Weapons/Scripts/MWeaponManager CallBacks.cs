@@ -1,10 +1,6 @@
-﻿using UnityEngine;
+﻿using MalbersAnimations.Weapons;
 using System.Collections;
-using MalbersAnimations.Weapons;
-using MalbersAnimations.Utilities;
-using System.Collections.Generic;
-using System;
-using MalbersAnimations.Scriptables;
+using UnityEngine;
 
 namespace MalbersAnimations
 {
@@ -15,7 +11,7 @@ namespace MalbersAnimations
     {
 
         #region Holsters
-        protected virtual void PrepareHolsters()
+        public virtual void PrepareHolsters()
         {
             if (holsters != null && holsters.Count == 0) return;
 
@@ -82,10 +78,22 @@ namespace MalbersAnimations
         /// <summary>Clear a Holster by its ID</summary> 
         public virtual void Holster_Clear(HolsterID HolsterID) => Holster_Clear(HolsterID.ID);
 
-
         /// <summary> Equip a weapon that is located in a Holster (INPUT CONNECTION)  </summary>
         protected virtual void Holster_Equip(HolsterID HolsterID, bool value) { if (value) Holster_Equip(HolsterID.ID); }
 
+        public virtual void HolsterClearAll()
+        {
+            if (UseHolsters && Active && !Paused)
+            {
+                foreach (var holster in holsters)
+                {
+                    if (holster.Weapon && holster.Weapon.IsEquiped)
+                        UnEquip_Fast(); //Make sure to unequip any equipped weapon on a holster
+
+                    Holster_AddWeapon(holster, null);
+                }
+            }
+        }
 
         /// <summary>Clear a Holster by its ID</summary> 
         public virtual void Holster_Clear(int HolsterID)
@@ -99,9 +107,11 @@ namespace MalbersAnimations
 
                 if (ActiveHolster != null)
                 {
-                    if (ActiveHolster.Weapon.IsEquiped) UnEquip_Fast(); //Make sure to unequip that weapon
+                    //Make sure to unequip that weapon
+                    if (ActiveHolster.Weapon && ActiveHolster.Weapon.IsEquiped)
+                        UnEquip_Fast();
 
-                    ActiveHolster.SetWeapon((MWeapon)null);
+                    Holster_AddWeapon(ActiveHolster, null);
                 }
             }
         }
@@ -173,6 +183,12 @@ namespace MalbersAnimations
         {
             if (Next_Weapon != null)
             {
+                if (Next_Weapon.gameObject.IsPrefab())
+                {
+                    Debugging($"[Weapon {Next_Weapon.name} is a Prefab] → [Instantianting]", "green");
+                    Next_Weapon = Instantiate(Next_Weapon);              //if is a prefab instantiate on the scene
+                }
+
                 var holster = holsters.Find(x => x.ID == Next_Weapon.HolsterID); //Find the holster you want the new weapon to be eqquipped
 
                 if (holster != null)
@@ -181,20 +197,18 @@ namespace MalbersAnimations
 
                     var WasEquipped = false;
 
-                    if (holster.Weapon != null) //Meaning there was another weapon there
+                    if (holster.Weapon != null)                         //Meaning there was another weapon there
                     {
-                        WasEquipped = holster.Weapon == Weapon; //Meaning is the same Weapon Equipped
-                        if (WasEquipped) UnEquip_Fast(); //If the weapon is the one holding right now then Unequip Fast
+                        WasEquipped = holster.Weapon == Weapon;         //Meaning is the same Weapon Equipped
+                        if (WasEquipped) UnEquip_Fast();                //If the weapon is the one holding right now then Unequip Fast
                     }
-
-                    if (Next_Weapon.gameObject.IsPrefab()) Next_Weapon = Instantiate(Next_Weapon);              //if is a prefab instantiate on the scene
-
 
                     //Set the new Weapon in the Correct Holster Spot
                     Next_Weapon.gameObject.transform.parent = holster.GetSlot(Next_Weapon.HolsterSlot);
                     Next_Weapon.gameObject.transform.SetLocalTransform(Next_Weapon.HolsterOffset);
 
-                    holster.SetWeapon(Next_Weapon);
+                    Holster_AddWeapon(holster, Next_Weapon);
+
                     holster.Weapon.DisablePhysics();
 
                     //   Debug.Log("**********************WasEquipped = " + WasEquipped);
@@ -205,13 +219,57 @@ namespace MalbersAnimations
                         Equip_Fast(); //Equip the new weapon if the last one was eqqiuped
                     }
                 }
+                //Means that the weapon does not have a holster;
+                //or the holster does not exist on the Weapon Manager
                 else
                 {
-                    Debugging($"Set Weapon on Holster Failed →" +
-                        $" There's no Holster [{Next_Weapon.Holster.name}] on the Holster List for the Weapon [{Next_Weapon.name}]");
+                    UnEquip_Fast();
+                    Weapon = Next_Weapon;
+                    Equip_Fast(); //Equip the new weapon if the last one was eqqiuped
                 }
             }
         }
+
+
+        private void Holster_AddWeapon(Holster holster, MWeapon weap)
+        {
+            if (holster.Weapon) //Meaning there's a OLD weapon already on the holster
+            {
+                if (holster.Weapon.IsCollectable != null)
+                {
+                    if (DropPoint != null)
+                    {
+                        Debug.Log("DROP POINT");
+                        holster.Weapon.transform.position = DropPoint.position;
+                        //    holster.Weapon.transform.rotation = DropPoint.rotation;
+                    }
+
+                    holster.Weapon.IsCollectable.Drop();
+                }
+                else
+                {
+                    Destroy(holster.Weapon.gameObject); //Destroy the weapon that was equipped. REVIEW!!!!!!
+                }
+            }
+
+            holster.Weapon = weap;
+
+            if (holster.Weapon != null)
+            {
+                if (holster.Weapon.IsCollectable != null)
+                    holster.Weapon.IsCollectable?.DisablePhysics();
+
+                holster.OnWeaponInHolster.Invoke(weap);
+                //holster.Weapon.InHolster = true;
+            }
+            else
+            {
+                holster.OnWeaponInHolster.Invoke(null);
+                //holster.Weapon.InHolster = false;
+            }
+        }
+
+
         #endregion
 
         #region Equip Weapon
@@ -295,12 +353,12 @@ namespace MalbersAnimations
         public virtual void Equip_Fast(GameObject WeaponGo)
         {
             if (WeaponGo == null) return;
-           
+
             var Next_Weapon = WeaponGo.GetComponent<MWeapon>(); //Find if there's a next weapon
             Equip_Fast(Next_Weapon);
         }
 
-        public virtual void Equip_Fast(MWeapon Next_Weapon) 
+        public virtual void Equip_Fast(MWeapon Next_Weapon)
         {
             //Do nothing if the Action is NOT Idle or None( DO NOT INCLUDE AIMING because Assasing Creed Style)
             if (!IsWeaponAction(Weapon_Action.None, Weapon_Action.Idle)) return;
@@ -313,7 +371,7 @@ namespace MalbersAnimations
             {
                 if (UseExternal) TryInstantiateWeapon(Next_Weapon);
                 Weapon = Next_Weapon;
-                if (!UseExternal) Holster_SetActive(Weapon.HolsterID); 
+                if (!UseExternal) Holster_SetActive(Weapon.HolsterID);
                 Equip_Fast();
             }
             else if (!Weapon.Equals(Next_Weapon))             //You are trying to Equip a different weapon, so Unequip the active one then equip the next one
@@ -370,7 +428,7 @@ namespace MalbersAnimations
 
         public virtual void SecondAttack()
         {
-            if (!Aim) MainAttack(1); 
+            if (!Aim) MainAttack(1);
         }
 
         public virtual void MainAttack(int Branch)
@@ -393,15 +451,15 @@ namespace MalbersAnimations
 
 
             // Debug.Log($"WeaponIsActive {WeaponIsActive}");
-           //  Debug.Log($"Weapon.CanAttack {Weapon.CanAttack}");
+            //  Debug.Log($"Weapon.CanAttack {Weapon.CanAttack}");
             if (WeaponIsActive)
             {
                 if (Weapon.CanAttack)
                 {
                     if (!Aimer.Active) Aimer.CalculateAiming(); //Quick Aim Calculation in case the Aimer is Disabled
-                  //  Debug.Log("<-------------> Weapon Attack <------------->");
+                                                                //  Debug.Log("<-------------> Weapon Attack <------------->");
                     Weapon.MainAttack_Start(this);
-                   // OnMainAttackStart.Invoke(Weapon.gameObject);
+                    // OnMainAttackStart.Invoke(Weapon.gameObject);
                 }
             }
             else //Meaning there's no WEAPON!!!! you are doing NO WEAPONS ATTACKS (ONLY DO THIS WITH ANIMAL CONTROLLER)
@@ -413,7 +471,7 @@ namespace MalbersAnimations
                 {
                     if (comboManager && comboManager.ActiveCombo != null) //if there's a combo manager use it
                     {
-                       //  Debug.Log("Unharmed Attack with Combo");
+                        //  Debug.Log("Unharmed Attack with Combo");
                         comboManager.Play();
                     }
                     else
@@ -471,7 +529,7 @@ namespace MalbersAnimations
         private void Reload(bool value)
         {
             if (value) ReloadWeapon();
-          //  else ReloadInterrupt();
+            //  else ReloadInterrupt();
         }
 
         private void ReloadInterrupt()

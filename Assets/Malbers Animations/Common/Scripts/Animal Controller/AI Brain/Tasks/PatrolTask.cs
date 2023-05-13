@@ -90,7 +90,6 @@ namespace MalbersAnimations.Controller.AI
         {
             brain.AIControl.AutoNextTarget = true; //When Patrolling make sure AutoTarget is set to true... 
 
-           // Debug.Log("OnTargetArrived");
             if (IgnoreWaitTime)
             {
                 brain.AIControl.StopWait(); //Ingore wait time

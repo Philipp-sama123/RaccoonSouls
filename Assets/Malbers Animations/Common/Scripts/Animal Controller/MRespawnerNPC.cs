@@ -44,9 +44,9 @@ namespace MalbersAnimations.Controller.AI
 
         void OnEnable()
         {
-            if (!isActiveAndEnabled) return;  
-
-            DontDestroyOnLoad(gameObject);
+            if (!isActiveAndEnabled) return;
+            transform.parent = null;
+            DontDestroyOnLoad(transform);
             gameObject.name = gameObject.name + " Instance";
             SceneManager.sceneLoaded += OnLevelFinishedLoading;
             FindNPCAnimal(); 

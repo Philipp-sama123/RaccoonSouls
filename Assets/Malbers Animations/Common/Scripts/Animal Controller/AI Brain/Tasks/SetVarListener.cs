@@ -9,7 +9,6 @@ namespace MalbersAnimations.Controller.AI
 
         public override string DisplayName => "Variables/Set Var Listener";
 
-
         public enum VarType
         {
             Bool,
@@ -36,40 +35,9 @@ namespace MalbersAnimations.Controller.AI
         public VarType varType = VarType.Bool;
 
 
-        [Hide("showBoolValue", true)] public bool boolValue = true;
-        [Hide("showIntValue", true)] public int intValue = 0;
-        [Hide("showFloatValue", true)] public float floatValue = 0f;
-
-      
-
-        [HideInInspector] public bool showFloatValue;
-        [HideInInspector] public bool showBoolValue = true;
-        [HideInInspector] public bool showIntValue;
-
-
-        private void OnValidate()
-        {
-            switch (varType)
-            {
-                case VarType.Bool:
-                    showFloatValue = false;
-                    showBoolValue = true;
-                    showIntValue = false;
-                    break;
-                case VarType.Int:
-                    showFloatValue = false;
-                    showBoolValue = false;
-                    showIntValue = true;
-                    break;
-                case VarType.Float:
-                    showFloatValue = true;
-                    showBoolValue = false;
-                    showIntValue = false;
-                    break;
-                default:
-                    break;
-            }
-        }
+        [Hide("varType",(int) VarType.Bool)] public bool boolValue = true;
+        [Hide("varType", (int)VarType.Int)] public int intValue = 0;
+        [Hide("varType", (int)VarType.Float)] public float floatValue = 0f;
 
 
         public override void StartTask(MAnimalBrain brain, int index)

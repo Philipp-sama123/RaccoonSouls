@@ -25,7 +25,7 @@ namespace MalbersAnimations.Controller.AI
         public float alignTime = 0.3f;
 
         public override void StartTask(MAnimalBrain brain, int index)
-        {
+        { 
             switch (alignTo)
             {
                 case AlignTo.TransformHook:

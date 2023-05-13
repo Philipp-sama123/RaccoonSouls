@@ -13,12 +13,23 @@ MonoBehaviour:
   m_Name: Wolf Lite Idle
   m_EditorClassIdentifier: 
   Active: 1
+  animal: {fileID: 0}
   Input: 
   ExitInput:
     UseConstant: 1
     ConstantValue: 
     Variable: {fileID: 0}
+  m_StateProfile:
+    UseConstant: 1
+    ConstantValue: 0
+    Variable: {fileID: 0}
+  AlwaysForward:
+    UseConstant: 1
+    ConstantValue: 0
+    Variable: {fileID: 0}
   Priority: 1
+  resetInputOnFailed: 0
+  ResetLastState: 0
   General:
     modify: 3199
     RootMotion: 1
@@ -39,6 +50,7 @@ MonoBehaviour:
   UseSendMessage: 0
   IncludeChildren: 1
   AllowExitFromAnim: 0
+  CanTransitionToItself: 0
   IncludeSleepState: 1
   SleepFromState: []
   SleepFromMode: []
@@ -62,7 +74,6 @@ MonoBehaviour:
     UseConstant: 1
     ConstantValue: 
     Variable: {fileID: 0}
-  ExitFrame: 1
   ExitOnMain: 1
   EnterCooldown:
     UseConstant: 1
@@ -73,8 +84,10 @@ MonoBehaviour:
     ConstantValue: 0
     Variable: {fileID: 0}
   CanStrafe: 1
+  StrafeAnimations: 1
   MovementStrafe: 0
   IdleStrafe: 1
-  debug: 1
+  m_debug: 1
   Editor_Tabs1: 0
+  SpeedSets: []
   ID: {fileID: 11400000, guid: 7370df9c769c2764381ad7c76eb3d949, type: 2}

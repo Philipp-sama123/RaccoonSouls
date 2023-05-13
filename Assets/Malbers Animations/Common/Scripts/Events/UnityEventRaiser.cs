@@ -9,13 +9,13 @@ namespace MalbersAnimations.Events
     public class UnityEventRaiser : UnityUtils
     {
         [Tooltip("Delayed time for invoking the Events, or the Repeated time  when Repeat is enable")]
-        public FloatReference Delayed = new FloatReference();
-        public FloatReference RepeatTime = new FloatReference();
+        public FloatReference Delayed = new();
+        public FloatReference RepeatTime = new();
         public bool Repeat;
 
 
         [FormerlySerializedAs("OnEnableEvent")]
-        public UnityEngine.Events.UnityEvent onEnable;
+        public UnityEngine.Events.UnityEvent onEnable =  new();
 
 
         public string Description = "";

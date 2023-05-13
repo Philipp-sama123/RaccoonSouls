@@ -33,18 +33,18 @@ namespace MalbersAnimations.Controller
 
         [Tooltip("When Entering the Fly State... The animal will keep the Velocity from the last State if this value is greater than zero")]
         [FormerlySerializedAs("InertiaTime")]
-        public FloatReference InertiaLerp = new FloatReference(1);
+        public FloatReference InertiaLerp = new(1);
          
 
         [Tooltip("The animal will move forward while flying, without the need to push the W Key, or Move forward Input")]
-        public BoolReference AlwaysForward = new BoolReference(false);
-        private bool LastAlwaysForward;
+        public BoolReference KeepForward = new(false);
+       // private bool LastAlwaysForward;
 
         [Header("TakeOff")]
         [Tooltip("Impulse to push the animal Upwards for a time to help him take off.\nIf set to zero this logic will be ignored")]
         public FloatReference Impulse = new FloatReference();
         [Tooltip("Time the Impulse will be applied")]
-        public FloatReference ImpulseTime = new FloatReference(0.5f);
+        public FloatReference ImpulseTime = new(0.5f);
         [Tooltip("Curve to apply to the Impulse Logic")]
         public AnimationCurve ImpulseCurve = new AnimationCurve(new Keyframe(0, 1), new Keyframe(1, 0));
 
@@ -140,14 +140,13 @@ namespace MalbersAnimations.Controller
         public override void Activate()
         {
             LastSpeedModifier = animal.CurrentSpeedModifier; //Store the current speed modifier
-
-            base.Activate();
-            LastAlwaysForward = animal.AlwaysForward;
-            animal.AlwaysForward = AlwaysForward;
+            base.Activate(); 
             InputValue = true; //Make sure the Input is set to True when the flying is not being activated by an input player
 
             NewSpeedModifier = animal.CurrentSpeedModifier; //Store the current speed modifier
         }
+
+        public override bool KeepForwardMovement => KeepForward.Value;
 
         public override void EnterTagAnimation()
         {
@@ -283,7 +282,7 @@ namespace MalbersAnimations.Controller
                         animal.AdditivePosition += Gravity * -(Dist * 0.75f - hit.distance);
                     }
 
-                    if (debug) Debug.DrawRay(surfacePos, Gravity * Dist, findWater);
+                    if (m_debug) Debug.DrawRay(surfacePos, Gravity * Dist, findWater);
                     return true;
                 }
             }
@@ -377,7 +376,7 @@ namespace MalbersAnimations.Controller
         public override void RestoreAnimalOnExit()
         {
             animal.FreeMovement = false;
-            animal.AlwaysForward = LastAlwaysForward;
+          //  animal.AlwaysForward = LastAlwaysForward;
           //  animal.Speed_Lock(false);
             animal.InputSource?.SetInput(Input, false); //Hack to reset the toggle when it exit on Grounded
             animal.LockUpDownMovement = false;
@@ -464,12 +463,12 @@ namespace MalbersAnimations.Controller
 
                 var PointDown = Gravity.normalized * (LandMultiplier) * animal.transform.lossyScale.y;
 
-                MTools.DrawLine(animal.Main_Pivot_Point, animal.Main_Pivot_Point + PointDown, width);
+                MDebug.DrawLine(animal.Main_Pivot_Point, animal.Main_Pivot_Point + PointDown, width);
 
                 if (BlockingBone)
                 {
                     var HitPoint = BlockingBone.TransformPoint(BoneOffsetPos);
-                    MTools.DrawLine(HitPoint, HitPoint + Gravity * BlockLandDist * animal.transform.lossyScale.y, width);
+                    MDebug.DrawLine(HitPoint, HitPoint + Gravity * BlockLandDist * animal.transform.lossyScale.y, width);
                 }
 
                 if (AvoidSurface && !Application.isPlaying)

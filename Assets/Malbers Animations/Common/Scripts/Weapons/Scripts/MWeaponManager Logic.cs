@@ -1,10 +1,7 @@
-﻿using UnityEngine;
+﻿using MalbersAnimations.Weapons;
 using System.Collections;
-using MalbersAnimations.Weapons;
-using MalbersAnimations.Utilities;
 using System.Collections.Generic;
-using System;
-using MalbersAnimations.Scriptables;
+using UnityEngine;
 
 namespace MalbersAnimations
 {
@@ -37,7 +34,7 @@ namespace MalbersAnimations
             {
                 RightHand = Anim.GetBoneTransform(HumanBodyBones.RightHand);           //Get the Rider Right Hand transform
                 LeftHand = Anim.GetBoneTransform(HumanBodyBones.LeftHand);             //Get the Rider Left  Hand transform
-               
+
                 //Head = Anim.GetBoneTransform(HumanBodyBones.Head);                     //Get the Rider Head transform
                 //Chest = Anim.GetBoneTransform(HumanBodyBones.Chest);                   //Get the Rider Head transform
 
@@ -80,8 +77,8 @@ namespace MalbersAnimations
         }
         private void OnDisable()
         {
-            if (CombatMode)  UnEquip_Fast();
-            
+            if (CombatMode) UnEquip_Fast();
+
 
             if (HasAnimal)
             {
@@ -89,7 +86,7 @@ namespace MalbersAnimations
                 animal.OnModeEnd.RemoveListener(AnimalModeEnd);
                 animal.OnStateActivate.RemoveListener(AnimalStateActivate);
                 animal.OnStrafe.RemoveListener(CheckStrafing);
-               // if (CombatMode) animal.Mode_Interrupt();
+                // if (CombatMode) animal.Mode_Interrupt();
             }
 
 
@@ -115,7 +112,7 @@ namespace MalbersAnimations
             CombatMode = Aim = false;
             OnCanAim.Invoke(false);
             ExitAim();
-           // UnEquip_Fast();
+            // UnEquip_Fast();
             Debugging($"Reset Combat");
         }
 
@@ -153,7 +150,9 @@ namespace MalbersAnimations
                 if (Weapon)
                 {
                     Holster_SetActive(Weapon.HolsterID); //Set the Active Holster the Weapon One
-                    ActiveHolster?.SetWeapon(Weapon);
+
+                    if (ActiveHolster != null) Holster_AddWeapon(ActiveHolster, Weapon);
+
                     Equip_Fast();
                     Weapon.IsCollectable?.Pick();
                     AutoStoreWeapon();
@@ -367,7 +366,7 @@ namespace MalbersAnimations
                     //Let know the Rider is Aiming. So if is using Straigth Spine, it stops. (REVIEW)!!!!!!!!!***
                     if (Rider != null) Rider.IsAiming = value;
 
-                   // Debugging($"Aim → [{aim.Value}]", "gray");
+                    // Debugging($"Aim → [{aim.Value}]", "gray");
 
                     Weapon.IsAiming = value;    //Update the Aim Value on the Weapon to the active weapon  that the Rider is/isn't aiming
 
@@ -400,7 +399,7 @@ namespace MalbersAnimations
                     {
                         animal.Strafe = true;
                         WasStrafing = false;
-                    } 
+                    }
                 }
 
                 //DO NOT AIM IF THE ANIMAL IS DODGING or doing a high priority mode
@@ -555,7 +554,7 @@ namespace MalbersAnimations
             {
                 if (HasAnimal)
                 {
-                    if (WeaponMode.ForceActivate((int)Weapon_Action.Reload))  
+                    if (WeaponMode.ForceActivate((int)Weapon_Action.Reload))
                     {
                         //Debug.Log("FORCE RELOAD ANIMATION" + WeaponMode.Name);
                         Weapon.IsReloading = true;
@@ -816,7 +815,7 @@ namespace MalbersAnimations
 
             Debugging($"EQUIP → [{Weapon.name}] T:{Time.time:F2}", "orange");
 
-           // ExitAim();
+            // ExitAim();
 
             Equip_Weapon_Data_Ground_Riding();
             EquipWeapon_AnimalController();
@@ -952,7 +951,7 @@ namespace MalbersAnimations
                 animal.Stance_SetDefault(Weapon.stance);
             }
         }
-        
+
 
         private void EnableModesAC(bool enable)
         {
@@ -965,7 +964,7 @@ namespace MalbersAnimations
             }
         }
 
-      
+
         /// <summary>Unequip Weapon from holster or from Inventory (Called by the Animator)</summary>
         public virtual void Unequip_Weapon()
         {
@@ -980,13 +979,15 @@ namespace MalbersAnimations
 
             if (UseHolsters)                                                //If Use holster Parent the ActiveMWeapon the the holster
             {
-                Weapon.transform.parent = ActiveHolster.GetSlot(Weapon.HolsterSlot);        //Parent the weapon to his original holster
+                if (Weapon.Holster != null) //Meaning the weapon has a holster
+                {
+                    Weapon.transform.parent = ActiveHolster.GetSlot(Weapon.HolsterSlot);        //Parent the weapon to his original holster
 
-                if (SmoothEquip)
-                    StartCoroutine(MTools.AlignTransform(Weapon.transform, Weapon.HolsterOffset, HolsterTime));
-                else
-                    Weapon.transform.SetLocalTransform(Weapon.HolsterOffset); //Set the Holster Offset Option
-
+                    if (SmoothEquip)
+                        StartCoroutine(MTools.AlignTransform(Weapon.transform, Weapon.HolsterOffset, HolsterTime));
+                    else
+                        Weapon.transform.SetLocalTransform(Weapon.HolsterOffset); //Set the Holster Offset Option
+                }
                 SmoothEquip = true;
             }
             else// if (UseExternal)
@@ -1013,9 +1014,6 @@ namespace MalbersAnimations
             SmoothEquip = false; //Skip the Smooth Equipment.
             Unequip_Weapon();
         }
-
-
-       
 
 
         /// <summary> Parents the Weapon to the Correct Hand</summary>
@@ -1088,11 +1086,11 @@ namespace MalbersAnimations
         }
 
         /// <summary> Activate the Damager of a Weapon. E.g. the Attack Trigger of a Melee Weapon    </summary>
-        public virtual void ActivateDamager(int value, float multiplier)
+        public virtual void ActivateDamager(int value, int prof)
         {
-            if (Weapon) Weapon.ActivateDamager(value, multiplier);
+            if (Weapon) Weapon.ActivateDamager(value, prof);
         }
-         
+
         private int LastAttackTriggerHash;
         public virtual void DamagerAnimationStart(int hash)
         {
@@ -1125,7 +1123,7 @@ namespace MalbersAnimations
             Holster_SetActive(HolstertoSwap);
             Draw_Weapon();                                  //Set the parameters so draw a weapon
             yield return null;
-        } 
+        }
         #endregion
     }
 }

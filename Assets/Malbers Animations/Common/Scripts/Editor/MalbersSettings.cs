@@ -1,4 +1,6 @@
-﻿using UnityEngine;
+﻿
+#if UNITY_EDITOR
+using UnityEngine;
 using UnityEditor;
 
 /// <summary> This Class is use for creating Layers and Tags </summary>
@@ -122,3 +124,5 @@ namespace MalbersAnimations
         }
     }
 }
+
+#endif

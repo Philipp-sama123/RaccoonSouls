@@ -2,7 +2,7 @@
 
 namespace MalbersAnimations
 {
-    public interface IWayPoint : IAITarget
+    public interface IWayPoint : IAITarget, IObjectCore
     {
         /// <summary>Returns the Next Target associated to the Current Waypoint</summary>
         Transform NextTarget();

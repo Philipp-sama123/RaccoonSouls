@@ -1,3 +1,6 @@
+
+
+#if UNITY_EDITOR
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor; 
@@ -22,6 +25,7 @@ namespace MalbersAnimations
         private List<Tag> tags;
         private List<ModeID> modes;
         private List<StateID> states;
+        private List<StatID> stats;
         private Vector2 Scroll;
         public int Editor_Tabs1;
 
@@ -32,9 +36,11 @@ namespace MalbersAnimations
             stances = MTools.GetAllInstances<StanceID>();
             tags = MTools.GetAllInstances<Tag>();
             actions = MTools.GetAllInstances<MAction>();
+            stats = MTools.GetAllInstances<StatID>();
 
 
             actions = actions.OrderBy(x => x.ID).ToList();
+            stats = stats.OrderBy(x => x.ID).ToList();
             modes = modes.OrderBy(x => x.ID).ToList();
             stances = stances.OrderBy(x => x.ID).ToList();
             states = states.OrderBy(x => x.ID).ToList();
@@ -43,7 +49,7 @@ namespace MalbersAnimations
 
         private void OnGUI()
         {
-            Editor_Tabs1 = GUILayout.Toolbar(Editor_Tabs1, new string[] { "States", "Modes", "Stances", "Actions", "Tags" });
+            Editor_Tabs1 = GUILayout.Toolbar(Editor_Tabs1, new string[] { "States", "Modes", "Stances","Stats", "Actions", "Tags" });
 
             using (var X = new GUILayout.ScrollViewScope(Scroll))
             {
@@ -54,8 +60,9 @@ namespace MalbersAnimations
                     case 0: foreach (var item in states) DrawID(item); break;
                     case 1: foreach (var item in modes) DrawID(item); break;
                     case 2: foreach (var item in stances) DrawID(item); break;
-                    case 3: foreach (var item in actions) DrawID(item); break;
-                    case 4: foreach (var item in tags) DrawID(item); break;
+                    case 3: foreach (var item in stats) DrawID(item); break;
+                    case 4: foreach (var item in actions) DrawID(item); break;
+                    case 5: foreach (var item in tags) DrawID(item); break;
                     default:
                         break;
                 }
@@ -75,3 +82,4 @@ namespace MalbersAnimations
         }
     }
 }
+#endif

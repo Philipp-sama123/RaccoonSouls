@@ -4,8 +4,6 @@ using System.Collections.Generic;
 using System.Reflection;
 using System.Linq;
 using System.IO;
-using Microsoft.CSharp;
-using System.CodeDom.Compiler;
 
 #if UNITY_EDITOR
 using UnityEditor.Presets;
@@ -17,7 +15,7 @@ namespace MalbersAnimations
 #if UNITY_EDITOR
     public static class MalbersEditor
     {
-        public static void CheckAnimParameter(Animator anim,string PName,   AnimatorControllerParameterType Ptype)
+        public static void CheckAnimParameter(Animator anim, string PName, AnimatorControllerParameterType Ptype)
         {
             if (anim)
             {
@@ -80,22 +78,22 @@ namespace MalbersAnimations
             }
         }
 
-       // private static GUIStyle descriptionStyle;
+        // private static GUIStyle descriptionStyle;
 
         public static GUIStyle DescriptionStyle
         {
             get
             {
                 //if (descriptionStyle == null)
-               // {
-                    var descriptionStyle = new GUIStyle(MTools.StyleGray)
-                    {
-                        fontSize = 12,
-                        fontStyle = FontStyle.Bold,
-                        alignment = TextAnchor.MiddleLeft,
-                        stretchWidth = true
-                    };
-                    descriptionStyle.normal.textColor = EditorStyles.boldLabel.normal.textColor;
+                // {
+                var descriptionStyle = new GUIStyle(MTools.StyleGray)
+                {
+                    fontSize = 12,
+                    fontStyle = FontStyle.Bold,
+                    alignment = TextAnchor.MiddleLeft,
+                    stretchWidth = true
+                };
+                descriptionStyle.normal.textColor = EditorStyles.boldLabel.normal.textColor;
                 //}
 
                 return descriptionStyle;
@@ -103,25 +101,42 @@ namespace MalbersAnimations
         }
 
 
-      //private static GUIStyle toolTipStyle;
+        //private static GUIStyle toolTipStyle;
 
         public static GUIStyle ToolTipStyle
         {
             get
             {
                 //if (toolTipStyle == null)
-               // {
-                   var toolTipStyle = new GUIStyle(MTools.StyleBlue)
-                    {
-                        fontSize = 12,
-                        fontStyle = FontStyle.Bold,
-                        alignment = TextAnchor.MiddleLeft,
-                        stretchWidth = true
-                    };
-                    toolTipStyle.normal.textColor = EditorStyles.boldLabel.normal.textColor;
-               // }
+                // {
+                var toolTipStyle = new GUIStyle(MTools.StyleBlue)
+                {
+                    fontSize = 12,
+                    fontStyle = FontStyle.Bold,
+                    alignment = TextAnchor.MiddleLeft,
+                    stretchWidth = true
+                };
+                toolTipStyle.normal.textColor = EditorStyles.boldLabel.normal.textColor;
+                // }
 
                 return toolTipStyle;
+            }
+        }
+        
+        
+        
+        private static GUIContent _icon_Point;
+        public static GUIContent Icon_Point
+        {
+            get
+            {
+                if (_icon_Point == null)
+                {
+                    _icon_Point = EditorGUIUtility.IconContent("blendSampler", "Edit Point");
+                    _icon_Point.tooltip = "Edit Point";
+                }
+
+                return _icon_Point;
             }
         }
 
@@ -139,6 +154,22 @@ namespace MalbersAnimations
                 return _icon_Add;
             }
         }
+
+        private static GUIContent _icon_Update;
+        public static GUIContent Icon_Update
+        {
+            get
+            {
+                if (_icon_Update == null)
+                {
+                    _icon_Update = EditorGUIUtility.IconContent("Refresh@2x", "Update Reference");
+                    _icon_Update.tooltip = "Update";
+                }
+
+                return _icon_Update;
+            }
+        }
+
 
         private static GUIContent _icon_delete;
         public static GUIContent Icon_Delete
@@ -450,14 +481,14 @@ namespace MalbersAnimations
 
         public static GUIContent DebugCont
         {
-            get 
+            get
             {
                 if (debugCont == null)
-                    debugCont =  new GUIContent((Texture)
+                    debugCont = new GUIContent((Texture)
                         (AssetDatabase.LoadAssetAtPath("Assets/Malbers Animations/Common/Scripts/Editor/Icons/Debug_Icon.png",
                         typeof(Texture))), "Debug");
                 return debugCont;
-            } 
+            }
         }
 
         public static void DrawDebugIcon(SerializedProperty property)
@@ -503,7 +534,16 @@ namespace MalbersAnimations
         public static bool Foldout(SerializedProperty prop, string name)
         {
             EditorGUI.indentLevel++;
-                prop.boolValue = GUILayout.Toggle(prop.boolValue,name,  EditorStyles.foldoutHeader);
+            prop.boolValue = GUILayout.Toggle(prop.boolValue, name, EditorStyles.foldoutHeader);
+            EditorGUI.indentLevel--;
+            return prop.boolValue;
+        }
+
+
+        public static bool Foldout(SerializedProperty prop, GUIContent content)
+        {
+            EditorGUI.indentLevel++;
+            prop.boolValue = GUILayout.Toggle(prop.boolValue, content, EditorStyles.foldoutHeader);
             EditorGUI.indentLevel--;
             return prop.boolValue;
         }
@@ -515,6 +555,27 @@ namespace MalbersAnimations
             EditorGUI.indentLevel--;
             return prop;
         }
+
+
+
+    }
+
+    public static class ManagedReferenceUtility
+    {
+        public static object SetManagedReference(this SerializedProperty property, System.Type type)
+        {
+            object obj = (type != null) ? System.Activator.CreateInstance(type) : null;
+            property.managedReferenceValue = obj;
+            return obj;
+        }
+
+        public static System.Type GetType(string typeName)
+        {
+            int splitIndex = typeName.IndexOf(' ');
+            var assembly = Assembly.Load(typeName.Substring(0, splitIndex));
+            return assembly.GetType(typeName.Substring(splitIndex + 1));
+        }
+
     }
 #endif
 }

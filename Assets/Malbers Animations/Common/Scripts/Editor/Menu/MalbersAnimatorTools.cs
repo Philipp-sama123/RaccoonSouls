@@ -1,14 +1,12 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-using UnityEditor; 
-using UnityEditor.Animations;
-//using UnityEditorInternal;
-using MalbersAnimations;
+
+
+#if UNITY_EDITOR
 using MalbersAnimations.Controller;
-using Object = UnityEngine.Object;
+using System.Collections.Generic;
 using System.Linq;
-using System;
+using UnityEditor;
+using UnityEditor.Animations;
+using UnityEngine;
 
 namespace MalbersAnimations
 {
@@ -19,7 +17,7 @@ namespace MalbersAnimations
         public int index;
         public Motion clip;
     }
-     
+
     public class MalbersAnimatorTools : EditorWindow
     {
         private AnimatorState[] m_AnimatorStates;
@@ -28,7 +26,7 @@ namespace MalbersAnimations
 
         public AnimatorController controller;
         public MAnimal Animal;
-         
+
         public StateID State;
         public StateID LastState;
         public ModeID Mode;
@@ -181,6 +179,7 @@ namespace MalbersAnimations
             foreach (var o in gameobjects)
             {
                 var AA = o.GetComponent<Animator>();
+                if (AA == null) return;
                 p_Animal.objectReferenceValue = o.GetComponent<MAnimal>();
 
                 if (p_Animal.objectReferenceValue != null)
@@ -200,7 +199,7 @@ namespace MalbersAnimations
             }
 
 
-            string Path ;
+            string Path;
 
             //Find the Animator Controller  via AssetPath
             if (m_StateMachines.Length > 0)
@@ -214,7 +213,7 @@ namespace MalbersAnimations
                 return;
             }
 
-                var CC = (AnimatorController)AssetDatabase.LoadAssetAtPath(Path, typeof(AnimatorController));
+            var CC = (AnimatorController)AssetDatabase.LoadAssetAtPath(Path, typeof(AnimatorController));
             if (p_Controller.objectReferenceValue != CC)
             {
 
@@ -232,7 +231,7 @@ namespace MalbersAnimations
 
         private void OnGUI()
         {
-          //  serializedObject.Update();
+            //  serializedObject.Update();
 
             MalbersEditor.DrawDescription("This tools helps create the correct transitions for any Animal Controller");
 
@@ -242,7 +241,7 @@ namespace MalbersAnimations
 
             using (new EditorGUI.DisabledGroupScope(true))
             {
-                EditorGUILayout.LabelField("SELECTED: "+
+                EditorGUILayout.LabelField("SELECTED: " +
                 $" Anim States[{m_AnimatorStates.Length}]. " +
                 $" States Machine [{m_StateMachines.Length}]. " +
                 $" Transitions [{m_Transitions.Length}]", EditorStyles.boldLabel);
@@ -265,9 +264,9 @@ namespace MalbersAnimations
                 }
             }
 
-                Editor_Tabs1 = GUILayout.Toolbar(Editor_Tabs1, gs, GUILayout.Height(22));
+            Editor_Tabs1 = GUILayout.Toolbar(Editor_Tabs1, gs, GUILayout.Height(22));
 
-           // Debug.Log("controller = " + controller);
+            // Debug.Log("controller = " + controller);
             if (controller == null) return;
 
 
@@ -354,7 +353,7 @@ namespace MalbersAnimations
                 updateB.tooltip = "Update Value";
             }
         }
-         
+
 
         private void DoStates()
         {
@@ -421,7 +420,7 @@ namespace MalbersAnimations
                                 foreach (var ASM in m_StateMachines)
                                 {
                                     if (isLayerRoot(ASM)) continue; //Do not do the Root Layer
-                                 
+
                                     var Parent = FindAnyState(ASM);
                                     var Any_ToState = Parent.AddAnyStateTransition(ASM); //Add Any
                                     Create_AnyToState(Any_ToState);
@@ -478,11 +477,11 @@ namespace MalbersAnimations
 
             Any_ToState.AddCondition(AnimatorConditionMode.If, 0, "ModeOn");
 
-            Any_ToState.AddCondition(AnimatorConditionMode.Greater, Mode.ID*1000, "Mode");
+            Any_ToState.AddCondition(AnimatorConditionMode.Greater, Mode.ID * 1000, "Mode");
             Any_ToState.AddCondition(AnimatorConditionMode.Less, Mode.ID * 1000 + 1000, "Mode");
 
 
-            EditorUtility.SetDirty(Any_ToState); 
+            EditorUtility.SetDirty(Any_ToState);
             p_Controller.serializedObject.ApplyModifiedProperties();
             p_Controller.serializedObject.Update();
 
@@ -512,7 +511,7 @@ namespace MalbersAnimations
             p_Controller.serializedObject.ApplyModifiedProperties();
             p_Controller.serializedObject.Update();
 
-           // EditorGUIUtility.PingObject(controller); //Final way of changing the name of the asset... dirty but it works
+            // EditorGUIUtility.PingObject(controller); //Final way of changing the name of the asset... dirty but it works
         }
 
         private void DoModes()
@@ -529,7 +528,7 @@ namespace MalbersAnimations
                     EditorGUILayout.LabelField($"   Actions", EditorStyles.boldLabel);
                     if (GUILayout.Button("Check Mode [Action] Abilities",/* GUILayout.Height(22),*/ GUILayout.Width(180)))
                     {
-                       var Modal = ShowIDWindow.ShowWindow();
+                        var Modal = ShowIDWindow.ShowWindow();
                         Modal.Editor_Tabs1 = 3; //Show Actions
                         GUIUtility.ExitGUI();
                     }
@@ -687,7 +686,7 @@ namespace MalbersAnimations
                                 threshold = (Mode.ID * 1000 + ModeAbilitiesIndex[i])
                             };
 
-                            ExitTransition(AS, "Interrupted [N]", false, 0.8f, 0.2f, 0, 
+                            ExitTransition(AS, "Interrupted [N]", false, 0.8f, 0.2f, 0,
                                 TransitionInterruptionSource.None, new AnimatorCondition[] { InterruptCondition });
                         }
                         EditorUtility.SetDirty(controller);
@@ -699,7 +698,7 @@ namespace MalbersAnimations
                 }
 
                 using (new GUILayout.VerticalScope(EditorStyles.helpBox))
-                { 
+                {
                     using (var X = new GUILayout.ScrollViewScope(Scroll))
                     {
                         Scroll = X.scrollPosition;
@@ -723,7 +722,7 @@ namespace MalbersAnimations
                                 ModeAbilitiesIndex[i] = EditorGUILayout.IntField(ModeAbilitiesIndex[i], GUILayout.Width(50));
                             }
                         }
-                    } 
+                    }
                 }
             }
         }
@@ -763,13 +762,18 @@ namespace MalbersAnimations
         private void AddModesAnimalComponent()
         {
             //Add on the Animal the mode and the new abilities
-            Mode animalMode = Animal.Mode_Get(this.Mode);
+            Mode animalMode = Animal.modes.Find(x => x.ID == Mode);
 
             if (animalMode == null)
             {
                 animalMode = new Mode()
-                { ID = this.Mode, AllowRotation = true, AllowMovement = true, 
-                    DefaultIndex = new Scriptables.IntReference(), AbilityIndex = 0};
+                {
+                    ID = this.Mode,
+                    AllowRotation = true,
+                    AllowMovement = true,
+                    DefaultIndex = new Scriptables.IntReference(),
+                    AbilityIndex = 0
+                };
 
                 Animal.modes.Add(animalMode);
             }
@@ -802,7 +806,7 @@ namespace MalbersAnimations
         }
 
         private void DoModeStateTransition()
-        { 
+        {
             for (int i = 0; i < m_AnimatorStates.Length; i++)
             {
                 var AS = m_AnimatorStates[i];
@@ -846,7 +850,7 @@ namespace MalbersAnimations
                             var Parent = FindParentSM(St);
                             var T = Parent.AddEntryTransition(St);
 
-                           if (State != null) St.tag = State.name;
+                            if (State != null) St.tag = State.name;
 
 
                             T.AddCondition(AnimatorConditionMode.Equals, Stance.ID, "Stance");
@@ -934,7 +938,7 @@ namespace MalbersAnimations
         }
 
         private void DoTransitions()
-        { 
+        {
             using (new GUILayout.VerticalScope(EditorStyles.helpBox))
             {
                 EditorGUILayout.LabelField($"   Actions", EditorStyles.boldLabel);
@@ -959,8 +963,6 @@ namespace MalbersAnimations
                         EditorGUILayout.LabelField($"*New [Default] Exit Transition", EditorStyles.boldLabel);
                     }
                     #endregion
-
-
                 }
 
                 if (HAS_AS || HAS_ASM)
@@ -981,7 +983,7 @@ namespace MalbersAnimations
                             }
                         }
                         EditorGUILayout.LabelField($"*New Loop Transition [Mode-Ability]" +
-                            $"[{m_AnimatorStates.Length+ m_StateMachines.Length}]", EditorStyles.boldLabel);
+                            $"[{m_AnimatorStates.Length + m_StateMachines.Length}]", EditorStyles.boldLabel);
                     }
                     #endregion
                 }
@@ -1210,7 +1212,7 @@ namespace MalbersAnimations
             //loopTransition.interruptionSource = TransitionInterruptionSource.Destination;
         }
 
-         
+
         public void AddTransitionCondition(AnimatorTransitionBase transition, AnimatorControllerParameter param, AnimatorConditionMode condition, float value)
         {
             if (transition == null) return;
@@ -1238,7 +1240,7 @@ namespace MalbersAnimations
                 threshold = -2    //CAMBIAR A EXIT MODE
             };
 
-            ExitTransition(AS, "Interrupted", false, 0.8f, 0.2f, 0, TransitionInterruptionSource.None,  new AnimatorCondition[1] { InterruptCondition });
+            ExitTransition(AS, "Interrupted", false, 0.8f, 0.2f, 0, TransitionInterruptionSource.None, new AnimatorCondition[1] { InterruptCondition });
         }
 
 
@@ -1272,7 +1274,7 @@ namespace MalbersAnimations
 
             return transition;
         }
- 
+
 
 
         private void AnyState()
@@ -1466,5 +1468,6 @@ namespace MalbersAnimations
 
             return lBlendTree;
         }
-    } 
+    }
 }
+#endif

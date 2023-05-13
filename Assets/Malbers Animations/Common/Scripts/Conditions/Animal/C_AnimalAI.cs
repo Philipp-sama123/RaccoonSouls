@@ -6,6 +6,7 @@ using UnityEngine;
 namespace MalbersAnimations.Conditions
 {
     [System.Serializable]
+    [AddComponentMenu("Malbers/Animal Controller/Conditions/Animal AI")]
     public class C_AnimalAI : MCondition
     {
         public override string DisplayName => "Animal/Animal AI";

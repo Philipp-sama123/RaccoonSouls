@@ -2,8 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
-using MalbersAnimations.Controller.Reactions;
-using System;
+using MalbersAnimations.Reactions; 
 
 #if UNITY_EDITOR
 using UnityEditor;
@@ -21,8 +20,10 @@ namespace MalbersAnimations.Controller.AI
         [Tooltip("OffMesh End Link Transform")]
         public Transform End;
 
-        public MReaction StartReaction;
-        public MReaction EndReaction;
+        [SerializeReference, SubclassSelector]
+        public Reaction StartReaction;
+        [SerializeReference, SubclassSelector]
+        public Reaction EndReaction;
         public Color DebugColor = Color.yellow;
 
        
@@ -119,8 +120,8 @@ namespace MalbersAnimations.Controller.AI
 
             while (RemainingDistance >= StoppingDistance  && ai.InOffMeshLink)
             {
-                MTools.DrawWireSphere(EndLink.position, DebugColor, StoppingDistance);
-                MTools.DrawWireSphere(EndLink.position, Color.cyan, SlowingDistance);
+                MDebug.DrawWireSphere(EndLink.position, DebugColor, StoppingDistance);
+                MDebug.DrawWireSphere(EndLink.position, Color.cyan, SlowingDistance);
 
                 if (!UseInputAxis) //If its using Direction vector to move
                 {
@@ -278,10 +279,10 @@ namespace MalbersAnimations.Controller.AI
 
 
                 MalbersEditor.DrawSplitter();
-                MTools.DrawScriptableObject(StartReaction, true, false);
+                EditorGUILayout.PropertyField(StartReaction);
                 //EditorGUILayout.Space();
                 MalbersEditor.DrawSplitter();
-                MTools.DrawScriptableObject(EndReaction, true, false);
+                EditorGUILayout.PropertyField(EndReaction);
                 serializedObject.ApplyModifiedProperties();
             }
 

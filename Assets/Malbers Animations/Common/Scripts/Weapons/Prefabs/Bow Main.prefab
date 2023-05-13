@@ -27,6 +27,7 @@ Transform:
   m_LocalRotation: {x: 0.6408488, y: 0.1393462, z: 0.1604005, w: 0.7376769}
   m_LocalPosition: {x: -0.0000072661737, y: 0.33197632, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 4000013949368488}
   m_RootOrder: 0
@@ -75,6 +76,7 @@ Transform:
   m_LocalRotation: {x: 0, y: 0, z: -0.09118084, w: 0.99583435}
   m_LocalPosition: {x: -0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 4000011573997520}
   m_Father: {fileID: 4000013949368488}
@@ -107,6 +109,7 @@ Transform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: -0.069, y: 0.034, z: 0.008}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 4000014175924486}
   m_RootOrder: 1
@@ -156,6 +159,7 @@ Transform:
   m_LocalRotation: {x: -0.7071068, y: 0, z: 0, w: 0.7071068}
   m_LocalPosition: {x: -0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 4000011976118994}
   m_RootOrder: 0
@@ -171,6 +175,7 @@ SkinnedMeshRenderer:
   m_CastShadows: 1
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1
+  m_StaticShadowCaster: 0
   m_MotionVectors: 0
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
@@ -243,6 +248,7 @@ Transform:
   m_LocalRotation: {x: -0.7071068, y: 0.000000061817246, z: 0.000000061817246, w: 0.7071068}
   m_LocalPosition: {x: -0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 4000011658240002}
   - {fileID: 4000011405597588}
@@ -276,6 +282,7 @@ Transform:
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 0.6780219, y: 0.6780219, z: 0.6780219}
+  m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 4000013642118984}
   - {fileID: 4000013949368488}
@@ -308,6 +315,7 @@ Transform:
   m_LocalRotation: {x: 0, y: 0, z: 0.9958344, w: -0.0911806}
   m_LocalPosition: {x: -0, y: 0, z: 0}
   m_LocalScale: {x: 1.0000001, y: 1.0000001, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 4000013673309850}
   m_Father: {fileID: 4000013949368488}
@@ -339,6 +347,7 @@ Transform:
   m_LocalRotation: {x: 0, y: 0, z: 0.1570218, w: 0.98759514}
   m_LocalPosition: {x: -0.46304628, y: 0.000000009536743, z: 0}
   m_LocalScale: {x: 1.0000001, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 4000011405597588}
   m_RootOrder: 0
@@ -374,6 +383,7 @@ Transform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 4000011976118994}
   - {fileID: 4000012813729316}
@@ -411,15 +421,17 @@ MonoBehaviour:
     ConstantValue: {fileID: 0}
     Variable: {fileID: 0}
   DestroyHitEffect: 0
-  interactorID:
-    UseConstant: 1
-    ConstantValue: 0
-    Variable: {fileID: 0}
   dontHitOwner:
     UseConstant: 1
     ConstantValue: 1
     Variable: {fileID: 0}
-  CustomReaction: {fileID: 0}
+  CustomReaction:
+    rid: -2
+  element: {fileID: 0}
+  interactorID:
+    UseConstant: 1
+    ConstantValue: 0
+    Variable: {fileID: 0}
   interact:
     UseConstant: 1
     ConstantValue: 1
@@ -435,9 +447,13 @@ MonoBehaviour:
   statModifier:
     ID: {fileID: 11400000, guid: d6b3e636d59a6c547a2cad40b69f4432, type: 2}
     modify: 3
-    Value:
+    MinValue:
       UseConstant: 1
       ConstantValue: 0
+      Variable: {fileID: 0}
+    MaxValue:
+      UseConstant: 1
+      ConstantValue: 10
       Variable: {fileID: 0}
   m_cChance:
     UseConstant: 1
@@ -451,6 +467,10 @@ MonoBehaviour:
     UseConstant: 1
     ConstantValue: 100
     Variable: {fileID: 0}
+  minForce:
+    UseConstant: 1
+    ConstantValue: 50
+    Variable: {fileID: 0}
   forceMode: 0
   OnHit:
     m_PersistentCalls:
@@ -459,6 +479,9 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   OnHitInteractable:
+    m_PersistentCalls:
+      m_Calls: []
+  OnProfileChanged:
     m_PersistentCalls:
       m_Calls: []
   animator: {fileID: 0}
@@ -470,23 +493,66 @@ MonoBehaviour:
     UseConstant: 1
     ConstantValue: 0.2
     Variable: {fileID: 0}
+  Profiles: []
+  DefaultProfile:
+    Name: 
+    modify: 0
+    interact:
+      UseConstant: 1
+      ConstantValue: 0
+      Variable: {fileID: 0}
+    interactorID:
+      UseConstant: 1
+      ConstantValue: 0
+      Variable: {fileID: 0}
+    react:
+      UseConstant: 1
+      ConstantValue: 0
+      Variable: {fileID: 0}
+    pureDamage:
+      UseConstant: 1
+      ConstantValue: 0
+      Variable: {fileID: 0}
+    statModifier:
+      ID: {fileID: 0}
+      modify: 0
+      MinValue:
+        UseConstant: 1
+        ConstantValue: 0
+        Variable: {fileID: 0}
+      MaxValue:
+        UseConstant: 1
+        ConstantValue: 10
+        Variable: {fileID: 0}
+    m_cChance:
+      UseConstant: 1
+      ConstantValue: 0
+      Variable: {fileID: 0}
+    cMultiplier:
+      UseConstant: 1
+      ConstantValue: 0
+      Variable: {fileID: 0}
+    maxForce:
+      UseConstant: 1
+      ConstantValue: 0
+      Variable: {fileID: 0}
+    minForce:
+      UseConstant: 1
+      ConstantValue: 0
+      Variable: {fileID: 0}
+    forceMode: 0
+    m_HitEffect:
+      UseConstant: 1
+      ConstantValue: {fileID: 0}
+      Variable: {fileID: 0}
+    CustomReaction:
+      rid: -2
+    element: {fileID: 0}
   debug: 0
   m_UI: {fileID: 0}
   description:
     UseConstant: 1
     ConstantValue: 
-    Variable: {fileID: 0}
-  minForce:
-    UseConstant: 1
-    ConstantValue: 50
-    Variable: {fileID: 0}
-  minDamage:
-    UseConstant: 1
-    ConstantValue: 15
-    Variable: {fileID: 0}
-  maxDamage:
-    UseConstant: 1
-    ConstantValue: 25
     Variable: {fileID: 0}
   chargeTime:
     UseConstant: 1
@@ -684,8 +750,8 @@ MonoBehaviour:
   OnReleaseFreeHand:
     m_PersistentCalls:
       m_Calls: []
-  Editor_Tabs1: 4
-  Editor_Tabs2: 3
+  Editor_Tabs1: 0
+  Editor_Tabs2: 4
   releaseProjectile: 2
   CancelAim: 1
   m_Projectile:
@@ -781,6 +847,11 @@ MonoBehaviour:
   proceduralfoldout: 0
   LowerIndex: 4
   UpperIndex: 5
+  references:
+    version: 2
+    RefIds:
+    - rid: -2
+      type: {class: , ns: , asm: }
 --- !u!82 &82862750148924414
 AudioSource:
   m_ObjectHideFlags: 0
@@ -908,6 +979,7 @@ LineRenderer:
   m_CastShadows: 1
   m_ReceiveShadows: 0
   m_DynamicOccludee: 1
+  m_StaticShadowCaster: 0
   m_MotionVectors: 0
   m_LightProbeUsage: 0
   m_ReflectionProbeUsage: 0
@@ -1081,6 +1153,7 @@ Transform:
   m_LocalRotation: {x: 0, y: 0, z: -0.1570218, w: 0.98759514}
   m_LocalPosition: {x: -0.46304628, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 4000012807669888}
   m_RootOrder: 0
@@ -1111,6 +1184,7 @@ Transform:
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1411844009029667719}
   m_Father: {fileID: 4000014175924486}
@@ -1144,6 +1218,7 @@ Transform:
   m_LocalRotation: {x: -0.7071068, y: 0, z: 0, w: 0.7071068}
   m_LocalPosition: {x: 0, y: 0.01, z: 0}
   m_LocalScale: {x: 0.4, y: 0.4, z: 0.4}
+  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 5641015424859407243}
   m_RootOrder: 0
@@ -1167,6 +1242,7 @@ MeshRenderer:
   m_CastShadows: 0
   m_ReceiveShadows: 1
   m_DynamicOccludee: 0
+  m_StaticShadowCaster: 0
   m_MotionVectors: 2
   m_LightProbeUsage: 0
   m_ReflectionProbeUsage: 1

@@ -1,7 +1,4 @@
 ﻿using MalbersAnimations.Controller;
-using MalbersAnimations.Scriptables;
-using MalbersAnimations.Utilities;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 #if UNITY_EDITOR
@@ -34,7 +31,7 @@ namespace MalbersAnimations
         {
             Collider[] colliders = Physics.OverlapSphere(transform.position, radius, Layer, triggerInteraction);             //Ignore Colliders
 
-            List<GameObject> Real_Roots = new List<GameObject>();
+            List<GameObject> Real_Roots = new();
 
 
             foreach (var other in colliders)
@@ -43,10 +40,8 @@ namespace MalbersAnimations
 
                 var rb = other.attachedRigidbody;
 
-               
+                GameObject realRoot = other.transform.FindObjectCore().gameObject;       //Get the gameObject on the entering collider
 
-                GameObject realRoot = other.transform.root.gameObject;         //Get the gameObject on the entering collider
-                
                 //Means the Root is not on the real root since its not on the search layer
                 if (realRoot.layer != other.gameObject.layer)
                     realRoot = MTools.FindRealParentByLayer(other.transform);
@@ -65,7 +60,7 @@ namespace MalbersAnimations
                     }
 
 
-                    Debugging("Apply Explosion",other);
+                    Debugging("Apply Explosion", other);
 
                     Real_Roots.Add(realRoot); //Affect Only One 
 
@@ -85,8 +80,14 @@ namespace MalbersAnimations
                     }
                 }
             }
-           // Debug.Log("-----------------------");
+            // Debug.Log("-----------------------");
             Destroy(gameObject, life);
+        }
+
+        private void OnDisable()
+        {
+            StopAllCoroutines();
+
         }
 
         private void OnDrawGizmosSelected()
@@ -94,7 +95,7 @@ namespace MalbersAnimations
             Gizmos.color = (Color.red);
             Gizmos.DrawWireSphere(transform.position, radius);
         }
-   }
+    }
 
 #if UNITY_EDITOR
     [CustomEditor(typeof(MExplosion))]
@@ -115,14 +116,14 @@ namespace MalbersAnimations
 
             radius = serializedObject.FindProperty("radius");
             life = serializedObject.FindProperty("life");
-        } 
+        }
 
         public override void OnInspectorGUI()
         {
             serializedObject.Update();
 
             DrawDescription("Explosion Damager. Damage is reduced if the target is far from the center of the explosion");
-             
+
             Editor_Tabs1.intValue = GUILayout.Toolbar(Editor_Tabs1.intValue, Tabs1);
 
             int Selection = Editor_Tabs1.intValue;
@@ -131,8 +132,8 @@ namespace MalbersAnimations
             else if (Selection == 1) DrawDamage();
             else if (Selection == 2) DrawExtras();
             else if (Selection == 3) DrawEvents();
-             
-           
+
+
 
             serializedObject.ApplyModifiedProperties();
         }

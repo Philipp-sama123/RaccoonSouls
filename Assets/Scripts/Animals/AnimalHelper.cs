@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using MalbersAnimations.Events;
 using UnityEngine;
 using UnityEngine.AI;
@@ -17,8 +18,7 @@ namespace Animals
         [SerializeField] private GameObject[] visibleGameObjects;
         [SerializeField] private GameObject successParticleSystem;
         [SerializeField] private GameObject deathParticleSystem;
-
-
+        
         private NavMeshAgent _navMeshAgent;
 
         private void Awake()
@@ -46,25 +46,30 @@ namespace Animals
 
         public void DestroyEnemyAnimal()
         {
-            StartCoroutine(DestroyInstantiateAfterSeconds());
+            StartCoroutine(DestroyAfterSeconds());
         }
 
-        private IEnumerator DestroyInstantiateAfterSeconds()
+        private IEnumerator DestroyAfterSeconds()
         {
-            if (deathParticleSystem != null)// ToDo: Improve Null Checks, Maybe go sure its assigned/defined on awake
+            if (deathParticleSystem != null) // ToDo: Improve Null Checks, Maybe go sure its assigned/defined on awake
             {
                 deathParticleSystem.SetActive(true);
+            }
+
+            foreach (var visibleGameObject in visibleGameObjects)
+            {
+                visibleGameObject.SetActive(false);
             }
 
             yield return new WaitForSeconds(delayTime);
 
 
-            if (enemyDeathEvent != null)// ToDo: Improve Null Checks, Maybe go sure its assigned/defined on awake
+            if (enemyDeathEvent != null) // ToDo: Improve Null Checks, Maybe go sure its assigned/defined on awake
             {
                 enemyDeathEvent.Invoke();
             }
 
-            if (deathObject != null)// ToDo: Improve Null Checks, Maybe go sure its assigned/defined on awake
+            if (deathObject != null) // ToDo: Improve Null Checks, Maybe go sure its assigned/defined on awake
             {
                 Vector3 instantiationPosition = transform.position;
                 Instantiate(deathObject, instantiationPosition, Quaternion.identity);
@@ -85,7 +90,7 @@ namespace Animals
                 visibleGameObject.SetActive(false);
             }
 
-            if (successParticleSystem != null)// ToDo: Improve Null Checks, Maybe go sure its assigned/defined on awake
+            if (successParticleSystem != null) // ToDo: Improve Null Checks, Maybe go sure its assigned/defined on awake
             {
                 successParticleSystem.SetActive(true);
             }
@@ -95,24 +100,25 @@ namespace Animals
 
             if (reachedGoal)
             {
-                if (successObject != null)// ToDo: Improve Null Checks, Maybe go sure its assigned/defined on awake
+                if (successObject != null) // ToDo: Improve Null Checks, Maybe go sure its assigned/defined on awake
                 {
                     Vector3 instantiationPosition = transform.position;
                     Instantiate(successObject, instantiationPosition, Quaternion.identity);
                 }
 
-                if (deerReachedGoalEvent != null) // ToDo: Improve Null Checks, Maybe go sure its assigned/defined on awake
-                    deerReachedGoalEvent.Invoke();// ToDo: Malbers Event Raiser
+                if (deerReachedGoalEvent !=
+                    null) // ToDo: Improve Null Checks, Maybe go sure its assigned/defined on awake
+                    deerReachedGoalEvent.Invoke(); // ToDo: Malbers Event Raiser
             }
             else
             {
-                if (deathObject != null)// ToDo: Improve Null Checks, Maybe go sure its assigned/defined on awake
+                if (deathObject != null) // ToDo: Improve Null Checks, Maybe go sure its assigned/defined on awake
                 {
                     Vector3 instantiationPosition = transform.position;
                     Instantiate(deathObject, instantiationPosition, Quaternion.identity);
                 }
 
-                if (preyDied != null)// ToDo: Improve Null Checks, Maybe go sure its assigned/defined on awake
+                if (preyDied != null) // ToDo: Improve Null Checks, Maybe go sure its assigned/defined on awake
                 {
                     preyDied.Invoke(); // ToDo: Malbers Event Raiser
                 }

@@ -1,5 +1,4 @@
 ﻿using UnityEngine;
-using System.Collections;
 using MalbersAnimations.Scriptables;
 
 #if UNITY_EDITOR
@@ -10,7 +9,7 @@ using UnityEditor;
 
 namespace MalbersAnimations.Utilities
 {
-    [AddComponentMenu("Malbers/Events/Messages")] 
+    [AddComponentMenu("Malbers/Events/Messages")]
     public class Messages : MonoBehaviour
     {
         public MesssageItem[] messages;                                     //Store messages to send it when Enter the animation State
@@ -20,7 +19,7 @@ namespace MalbersAnimations.Utilities
 
         public bool nextFrame = false;
         public Component Pinned;
-         
+
         /// <summary>  Send all the messages to a gameobject </summary>
         public virtual void SendMessage(GameObject component) => SendMessage(component.transform);
 
@@ -45,20 +44,31 @@ namespace MalbersAnimations.Utilities
         {
             Pinned = go;
 
+            var realRoot = go;
+
+            //Find the Right Root if the objets is a Malbers Core Object
+            var coreRoot = go.FindInterface<IObjectCore>();
+
+            if (coreRoot != null)
+            {
+                Pinned = coreRoot.transform;
+            }
+
+
             foreach (var m in messages)
             {
                 if (nextFrame)
                     this.Delay_Action(() => Deliver(m, Pinned));
                 else
-                    Deliver(m, Pinned); 
+                    Deliver(m, Pinned);
             }
-        } 
- 
+        }
+
 
         private void Deliver(MesssageItem m, Component go)
         {
             if (UseSendMessage)
-               m.DeliverMessage(go, SendToChildren, debug);
+                m.DeliverMessage(go, SendToChildren, debug);
             else
             {
                 IAnimatorListener[] listeners;
@@ -66,44 +76,44 @@ namespace MalbersAnimations.Utilities
                 if (SendToChildren)
                     listeners = go.GetComponentsInChildren<IAnimatorListener>();
                 else
-                    listeners = go.GetComponents<IAnimatorListener>();
+                    listeners = go.GetComponentsInParent<IAnimatorListener>();
 
                 if (listeners != null && listeners.Length > 0)
                 {
                     foreach (var animListeners in listeners)
-                        m.DeliverAnimListener(animListeners,debug);
+                        m.DeliverAnimListener(animListeners, debug);
                 }
             }
         }
 
 
 
-//#if UNITY_EDITOR
-//        private void OnDrawGizmosSelected()
-//        {
-//            DrawInteration(true);
-//        }
+        //#if UNITY_EDITOR
+        //        private void OnDrawGizmosSelected()
+        //        {
+        //            DrawInteration(true);
+        //        }
 
 
-//        private void OnDrawGizmos()
-//        {
-//            DrawInteration(false);
-//        }
+        //        private void OnDrawGizmos()
+        //        {
+        //            DrawInteration(false);
+        //        }
 
-//        private void DrawInteration(bool Selected)
-//        {
-//            foreach (var msg in messages)
-//            {
-//                Transform t = null;
+        //        private void DrawInteration(bool Selected)
+        //        {
+        //            foreach (var msg in messages)
+        //            {
+        //                Transform t = null;
 
-//                if (msg.typeM == TypeMessage.Transform && !msg.transformValue.gameObject.IsPrefab()) t = msg.transformValue;
-//                else if (msg.typeM == TypeMessage.Component && !msg.ComponentValue.gameObject.IsPrefab()) t = msg.ComponentValue.transform;
-//                else if (msg.typeM == TypeMessage.GameObject && !msg.GoValue.IsPrefab()) t = msg.GoValue.transform;
+        //                if (msg.typeM == TypeMessage.Transform && !msg.transformValue.gameObject.IsPrefab()) t = msg.transformValue;
+        //                else if (msg.typeM == TypeMessage.Component && !msg.ComponentValue.gameObject.IsPrefab()) t = msg.ComponentValue.transform;
+        //                else if (msg.typeM == TypeMessage.GameObject && !msg.GoValue.IsPrefab()) t = msg.GoValue.transform;
 
-//                if (t) MalbersEditor.DrawInteraction(transform.position, t.position, Selected, Color.white);
-//            }
-//        }
-//#endif
+        //                if (t) MalbersEditor.DrawInteraction(transform.position, t.position, Selected, Color.white);
+        //            }
+        //        }
+        //#endif
     }
 
     [System.Serializable]
@@ -180,7 +190,8 @@ namespace MalbersAnimations.Utilities
                     break;
             }
 
-            if (debug && succesful) Debug.Log($"<b>Anim Message: [<color=yellow>{message}->{val}</color>]</b> T:{Time.time:F2}");  //Debug
+            //Debug
+            if (debug && succesful) Debug.Log($"<b>Anim Message: [<color=yellow>{message}->{val}</color>]</b> T:{Time.time:F2}", listener.transform);
         }
 
 
@@ -241,8 +252,8 @@ namespace MalbersAnimations.Utilities
                 anim.BroadcastMessage(message, SendMessageOptions.DontRequireReceiver);
             else
                 anim.SendMessage(message, SendMessageOptions.DontRequireReceiver);
-        } 
- 
+        }
+
 
     }
 
@@ -269,7 +280,6 @@ namespace MalbersAnimations.Utilities
 
             var rect = new Rect(position);
 
-            rect.y += 2;
 
             Rect R_0 = new Rect(rect.x, rect.y, 15, EditorGUIUtility.singleLineHeight);
             EditorGUI.PropertyField(R_0, Active, GUIContent.none);
@@ -337,7 +347,7 @@ namespace MalbersAnimations.Utilities
     {
         private ReorderableList list;
 
-       // private Messages MMessage;
+        // private Messages MMessage;
         private SerializedProperty sp_messages, debug, nextFrame, SendToChildren, UseSendMessage;
 
         private void OnEnable()
@@ -351,8 +361,8 @@ namespace MalbersAnimations.Utilities
             list = new ReorderableList(serializedObject, sp_messages, true, true, true, true)
             {
                 drawHeaderCallback = HeaderCallbackDelegate1,
-               
-                drawElementCallback = ( rect,  index,  isActive,  isFocused) => 
+
+                drawElementCallback = (rect, index, isActive, isFocused) =>
                 {
                     EditorGUI.PropertyField(rect, sp_messages.GetArrayElementAtIndex(index), GUIContent.none);
                 }
@@ -366,7 +376,7 @@ namespace MalbersAnimations.Utilities
             MalbersEditor.DrawDescription("Send messages to scripts with the [IAnimatorListener] interface. " +
                 "Enable [SendMessage] to use Component.SendMessage() instead.");
 
-           // EditorGUILayout.BeginVertical(MTools.StyleGray);
+            // EditorGUILayout.BeginVertical(MTools.StyleGray);
             {
                 list.DoLayoutList();
 
@@ -377,7 +387,7 @@ namespace MalbersAnimations.Utilities
 
                 SendToChildren.boolValue = GUILayout.Toggle(SendToChildren.boolValue,
                     new GUIContent("Children", "The Messages will be sent also to the gameobject children"), EditorStyles.miniButton);
-                 
+
                 GUI.color = UseSendMessage.boolValue ? (Color.green) : currentGUIColor;
                 UseSendMessage.boolValue = GUILayout.Toggle(UseSendMessage.boolValue,
                     new GUIContent("SendMessage()", "Uses the SendMessage() method, instead of checking for IAnimator Listener Interfaces"), EditorStyles.miniButton);
@@ -395,7 +405,7 @@ namespace MalbersAnimations.Utilities
 
                 EditorGUILayout.EndHorizontal();
             }
-        //    EditorGUILayout.EndVertical();
+            //    EditorGUILayout.EndVertical();
 
             serializedObject.ApplyModifiedProperties();
         }
@@ -413,7 +423,7 @@ namespace MalbersAnimations.Utilities
 
             Rect R_5 = new Rect(rect.x + 10 + width * 2 + 20, rect.y, width - 20, height);
             EditorGUI.LabelField(R_5, "Value");
-        } 
+        }
     }
 #endif
 }

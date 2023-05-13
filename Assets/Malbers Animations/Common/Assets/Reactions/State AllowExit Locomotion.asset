@@ -9,17 +9,20 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4b4f81d7422aa214cbffb3e3b1ba71c6, type: 3}
+  m_Script: {fileID: 11500000, guid: 78d0423c6f602bf4cbf13c9280b460a5, type: 3}
   m_Name: State AllowExit Locomotion
   m_EditorClassIdentifier: 
-  description: The Animal will enable [Allow Exit] on the active state, and it will
-    force the next state to be [Locomotion]
-  active: 1
-  delay: 0
-  fullName: "State \u2192 AllowExitToState [Locomotion]"
-  type: 6
-  ID: {fileID: 11400000, guid: 3787b6d94d5454740bf36d57436185b0, type: 2}
-  ExitStatus: 0
-  EnterStatus: 0
-  ShowExitStatus: 1
-  ShowEnterStatus: 0
+  reaction:
+    rid: 1087322728279048233
+  references:
+    version: 2
+    RefIds:
+    - rid: 1087322728279048233
+      type: {class: StateReaction, ns: MalbersAnimations.Reactions, asm: MalbersAnimations}
+      data:
+        Active: 1
+        type: 6
+        ID: {fileID: 11400000, guid: 3787b6d94d5454740bf36d57436185b0, type: 2}
+        EnterStatus: 0
+        ExitStatus: 0
+        replace: {fileID: 0}

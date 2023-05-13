@@ -9,19 +9,23 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b12ae562118d00441ae7f73c1bb7c6da, type: 3}
+  m_Script: {fileID: 11500000, guid: 78d0423c6f602bf4cbf13c9280b460a5, type: 3}
   m_Name: Item Drop
   m_EditorClassIdentifier: 
-  description: Activate a Mode on the Animal
-  active: 1
-  delay: 0
-  fullName: "Mode \u2192 Activate [PickUp]"
-  type: 0
-  ID: {fileID: 11400000, guid: c0d938e24e7fe1f4a8f00633ce81a5b1, type: 2}
-  action: {fileID: 0}
-  ModeAbility: 2
-  coolDown: 0
-  ShowAction: 0
-  ShowCooldown: 0
-  ShowStatus: 0
-  ShowAbilityIndex: 1
+  reaction:
+    rid: 1087322728279048223
+  references:
+    version: 2
+    RefIds:
+    - rid: 1087322728279048223
+      type: {class: ModeReaction, ns: MalbersAnimations.Reactions, asm: MalbersAnimations}
+      data:
+        Active: 1
+        type: 0
+        ID: {fileID: 11400000, guid: c0d938e24e7fe1f4a8f00633ce81a5b1, type: 2}
+        Ability: 2
+        HasCoolDown: 1
+        coolDown: 0
+        abilityStatus: 0
+        AbilityTime: 3
+        ModePower: 0

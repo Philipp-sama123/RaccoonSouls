@@ -94,9 +94,10 @@ namespace MalbersAnimations.Utilities
             get => active;
             set
             {
-                active.Value = value;        //enable disable also the Aimer
-              
-                if (aimer != null) aimer.Active = value;
+                active.Value = value;
+
+                //enable disable also the Aimer
+                // if (aimer != null) aimer.Active = value;
             }
         }
 
@@ -116,10 +117,22 @@ namespace MalbersAnimations.Utilities
 
             aimer.IgnoreTransform = transform;
             ActiveByAnimation = true;
+
+            foreach (var item in Bones)
+            {
+                if (item.bone == null)
+                {
+                    Debug.LogError($"LookAt in [{name}] has missing/empty bones. Please fill the reference. Disabling [LookAt]", this);
+                    enabled = false;
+                    break;
+                }
+            }
         }
 
         void Start()
         {
+            
+
             if (Bones != null && Bones.Length > 0) 
                 EndBone = Bones[Bones.Length - 1].bone;
 

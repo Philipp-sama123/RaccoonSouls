@@ -9,16 +9,20 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4b4f81d7422aa214cbffb3e3b1ba71c6, type: 3}
+  m_Script: {fileID: 11500000, guid: 78d0423c6f602bf4cbf13c9280b460a5, type: 3}
   m_Name: Climb Activate
   m_EditorClassIdentifier: 
-  description: Tries to activate a state, checking all the activation conditions
-  active: 1
-  delay: 0
-  fullName: "State \u2192 Activate [Climb]"
-  type: 0
-  ID: {fileID: 11400000, guid: 975403cc10f8cec46a3caa6ed4e3d6c5, type: 2}
-  ExitStatus: 0
-  EnterStatus: 0
-  ShowExitStatus: 0
-  ShowEnterStatus: 1
+  reaction:
+    rid: 1087322728279048217
+  references:
+    version: 2
+    RefIds:
+    - rid: 1087322728279048217
+      type: {class: StateReaction, ns: MalbersAnimations.Reactions, asm: MalbersAnimations}
+      data:
+        Active: 1
+        type: 0
+        ID: {fileID: 11400000, guid: 975403cc10f8cec46a3caa6ed4e3d6c5, type: 2}
+        EnterStatus: 0
+        ExitStatus: 0
+        replace: {fileID: 0}

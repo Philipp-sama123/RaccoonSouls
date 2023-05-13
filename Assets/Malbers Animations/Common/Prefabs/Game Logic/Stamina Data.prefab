@@ -11,6 +11,8 @@ GameObject:
   - component: {fileID: 2547823808600036364}
   - component: {fileID: 1581013863828685392}
   - component: {fileID: 2853561667545558222}
+  - component: {fileID: -7805577076668591263}
+  - component: {fileID: 743166876854685742}
   m_Layer: 2
   m_Name: Stamina Data
   m_TagString: Untagged
@@ -28,6 +30,7 @@ Transform:
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: -0.019, y: 0.02, z: -0.121}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
@@ -57,6 +60,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 11400000, guid: 7cf722dd04e074d4eb5c291280cdd5aa, type: 2}
+        m_TargetAssemblyTypeName: 
         m_MethodName: Invoke
         m_Mode: 2
         m_Arguments:
@@ -87,6 +91,7 @@ MonoBehaviour:
     ConstantValue: 0
     Variable: {fileID: 0}
   Auto: 1
+  InvokeOnEnable: 1
   Description: 'Stamina Logics (True : Sprint is Enable)
 
     - Degenerate the Stamina
@@ -99,33 +104,12 @@ MonoBehaviour:
     UseConstant: 1
     ConstantValue: 0
     Variable: {fileID: 0}
+  invert: 0
   OnValueChanged:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
-        m_MethodName: Stat_Pin
-        m_Mode: 2
-        m_Arguments:
-          m_ObjectArgument: {fileID: 11400000, guid: 8f96533110b305a4792c37a844108d26,
-            type: 2}
-          m_ObjectArgumentAssemblyTypeName: MalbersAnimations.StatID, Assembly-CSharp
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-      - m_Target: {fileID: 0}
-        m_MethodName: Stat_Pin_Degenerate
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
       - m_Target: {fileID: 11400000, guid: e5d916c64bda38744b0188f0294c69ae, type: 2}
+        m_TargetAssemblyTypeName: 
         m_MethodName: Invoke
         m_Mode: 0
         m_Arguments:
@@ -140,6 +124,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 11400000, guid: 7cf722dd04e074d4eb5c291280cdd5aa, type: 2}
+        m_TargetAssemblyTypeName: 
         m_MethodName: Invoke
         m_Mode: 6
         m_Arguments:
@@ -150,6 +135,106 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 1
         m_CallState: 2
+      - m_Target: {fileID: -7805577076668591263}
+        m_TargetAssemblyTypeName: MalbersAnimations.Reactions.MReactions, MalbersAnimations
+        m_MethodName: React
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 1
+        m_CallState: 2
   OnFalse:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 743166876854685742}
+        m_TargetAssemblyTypeName: MalbersAnimations.Reactions.MReactions, MalbersAnimations
+        m_MethodName: React
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+--- !u!114 &-7805577076668591263
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 612905852502852731}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2fdecb89e10038244b87c2a5325e6423, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  FindTarget: 1
+  Target: {fileID: 0}
+  reaction:
+    rid: 5723820122946666501
+  references:
+    version: 2
+    RefIds:
+    - rid: 5723820122946666501
+      type: {class: StatReaction, ns: MalbersAnimations.Reactions, asm: MalbersAnimations}
+      data:
+        Active: 1
+        modifier:
+          ID: {fileID: 11400000, guid: 8f96533110b305a4792c37a844108d26, type: 2}
+          modify: 6
+          MinValue:
+            UseConstant: 1
+            ConstantValue: 5
+            Variable: {fileID: 0}
+          MaxValue:
+            UseConstant: 1
+            ConstantValue: 5
+            Variable: {fileID: 0}
+          enable:
+            UseConstant: 1
+            ConstantValue: 1
+            Variable: {fileID: 0}
+--- !u!114 &743166876854685742
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 612905852502852731}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2fdecb89e10038244b87c2a5325e6423, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  FindTarget: 1
+  Target: {fileID: 0}
+  reaction:
+    rid: 5723820122946666501
+  references:
+    version: 2
+    RefIds:
+    - rid: 5723820122946666501
+      type: {class: StatReaction, ns: MalbersAnimations.Reactions, asm: MalbersAnimations}
+      data:
+        Active: 1
+        modifier:
+          ID: {fileID: 11400000, guid: 8f96533110b305a4792c37a844108d26, type: 2}
+          modify: 7
+          MinValue:
+            UseConstant: 1
+            ConstantValue: 5
+            Variable: {fileID: 0}
+          MaxValue:
+            UseConstant: 1
+            ConstantValue: 5
+            Variable: {fileID: 0}
+          enable:
+            UseConstant: 1
+            ConstantValue: 1
+            Variable: {fileID: 0}

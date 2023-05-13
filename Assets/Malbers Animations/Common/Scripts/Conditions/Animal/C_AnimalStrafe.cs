@@ -23,14 +23,12 @@ namespace MalbersAnimations.Conditions
                 switch (Condition)
                 {
                     case StrafeCondition.Strafing: return Target.Strafe;
-                    case StrafeCondition.CanSrafe: return Target.CanStrafe && Target.ActiveState.CanStrafe;
+                    case StrafeCondition.CanSrafe: return Target.CanStrafe && Target.ActiveStance.CanStrafe && Target.ActiveState.CanStrafe;
                 }
             }
             return false;
         }
 
-
         private void Reset() => Name = "Can the Animal Strafe?";
-
     }
 }

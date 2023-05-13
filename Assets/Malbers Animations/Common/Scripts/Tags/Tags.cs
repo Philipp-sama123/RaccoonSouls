@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 
 #if UNITY_EDITOR
@@ -92,7 +91,7 @@ namespace MalbersAnimations
         }
 
 
-       
+
 
         /// <summary>Return all the Gameobjects that use a tag ID</summary>
         public bool HasTag(Tag tag) => HasTag(tag.ID);
@@ -188,7 +187,7 @@ namespace MalbersAnimations
         /// <summary> Returns if the Gameobject has a Malbers Tag</summary>
         public static bool HasMalbersTag(this GameObject t, Tag tag) => HasMalbersTag(t.transform, tag);
         public static bool HasMalbersTag(this Component t, Tag tag) => HasMalbersTag(t.transform, tag);
-       
+
         public static bool HasMalbersTag(this GameObject t, params Tag[] tags) => HasMalbersTag(t.transform, tags);
 
 
@@ -202,7 +201,7 @@ namespace MalbersAnimations
 #endif
             return tagC;
         }
-     
+
         /// <summary> Returns if the Transform has a malbers Tag in one of its parents</summary>
         public static bool HasMalbersTagInParent(this Transform t, Tag tag)
         {
@@ -221,13 +220,13 @@ namespace MalbersAnimations
         public static bool HasMalbersTagInParent(this GameObject t, Tag tag)
         {
             var tagC = GetTag(t);
-            return tagC != null ? tagC.HasTag(tag) : false;
+            return tagC != null && tagC.HasTag(tag);
         }
 
         public static bool HasMalbersTagInParent(this GameObject t, params Tag[] tags)
         {
             var tagC = GetTag(t);
-            return tagC != null ? tagC.HasTag(tags) : false;
+            return tagC != null && tagC.HasTag(tags);
         }
     }
 

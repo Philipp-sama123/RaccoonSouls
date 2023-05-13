@@ -1,18 +1,19 @@
 ﻿using MalbersAnimations.Scriptables;
+using MalbersAnimations.Controller;
 using System.Collections;
 using UnityEngine;
 
-namespace MalbersAnimations.Controller.Reactions
+namespace MalbersAnimations.Reactions
 {
     [System.Serializable]
-    [CreateAssetMenu(menuName = "Malbers Animations/Animal Reactions/Force Reaction"/*, order = 10*/)]
+    [AddTypeMenu("Malbers/Animal Controller/Animal Force")]
+
     public class ForceReaction : MReaction
     {
-        public enum DirectionType { Local, World}
-
+        public enum DirectionType { Local, World }
 
         [Tooltip("Relative Direction of the Force to apply")]
-        public Vector3 Direction =  Vector3.forward;
+        public Vector3Reference Direction =  new Vector3Reference( Vector3.forward);
         [Tooltip("Direction mode to be applied the force on the Animal. World, or Local")]
         public DirectionType Mode = DirectionType.Local;
 
@@ -27,15 +28,23 @@ namespace MalbersAnimations.Controller.Reactions
         [Tooltip("Set if the Animal is grounded when adding a force")]
         public BoolReference ResetGravity = new BoolReference(false);
 
-        protected override void _React(MAnimal animal)
+        
+        protected override bool _TryReact(Component component)
         {
-            if (animal.enabled && animal.gameObject.activeInHierarchy)  
+            var animal = component as MAnimal;
+
+            if (animal.enabled && animal.gameObject.activeInHierarchy)
+            {
                 animal.StartCoroutine(IForceC(animal));
+                
+                return true;
+            }
+           
+            return false;
         }
 
         IEnumerator IForceC(MAnimal animal)
         {
-
             var dir = animal.transform.InverseTransformDirection(Direction);
 
             if (Mode == DirectionType.World) dir = Direction;
@@ -46,36 +55,5 @@ namespace MalbersAnimations.Controller.Reactions
 
             animal.Force_Remove(ExitDrag);
         }
-
-
-        protected override bool _TryReact(MAnimal animal)
-        {
-            _React(animal);
-            return true;
-        }
- 
-      
-        private const string reactionName = "Force → ";
-
-
-        private void OnEnable() { Validation(); }
-        private void OnValidate() { Validation(); }
-
-        void Validation()
-        {
-            fullName = reactionName + "("+Mode.ToString()+")";
-            description = $"Adds Force to the Animal";
-
-            switch (Mode)
-            {
-                case DirectionType.Local:
-                    break;
-                case DirectionType.World:
-                    break;
-                default:
-                    break;
-            }
-        }
-
     }
 }

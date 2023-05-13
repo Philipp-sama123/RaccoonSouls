@@ -33,7 +33,7 @@ namespace MalbersAnimations.Utilities
         private void Deliver(MesssageItem m, Component go)
         {
             if (UseSendMessage)
-                 m.DeliverMessage(go.transform.root,SendToChildren,debug);
+                m.DeliverMessage(go.transform.root, SendToChildren, debug);
             else
             {
                 if (SendToChildren)

@@ -1,4 +1,7 @@
-﻿using UnityEngine;
+﻿
+#if UNITY_EDITOR
+
+using UnityEngine;
 using System.Collections;
 using UnityEditor;
 using UnityEditorInternal;
@@ -187,3 +190,4 @@ namespace MalbersAnimations.Utilities
         }
     }
 }
+#endif

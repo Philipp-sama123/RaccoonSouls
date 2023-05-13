@@ -48,17 +48,22 @@ namespace MalbersAnimations.Weapons
 
 
         /// <summary>Damager from the Attack Triger Behaviour</summary>
-        public override void ActivateDamager(int value, float multiplier)
+        public override void ActivateDamager(int value, int profile)
         {
-            base.ActivateDamager(value, multiplier);
-
             if (value == 0)
             {
                 CanCauseDamage = false;
                 OnCauseDamage.Invoke(CanCauseDamage);
+             
+                if (CurrentProfileIndex != 0)
+                {
+                    DefaultProfile.Modify(this); //Restore the profile
+                    CurrentProfileIndex = 0;
+                }
             }
             else if (value == -1 || value == Index)
             {
+                base.ActivateDamager(value, profile);
                 CanCauseDamage = true;
                 OnCauseDamage.Invoke(CanCauseDamage);
             }
@@ -116,28 +121,13 @@ namespace MalbersAnimations.Weapons
                 WeaponAction.Invoke((int)Weapon_Action.Attack);
             }
         }
-
-        //Super Uggly!!
-        //internal override void MainAttack_Released(IMWeaponOwner RC)
-        //{
-        //    if (RC.IsRiding && RidingCombo != -1)
-        //    {
-        //        WeaponAction.Invoke((int)Weapon_Action.Idle);
-        //        CanAttack = false;
-        //    }
-        //}
         #endregion
-
-
         void AttackTriggerEnter(GameObject root, Collider other)
         {
             //Debug.Log("AttackTriggerEnter = " + other);
-
             if (IsInvalid(other)) return;                                               //Check Layers and Don't hit yourself
             if (other.transform.root == IgnoreTransform) return;                        //Check an Extra transform that you cannot hit...e.g your mount
             if (ignoreStaticObjects && other.transform.gameObject.isStatic) return;     //Ignore Static Objects
-
-
 
             var damagee = other.GetComponentInParent<IMDamage>();                      //Get the Animal on the Other collider
 

@@ -67,16 +67,16 @@ MonoBehaviour:
     ConstantValue: {fileID: 1947218636460032601}
     Variable: {fileID: 0}
   DestroyHitEffect: 0
-  interactorID:
-    UseConstant: 1
-    ConstantValue: 0
-    Variable: {fileID: 0}
   dontHitOwner:
     UseConstant: 1
     ConstantValue: 1
     Variable: {fileID: 0}
   CustomReaction: {fileID: 0}
   element: {fileID: 0}
+  interactorID:
+    UseConstant: 1
+    ConstantValue: 0
+    Variable: {fileID: 0}
   interact:
     UseConstant: 1
     ConstantValue: 1
@@ -92,9 +92,13 @@ MonoBehaviour:
   statModifier:
     ID: {fileID: 11400000, guid: d6b3e636d59a6c547a2cad40b69f4432, type: 2}
     modify: 3
-    Value:
+    MinValue:
       UseConstant: 1
-      ConstantValue: 0
+      ConstantValue: 40
+      Variable: {fileID: 0}
+    MaxValue:
+      UseConstant: 1
+      ConstantValue: 45
       Variable: {fileID: 0}
   m_cChance:
     UseConstant: 1
@@ -107,6 +111,10 @@ MonoBehaviour:
   m_Force:
     UseConstant: 1
     ConstantValue: 200
+    Variable: {fileID: 0}
+  minForce:
+    UseConstant: 1
+    ConstantValue: 100
     Variable: {fileID: 0}
   forceMode: 0
   OnHit:
@@ -151,15 +159,117 @@ MonoBehaviour:
     UseConstant: 1
     ConstantValue: 0.1
     Variable: {fileID: 0}
+  Profiles:
+  - Name: Final Blow
+    modify: 1
+    interact:
+      UseConstant: 1
+      ConstantValue: 1
+      Variable: {fileID: 0}
+    interactorID:
+      UseConstant: 1
+      ConstantValue: 0
+      Variable: {fileID: 0}
+    react:
+      UseConstant: 1
+      ConstantValue: 1
+      Variable: {fileID: 0}
+    pureDamage:
+      UseConstant: 1
+      ConstantValue: 0
+      Variable: {fileID: 0}
+    statModifier:
+      ID: {fileID: 11400000, guid: d6b3e636d59a6c547a2cad40b69f4432, type: 2}
+      modify: 3
+      MinValue:
+        UseConstant: 1
+        ConstantValue: 40
+        Variable: {fileID: 0}
+      MaxValue:
+        UseConstant: 1
+        ConstantValue: 45
+        Variable: {fileID: 0}
+    m_cChance:
+      UseConstant: 1
+      ConstantValue: 0
+      Variable: {fileID: 0}
+    cMultiplier:
+      UseConstant: 1
+      ConstantValue: 2
+      Variable: {fileID: 0}
+    maxForce:
+      UseConstant: 1
+      ConstantValue: 200
+      Variable: {fileID: 0}
+    minForce:
+      UseConstant: 1
+      ConstantValue: 100
+      Variable: {fileID: 0}
+    forceMode: 0
+    m_HitEffect:
+      UseConstant: 1
+      ConstantValue: {fileID: 1947218636460032601}
+      Variable: {fileID: 0}
+    CustomReaction: {fileID: 0}
+    element: {fileID: 0}
+  DefaultProfile:
+    Name: 
+    modify: 0
+    interact:
+      UseConstant: 1
+      ConstantValue: 0
+      Variable: {fileID: 0}
+    interactorID:
+      UseConstant: 1
+      ConstantValue: 0
+      Variable: {fileID: 0}
+    react:
+      UseConstant: 1
+      ConstantValue: 0
+      Variable: {fileID: 0}
+    pureDamage:
+      UseConstant: 1
+      ConstantValue: 0
+      Variable: {fileID: 0}
+    statModifier:
+      ID: {fileID: 0}
+      modify: 0
+      MinValue:
+        UseConstant: 1
+        ConstantValue: 0
+        Variable: {fileID: 0}
+      MaxValue:
+        UseConstant: 1
+        ConstantValue: 10
+        Variable: {fileID: 0}
+    m_cChance:
+      UseConstant: 1
+      ConstantValue: 0
+      Variable: {fileID: 0}
+    cMultiplier:
+      UseConstant: 1
+      ConstantValue: 0
+      Variable: {fileID: 0}
+    maxForce:
+      UseConstant: 1
+      ConstantValue: 0
+      Variable: {fileID: 0}
+    minForce:
+      UseConstant: 1
+      ConstantValue: 0
+      Variable: {fileID: 0}
+    forceMode: 0
+    m_HitEffect:
+      UseConstant: 1
+      ConstantValue: {fileID: 0}
+      Variable: {fileID: 0}
+    CustomReaction: {fileID: 0}
+    element: {fileID: 0}
   debug: 0
   m_UI: {fileID: 0}
   description:
     UseConstant: 1
     ConstantValue: 
-    Variable: {fileID: 0}
-  minForce:
-    UseConstant: 1
-    ConstantValue: 100
     Variable: {fileID: 0}
   minDamage:
     UseConstant: 1
@@ -303,8 +413,8 @@ MonoBehaviour:
   OnReleaseFreeHand:
     m_PersistentCalls:
       m_Calls: []
-  Editor_Tabs1: 4
-  Editor_Tabs2: 2
+  Editor_Tabs1: 0
+  Editor_Tabs2: 3
   meleeTrigger: {fileID: 1054929852354334767}
   ignoreStaticObjects: 1
   OnCauseDamage:

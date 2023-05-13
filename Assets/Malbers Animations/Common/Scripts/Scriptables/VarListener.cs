@@ -304,33 +304,37 @@ namespace MalbersAnimations
                             stretchWidth = true
                         };
 
-                    style.normal.textColor = UnityEditor.EditorStyles.boldLabel.normal.textColor;
+                    style.normal.textColor = EditorStyles.boldLabel.normal.textColor;
 
-                    Description.stringValue = UnityEditor.EditorGUILayout.TextArea(Description.stringValue, style);
+                    Description.stringValue = EditorGUILayout.TextArea(Description.stringValue, style);
                 }
             }
 
 
-            UnityEditor.EditorGUILayout.BeginHorizontal(UnityEditor.EditorStyles.helpBox);
-            UnityEditor.EditorGUIUtility.labelWidth = 55;
-            UnityEditor.EditorGUILayout.PropertyField(value, GUILayout.MinWidth(25));
-            UnityEditor.EditorGUIUtility.labelWidth = 40;
-            UnityEditor.EditorGUILayout.PropertyField(Index, new GUIContent("    ID"),  GUILayout.MinWidth(15));
-            UnityEditor.EditorGUIUtility.labelWidth = 0;
-            ShowEvents.boolValue = GUILayout.Toggle(ShowEvents.boolValue, new GUIContent("E", "Show Events"), UnityEditor.EditorStyles.miniButton, GUILayout.Width(22));
-            UnityEditor.EditorGUILayout.EndHorizontal();
+            EditorGUILayout.BeginHorizontal(EditorStyles.helpBox);
+            EditorGUIUtility.labelWidth = 55;
+            EditorGUILayout.PropertyField(value, GUILayout.MinWidth(25));
+            EditorGUIUtility.labelWidth = 40;
+            EditorGUILayout.PropertyField(Index, new GUIContent("    ID"),  GUILayout.MinWidth(15));
+            EditorGUIUtility.labelWidth = 0;
+            ShowEvents.boolValue = 
+                GUILayout.Toggle(ShowEvents.boolValue, 
+                new GUIContent((ShowEvents.boolValue ?"▲" : "▼"), "Show Events"), EditorStyles.miniButton, GUILayout.Width(25));
+            EditorGUILayout.EndHorizontal();
 
             if (ShowEvents.boolValue)
             {
-                UnityEditor.EditorGUILayout.BeginHorizontal(UnityEditor.EditorStyles.helpBox);
-                UnityEditor.EditorGUIUtility.labelWidth = 55;
-                UnityEditor.EditorGUILayout.PropertyField(Auto);
-                 UnityEditor.EditorGUIUtility.labelWidth = 65;
-                UnityEditor.EditorGUILayout.PropertyField(InvokeOnEnable,new GUIContent("On Enable"));
-                UnityEditor.EditorGUIUtility.labelWidth = 0;
-                MalbersEditor.DrawDebugIcon(Debug);
-                //Debug.boolValue = GUILayout.Toggle(Debug.boolValue, new GUIContent("D"), UnityEditor.EditorStyles.miniButton, GUILayout.Width(22));
-                UnityEditor.EditorGUILayout.EndHorizontal();
+                using (new GUILayout.HorizontalScope(EditorStyles.helpBox))
+                {
+                    EditorGUIUtility.labelWidth = 55;
+                    EditorGUILayout.PropertyField(Auto);
+                    EditorGUIUtility.labelWidth = 65;
+                    EditorGUILayout.PropertyField(InvokeOnEnable, new GUIContent("On Enable"));
+                    EditorGUIUtility.labelWidth = 0;
+                    MalbersEditor.DrawDebugIcon(Debug);
+                    //Debug.boolValue = GUILayout.Toggle(Debug.boolValue, new GUIContent("D"), UnityEditor.EditorStyles.miniButton, GUILayout.Width(22));
+                }
+                
 
                 DrawEvents();
             }

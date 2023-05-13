@@ -1,68 +1,67 @@
 ﻿using System;
-using System.Collections;
-using UnityEngine;
+using UnityEngine; 
 
- 
-namespace MalbersAnimations.Controller.Reactions
+
+namespace MalbersAnimations.Reactions
 {
+    [Serializable]
+   // [MovedFrom(false, null,"MalbersAnimations.Runtime",null)]
     /// <summary>Abstract Class to anything react </summary>
-    public abstract class Reaction<T> : ScriptableObject where T : Component
+    public abstract class Reaction
     {
-        [HideInInspector] public string description;
-        public bool active = true;
-        [Min(0)] public float delay = 0f;
-        [HideInInspector] public string fullName;
-
         /// <summary>Instant Reaction ... without considering Active or Delay parameters</summary>
-        protected abstract void _React(T reactor);
-
-        /// <summary>Instant Reaction ... without considering Active or Delay parameters</summary>
-        protected abstract bool _TryReact(T reactor);
+        protected abstract bool _TryReact(Component reactor);
 
         /// <summary>Get the Type of the reaction</summary>
-        public Type ReactionType() => typeof(T);
-        
+        public abstract Type ReactionType { get; }
 
-        public void React(Component component)
+        public void React(Component component) => TryReact(component);
+
+        public void React(GameObject go) => TryReact(go.transform);
+
+        [Tooltip("Temporally Enable or Disable the Reaction")]
+        [HideInInspector] public bool Active = true;
+
+        [Tooltip("The component assigned is verified. Which means is the Correct type")]
+        protected Component Verified;
+
+
+        /// <summary>  Checks and find the correct component to apply a reaction  </summary>  
+        public Component VerifyComponent(Component component)
         {
-            if (component is T) _React(component as T);
-        }
+            Component TrueComponent;
 
-        public void React(GameObject go) => React(go.FindComponent<T>());
-         
-
-        public void React(T reactor)
-        {
-            if (reactor != null && active)
+            if (ReactionType.IsAssignableFrom(component.GetType()))
             {
-                if (delay > 0 && (reactor is MonoBehaviour) && (reactor as MonoBehaviour).isActiveAndEnabled)
-                    (reactor as MonoBehaviour).StartCoroutine(DelayedReaction(reactor));
-                else
-                    _React(reactor);
+                TrueComponent = component;
             }
+            else
+            {
+                TrueComponent = component.GetComponentInParent(ReactionType);
+
+                if (TrueComponent == null)
+                    TrueComponent = component.GetComponentInChildren(ReactionType);
+            }
+
+            Verified = TrueComponent; //Store if that component is verified.
+
+            return TrueComponent;
         }
 
-
-        private IEnumerator DelayedReaction(T reactor)
+        public bool TryReact(Component component)
         {
-            yield return new WaitForSeconds(delay);
-            _React(reactor);
-        }
+            if (Active && component != null)
+            {
+                //Check if the component is the correct component.. a first time
+                if (Verified == null || Verified != component)
+                {
+                    Verified = VerifyComponent(component);
+                    if (Verified == null) return false;
+                }
 
-        public bool TryReact(Component component) => TryReact(component as T);
-
-        public bool TryReact(GameObject gameObj) 
-        {
-            var reactor = gameObj.FindComponent<T>();
-            return TryReact(reactor);
-        }
-
-        public bool TryReact(T reactor)
-        {
-            if (reactor != null && active)
-                return _TryReact(reactor);
-
+                return _TryReact(Verified);
+            }
             return false;
-        }  
+        }
     }
 }

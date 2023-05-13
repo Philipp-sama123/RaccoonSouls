@@ -16,44 +16,33 @@ namespace MalbersAnimations.Controller
         public float m_time = 0.8f;
         private bool isOn;
 
+
         public override void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
         {
             if (animal == null) animal = animator.FindComponent<MAnimal>();
             isOn = false;
+
+           
         }
 
         public override void OnStateMove(Animator animator, AnimatorStateInfo state, int layerIndex)
         {
          //   Debug.Log($"Time {state.normalizedTime:F3}  >= {m_time} ");  
 
-            if (animal && !isOn && (state.normalizedTime/* % 1*/ >= m_time))
+            if (animal && !isOn)
             {
-                isOn = true;
+                animal.ActiveState.IgnoreLowerStates = true;
 
-              //  Debug.Log("on");
+                if (state.normalizedTime/* % 1*/ >= m_time)
+                {
+                    isOn = true;
 
-                var nextSt = NextState ? NextState.ID : -1;
-                animal.State_Allow_Exit(nextSt, ExitStatus);
+                    //  Debug.Log("on");
+
+                    var nextSt = NextState ? NextState.ID : -1;
+                    animal.State_Allow_Exit(nextSt, ExitStatus);
+                }
             }
-        }
-
-//#if UNITY_EDITOR    //INSPECTOR
-//        [UnityEditor.CustomEditor(typeof(AllowExitBehaviour))]
-//        public class AllowExitBehaviourEditor : UnityEditor.Editor
-//        {
-//            private UnityEditor.SerializedProperty Raise;
-
-//            void OnEnable()
-//            {
-               
-//            }
-
-
-//            public override void OnInspectorGUI()
-//            {
-                
-//            }
-//        }
-//#endif
+        } 
     }
 }

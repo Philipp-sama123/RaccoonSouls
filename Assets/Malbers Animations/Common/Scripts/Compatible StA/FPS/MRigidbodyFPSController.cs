@@ -6,16 +6,16 @@ namespace MalbersAnimations.SA
     [RequireComponent(typeof(Rigidbody))]
     [RequireComponent(typeof(CapsuleCollider))]
     [AddComponentMenu("Malbers/Utilities/Standard Asset/Rigidbody FPS Controller")]
-    public class MRigidbodyFPSController : MonoBehaviour
+    public class MRigidbodyFPSController : MonoBehaviour, IObjectCore
     {
         public Camera cam;
         public bool LockCursor;
 
         [SerializeField]
         public bool lockMovement = false;
-        public MMovementSettings movementSettings = new MMovementSettings();
-        public MMouseLook mouseLook = new MMouseLook();
-        public MAdvancedSettings advancedSettings = new MAdvancedSettings();
+        public MMovementSettings movementSettings = new();
+        public MMouseLook mouseLook = new();
+        public MAdvancedSettings advancedSettings = new();
 
 
         private Rigidbody m_RigidBody;

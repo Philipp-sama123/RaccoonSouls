@@ -15,10 +15,11 @@ namespace MalbersAnimations.Controller.AI
         public ExecuteTask when = ExecuteTask.OnStart;
         public bool UseSendMessage = false;
         public bool SendToChildren = false;
-        [Tooltip("Send the message only when the AI is near the target")]
+        [Tooltip("Send the message only when the AI is near the target. AI has Arrived")]
         public bool NearTarget = true;
         [Tooltip("The message will be send to the Root of the Hierarchy")]
         public bool SendToRoot = true;
+        [NonReorderable] 
         public MesssageItem[] messages;                                     //Store messages to send it when Enter the animation State
 
 
@@ -59,11 +60,12 @@ namespace MalbersAnimations.Controller.AI
         {
             if (affect == Affected.Self)
             {
-                SendMessage(SendToRoot ?  brain.transform.root : brain.transform);
+                SendMessage(SendToRoot ?  brain.Animal.transform: brain.transform);
             }
             else
             {
-                if (brain.Target != null) SendMessage(SendToRoot ? brain.Target.root : brain.Target);
+                if (brain.Target != null)
+                    SendMessage(SendToRoot ? brain.Target.FindObjectCore() : brain.Target);
             }
         }
 

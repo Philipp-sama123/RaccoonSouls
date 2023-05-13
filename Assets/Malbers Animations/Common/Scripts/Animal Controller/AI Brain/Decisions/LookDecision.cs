@@ -236,7 +236,7 @@ namespace MalbersAnimations.Controller.AI
                         {
                             Debug.DrawRay(brain.Eyes.position, Direction_to_Target * LookMultiplier, Color.green, interval);
                             Debug.DrawLine(hit.point, Center, Color.red, interval);
-                            MTools.DrawWireSphere(Center, Color.red, interval);
+                            MDebug.DrawWireSphere(Center, Color.red, interval);
                         }
 
                         //if (brain.debug) Debug.Log($"Look Decision {lookFor.ToString()}: Found Obstacle: [{hit.transform.name}]. " +
@@ -249,7 +249,7 @@ namespace MalbersAnimations.Controller.AI
                         if (brain.debug)
                         {
                             Debug.DrawRay(brain.Eyes.position, Direction_to_Target, Color.green, interval);
-                            MTools.DrawWireSphere(Center, Color.green, interval);
+                            MDebug.DrawWireSphere(Center, Color.green, interval);
                         }
                         return true;
                     }
@@ -405,7 +405,7 @@ namespace MalbersAnimations.Controller.AI
                         int total = 0;
                         foreach (var c in brain.DecisionsVars[index].Components)
                         {
-                            if (c != null && c is Collider && c.transform.IsGrandchild(go.transform))
+                            if (c != null && c is Collider && c.transform.SameHierarchy(go.transform))
                             {
                                 bounds += (c as Collider).bounds.center;
                                 total++;
@@ -452,7 +452,8 @@ namespace MalbersAnimations.Controller.AI
 
                     var renderer = brain.DecisionsVars[index].Components[newIndex];
 
-                    if (renderer != null) Center = (renderer as Renderer).bounds.center;
+                    if (renderer != null && renderer is Renderer) 
+                        Center = (renderer as Renderer).bounds.center;
 
                     if (IsInFieldOfView(brain, Center, out float Distance))
                     {

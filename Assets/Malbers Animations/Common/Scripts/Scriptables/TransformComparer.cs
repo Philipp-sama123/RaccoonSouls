@@ -1,6 +1,4 @@
-﻿using MalbersAnimations.Events;
-using System;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.Events;
 
 namespace MalbersAnimations.Scriptables
@@ -10,7 +8,6 @@ namespace MalbersAnimations.Scriptables
     {
         public enum TransformCondition { Null, Equal, ChildOf, ParentOf, Name }
 
-
         public TransformReference value;
         public TransformCondition Condition;
         public TransformReference compareTo;
@@ -19,8 +16,8 @@ namespace MalbersAnimations.Scriptables
         [Tooltip("Invokes the current value on Enable")]
         public bool InvokeOnEnable = true;
 
-        public UnityEvent Then = new UnityEvent();
-        public UnityEvent Else = new UnityEvent();
+        public UnityEvent Then = new();
+        public UnityEvent Else = new();
 
 
         void OnEnable()
@@ -35,35 +32,62 @@ namespace MalbersAnimations.Scriptables
         {
             if (value.Variable != null) value.Variable.OnValueChanged -= Invoke;
             if (compareTo.Variable != null) compareTo.Variable.OnValueChanged -= Invoke;
-
-          //  Invoke(value.Value);
         }
 
         /// <summary> Used to use turn Objects to True or false </summary>
-        public virtual void Invoke(Transform _)
+        public virtual void Invoke(Transform value)
         {
             switch (Condition)
             {
                 case TransformCondition.Null:
-                    Response(value.Value == null);
+                    Response(value == null);
                     break;
                 case TransformCondition.Equal:
-                    Response(value.Value == compareTo.Value);
+                    Response(value == compareTo.Value);
                     break;
                 case TransformCondition.ChildOf:
-                    if (value.Value) Response(value.Value.IsChildOf(compareTo.Value));
+                    if (value) Response(value.IsChildOf(compareTo.Value));
                     break;
                 case TransformCondition.ParentOf:
                     if (compareTo.Value) Response(compareTo.Value.IsChildOf(value));
                     break;
                 case TransformCondition.Name:
-                    if (value.Value) Response(value.Value.name.Contains(T_Name));
+                    if (value) Response(value.name.Contains(T_Name));
                     break;
                 default:
                     break;
             }
         }
 
+
+        public virtual void Invoke() => Invoke(value.Value);
+
+        public void SetTarget(Component target)
+        {
+            value.Value = target.transform;
+            Invoke();
+        }
+
+        public void SetTarget(GameObject target)
+        {
+            value.Value = target.transform;
+            Invoke();
+        }
+
+        public void SetCompareTo(Component ct)
+        {
+            compareTo.Value = ct.transform;
+            Invoke();
+        }
+
+        public void SetCompareTo(GameObject ct)
+        {
+            compareTo.Value = ct.transform;
+            Invoke();
+        }
+
+        public void ClearTarget() => value.Value = null;
+        public void ClearComparteTo() => compareTo.Value = null;
 
         private void Response(bool value)
         {
@@ -104,7 +128,7 @@ namespace MalbersAnimations.Scriptables
             }
 
             if (Condition.intValue == 4)
-                UnityEditor.EditorGUILayout.PropertyField(T_Name,new GUIContent("Transform Name"));
+                UnityEditor.EditorGUILayout.PropertyField(T_Name, new GUIContent("Transform Name"));
 
             UnityEditor.EditorGUILayout.PropertyField(InvokeOnEnable);
 

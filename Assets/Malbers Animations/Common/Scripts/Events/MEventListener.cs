@@ -41,9 +41,7 @@ namespace MalbersAnimations.Events
     [System.Serializable]
     public class MEventItemListener
     {
-#pragma warning disable CA2235 // Mark all non-serializable fields
         public MEvent Event;
-#pragma warning restore CA2235 // Mark all non-serializable fields
 
 
         [HideInInspector]
@@ -77,60 +75,97 @@ namespace MalbersAnimations.Events
 
         public float multiplier = 1;
 
-        public virtual void OnEventInvoked() => Response.Invoke();
-        public virtual void OnEventInvoked(string value) => ResponseString.Invoke(value);
-        public virtual void OnEventInvoked(float value) => ResponseFloat.Invoke(value*multiplier);
+        public virtual void OnEventInvoked()
+        {
+           if (useVoid)
+                Response.Invoke();
+        }
+
+        public virtual void OnEventInvoked(string value)
+        {
+           if (useString) 
+                ResponseString.Invoke(value);
+        }
+
+        public virtual void OnEventInvoked(float value)
+        {
+            if (useFloat) 
+                ResponseFloat.Invoke(value * multiplier);
+        }
 
         public virtual void OnEventInvoked(int value)
         {
-            ResponseInt.Invoke(value);
-
-            if (AdvancedInteger)
+            if (useInt)
             {
-                foreach (var item in IntEventList)
-                    item.ExecuteAdvanceIntegerEvent(value);
+                ResponseInt.Invoke(value);
+
+                if (AdvancedInteger)
+                {
+                    foreach (var item in IntEventList)
+                        item.ExecuteAdvanceIntegerEvent(value);
+                }
             }
         }
 
         public virtual void OnEventInvoked(bool value)
         {
-            ResponseBool.Invoke(InvertBool ? !value : value);
-
-            if (AdvancedBool)
+            if (useBool)
             {
-                if (value)
-                    ResponseBoolTrue.Invoke();
-                else
-                    ResponseBoolFalse.Invoke();
+                ResponseBool.Invoke(InvertBool ? !value : value);
+
+                if (AdvancedBool)
+                {
+                    if (value)
+                        ResponseBoolTrue.Invoke();
+                    else
+                        ResponseBoolFalse.Invoke();
+                }
             }
         }
-        public virtual void OnEventInvoked(Vector3 value) => ResponseVector3.Invoke(value);
-        public virtual void OnEventInvoked(Vector2 value) => ResponseVector2.Invoke(value);
+        public virtual void OnEventInvoked(Vector3 value)
+        {
+           if (useVector3) ResponseVector3.Invoke(value);
+        }
 
-
+        public virtual void OnEventInvoked(Vector2 value)
+        {
+          if (useVector2)  ResponseVector2.Invoke(value);
+        }
 
         public virtual void OnEventInvoked(GameObject value)
         {
-            if (value) ResponseGO.Invoke(value);
-            else ResponseNull.Invoke();
+            if (useGO)
+            {
+                if (value) ResponseGO.Invoke(value);
+                else ResponseNull.Invoke();
+            }
         }
 
         public virtual void OnEventInvoked(Transform value)
         {
-            ResponseTransform.Invoke(value);
-            if (!value) ResponseNull.Invoke();
+            if (useTransform)
+            {
+                ResponseTransform.Invoke(value);
+                if (!value) ResponseNull.Invoke();
+            }
         }
 
         public virtual void OnEventInvoked(Component value)
         {
-            if (value) ResponseComponent.Invoke(value);
-            else ResponseNull.Invoke();
+            if (useComponent)
+            {
+                if (value) ResponseComponent.Invoke(value);
+                else ResponseNull.Invoke();
+            }
         }
 
         public virtual void OnEventInvoked(Sprite value)
         {
-            if (value) ResponseSprite.Invoke(value);
-            else ResponseNull.Invoke();
+            if (useSprite)
+            {
+                if (value) ResponseSprite.Invoke(value);
+                else ResponseNull.Invoke();
+            }
         }
 
         public MEventItemListener()
@@ -152,7 +187,7 @@ namespace MalbersAnimations.Events
         private MEventListener M;
        // MonoScript script;
 
-        private Dictionary<string, ReorderableList> innerListDict = new Dictionary<string, ReorderableList>();
+        private readonly Dictionary<string, ReorderableList> innerListDict = new();
 
 
         private void OnEnable()

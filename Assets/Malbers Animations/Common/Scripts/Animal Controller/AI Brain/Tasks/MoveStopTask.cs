@@ -361,7 +361,7 @@ namespace MalbersAnimations.Controller.AI
         {
             Handles.color = Gizmos.color = debugColor;
 
-            var scale = brain.Animal ? brain.Animal.ScaleFactor : brain.transform.root.localScale.y;
+            var scale = brain.Animal ? brain.Animal.ScaleFactor : brain.transform.localScale.y;
           
 
             switch (task)

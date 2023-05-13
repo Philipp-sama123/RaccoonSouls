@@ -21,6 +21,9 @@ namespace MalbersAnimations.Weapons
         public ImpactBehaviour impactBehaviour = ImpactBehaviour.None;
         public ProjectileRotation rotation = ProjectileRotation.None;
 
+        [Tooltip("Rotation ammount around trajectory axis when the prokectile is set to Follow Trajectory")]
+        public float TrajectoryRoll = 0;
+
         public float Penetration = 0.1f;
 
         [SerializeField, Tooltip("Keep Projectile Damage Values, The throwable wont affect the Damage Values")]
@@ -43,18 +46,23 @@ namespace MalbersAnimations.Weapons
         [Tooltip("Axis Torque for the rotation of the projectile")]
         public Vector3 torqueAxis = Vector3.up;
 
-        [Tooltip("Offset to position the projectile. E.g. (Arrow in the Weapon) ")]
+        [Tooltip("Offset to position the projectile when is Instantiated on the weapon. E.g. (Arrow in the Bow) ")]
         public Vector3 m_PosOffset;
 
-        [Tooltip("Offset to position the projectile. E.g. (Arrow in the Weapon) ")]
+        [Tooltip("Offset to rotation the projectile when is Instantiated on the weapon. E.g. (Arrow in the Bow) ")]
         public Vector3 m_RotOffset;
 
-        [Tooltip("Offset to position the projectile. E.g. (Arrow in the Weapon) ")]
+        [Tooltip("Offset to scale the projectile when is Instantiated on the weapon. E.g. (Arrow in the Bow) ")]
         public Vector3 m_ScaleOffset;
+
+        [Tooltip("Radius of the projectile to cast a ray to find targets better")]
+        public FloatReference Radius = new FloatReference(0.1f);
 
         public UnityEvent OnFire = new UnityEvent();                       //Send the transform to the event
         public Rigidbody rb;
         public Collider m_collider;
+
+      
 
         private Vector3 Prev_pos;
 
@@ -70,6 +78,7 @@ namespace MalbersAnimations.Weapons
 
         /// <summary>Is the Projectile Flying</summary>
         public bool IsFlying { get; set; }
+
 
         public Vector3 Gravity { get => gravity.Value; set => gravity.Value = value; }
         public bool KeepDamageValues { get => m_KeepDamageValues.Value; set => m_KeepDamageValues.Value = value; }
@@ -99,7 +108,7 @@ namespace MalbersAnimations.Weapons
         private void Initialize()
         {
             HasImpacted = false;
-            Invoke(nameof(DestroyProjectile), Life); //Destroy Projectile after a time
+            if (Life > 0) Invoke(nameof(DestroyProjectile), Life); //Destroy Projectile after a time
         }
 
 
@@ -112,7 +121,8 @@ namespace MalbersAnimations.Weapons
             this.Owner = Owner;
             this.Gravity = Gravity;
             this.Velocity = ProjectileVelocity;
-            this.Force = Velocity.magnitude;
+            this.MaxForce = Velocity.magnitude;
+            this.MinForce = Velocity.magnitude;
 
 
             Debugging("Projectile Prepared",this);
@@ -121,7 +131,8 @@ namespace MalbersAnimations.Weapons
         public virtual void Fire(Vector3 ProjectileVelocity)
         {
             this.Velocity = ProjectileVelocity;
-            this.Force = Velocity.magnitude;
+            this.MaxForce = Velocity.magnitude;
+            this.MinForce = Velocity.magnitude;
             Fire();
         }
 
@@ -130,16 +141,18 @@ namespace MalbersAnimations.Weapons
             Initialize();
 
             gameObject.SetActive(true); //Just to make sure is working
+            Enabled = true;
 
             if (Velocity == Vector3.zero) //Hack when the Velocity is not set
             {
                 Velocity = transform.forward;
-                Force = 1;
+                this.MaxForce = 1;
+                this.MinForce = 1;
             }
 
             doRayCast = true;
 
-            if (m_collider)
+            if (m_collider && rb)
             {
                 EnableCollider(0.1f); //Don't enable it right away so it does not collide with the thrower
                 doRayCast = m_collider.isTrigger;
@@ -147,11 +160,12 @@ namespace MalbersAnimations.Weapons
 
             if (rb)
             {
-                rb.isKinematic = false; //IMPORTANT!!!
+              //  rb.isKinematic = false; //IMPORTANT!!!
+                EnableRigidBody();
                 rb.velocity = Vector3.zero; //Reset the velocity IMPORTANT!
 
 
-                StartCoroutine(Artificial_Gravity()); //Check if the Gravity is not the Physics Gravity
+              //  StartCoroutine(Artificial_Gravity()); //Check if the Gravity is not the Physics Gravity
 
                 if (rotation == ProjectileRotation.Random)
                 {
@@ -161,13 +175,18 @@ namespace MalbersAnimations.Weapons
                 {
                     rb.AddTorque(torqueAxis * torque.Value, ForceMode.Impulse);
                 }
-              //  Debug.Log("RIGID BODY Gravity");
+                //  Debug.Log("RIGID BODY Gravity");
                 rb.AddForce(Velocity, ForceMode.VelocityChange);
             }
 
-            StartCoroutine(FlyingProjectile());
+            StartCoroutine(FlyingProjectile()); //Trajectory movement is done here.
 
             OnFire.Invoke();
+
+            //if (TryGetComponent<ICollectable>(out var pickable))
+            //{
+            //    pickable.Drop(); //if the Projectile is a pickable then drop it?
+            //}
 
             Debugging("Projectile Fired", this);
         }
@@ -181,10 +200,11 @@ namespace MalbersAnimations.Weapons
 
         private void DestroyProjectile()
         {
-            if (HasImpacted && !DestroyOnImpact)
-                Destroy(gameObject, Life); //Reset after has impacted the Destroy Time
-            else
+            if (!HasImpacted)
+            {
+                Debugging($"Life time elapsed [{Life}]. Destroy Projectile", null);
                 Destroy(gameObject);
+            }
         }
 
 
@@ -215,25 +235,27 @@ namespace MalbersAnimations.Weapons
         private void OnDisable() { StopAllCoroutines(); }
 
 
-        /// <summary> When the Gravity is not Physic.Gravity whe apply our own </summary>
-        IEnumerator Artificial_Gravity()
-        {
-            if (Gravity == Physics.gravity)
-            {
-                rb.useGravity = true;
-            }
-            else if (Gravity != Vector3.zero)
-            {
-                var waitForFixedUpdate = new WaitForFixedUpdate();
-                rb.useGravity = false;
-                while (!HasImpacted)
-                {
-                    rb.AddForce(Gravity, ForceMode.Acceleration);
-                    yield return waitForFixedUpdate;
-                }
-            }
-            yield return true;
-        }
+        ///// <summary> When the Gravity is not Physic.Gravity whe apply our own </summary>
+        //IEnumerator Artificial_Gravity()
+        //{
+        //    if (Gravity == Physics.gravity)
+        //    {
+        //        rb.useGravity = true;
+        //    }
+        //    else if (Gravity != Vector3.zero)
+        //    {
+        //        var waitForFixedUpdate = new WaitForFixedUpdate();
+        //        rb.useGravity = false;
+        //        while (!HasImpacted)
+        //        {
+        //            rb.AddForce(Gravity, ForceMode.Acceleration);
+        //            yield return waitForFixedUpdate;
+        //        }
+
+              
+        //    }
+        //    yield return true;
+        //}
 
         /// <summary> Logic Applied when the projectile is flying</summary>
         IEnumerator FlyingProjectile()
@@ -243,27 +265,40 @@ namespace MalbersAnimations.Weapons
             float deltatime = Time.fixedDeltaTime;
             var waitForFixedUpdate = new WaitForFixedUpdate();
 
+            Direction = Velocity.normalized; //Start the 
+
             int i = 1;
 
             while (!HasImpacted && enabled)
             {
                 var time = deltatime * i;
-                Vector3 next_pos = start + Velocity * time + Gravity * time * time / 2;
 
-                if (!rb) transform.position = Prev_pos; //If there's no Rigid body move the Projectile!!
+                Vector3 next_pos = (start + Velocity * time) + (time * time * Gravity / 2);
 
-                Direction = next_pos - Prev_pos;
+                //if (!rb)
+                //{
+                     transform.position = Prev_pos; //If there's no Rigid body move the Projectile!!
+                //}
+                //else
+                //{
+                //    rb.velocity = Direction;
+                //    rb.MovePosition(next_pos);
+                //}
+
+                Direction = (next_pos - Prev_pos).normalized;
+
                 Debug.DrawLine(Prev_pos, next_pos, Color.yellow);
-
-                if (FollowTrajectory) //The Projectile will rotate towards de Direction
+                if (Radius > 0)
                 {
-                    if (Direction.sqrMagnitude > 0)
-                        transform.rotation = Quaternion.LookRotation(Direction, transform.up);
+                    MDebug.DrawWireSphere(Prev_pos, Color.yellow, Radius);
+                    MDebug.DrawWireSphere(next_pos, Color.yellow, Radius);
                 }
 
-                if (doRayCast && Physics.Linecast(Prev_pos, next_pos, out RaycastHit hit, Layer, triggerInteraction))
+                var Length = Vector3.Distance(next_pos, Prev_pos);
+
+                if (Physics.SphereCast(Prev_pos, Radius, Direction,  out RaycastHit hit, Length, Layer, triggerInteraction))
                 {
-                    yield return waitForFixedUpdate;
+                    //yield return waitForFixedUpdate;
 
                     if (!IsInvalid(hit.collider))
                     {
@@ -272,12 +307,114 @@ namespace MalbersAnimations.Weapons
                     }
                 }
 
+                if (FollowTrajectory) //The Projectile will rotate towards de Direction
+                {
+                    transform.rotation = Quaternion.LookRotation(Direction, transform.up);
+
+                    //Rotate around an axis while following a trajectory
+                    if (TrajectoryRoll != 0)
+                        transform.Rotate(Direction, TrajectoryRoll * deltatime, Space.World);
+                }
+               
+
                 Prev_pos = next_pos;
                 i++;
 
                 yield return waitForFixedUpdate;
             }
             yield return null;
+        }
+       
+
+        public virtual void ProjectileImpact(Rigidbody targetRB, Collider collider, Vector3 HitPosition, Vector3 normal)
+        {
+            if (!Enabled) return;
+
+            Enabled = false; //Disable the projectile it has already impacted with something
+
+            Debugging($"<color=yellow> <b>[Projectile Impact] </b> [{collider.name}] </color>",this);  //Debug
+
+            HasImpacted = true;
+            TargetHitPosition = HitPosition; //Store the Hit position of the Projectile
+
+            StopAllCoroutines();
+
+            //if there's no collider OR the projectile collider is a trigger
+            if (!m_collider || m_collider.isTrigger)
+            {
+                DisableRigidBody();
+                if (rb) rb.constraints = RigidbodyConstraints.FreezeAll;
+            }
+
+            TryInteract(collider.gameObject);
+
+            TryDamage(collider.gameObject, statModifier);
+
+
+            // TryPhysics(targetRB, collider, Direction, Force);
+            //Add a force to the Target RigidBody
+            targetRB?.AddForceAtPosition(Direction.normalized * Velocity.magnitude * PushMultiplier, HitPosition, forceMode);
+
+            OnHit.Invoke(collider.transform);
+            OnHitPosition.Invoke(HitPosition);
+
+            //var ClosestTransform = MTools.GetClosestTransform(HitPosition, collider.transform, Layer); 
+            var ClosestTransform = MTools.GetClosestTransform(HitPosition, collider.transform, Layer); 
+
+            TryHitEffectProjectile(HitPosition, normal, ClosestTransform);
+
+            switch (impactBehaviour)
+            {
+                case ImpactBehaviour.None:
+                    break;
+                case ImpactBehaviour.StickOnSurface:
+                    Stick_On_Surface(ClosestTransform, HitPosition);
+                    break;
+                case ImpactBehaviour.DestroyOnImpact:
+                    Debugging("DestroyOnImpact",null);
+                    Destroy(gameObject);
+                    return;
+                case ImpactBehaviour.ActivateRigidBody:
+                    EnableRigidBody();
+                    Enable_Collider();
+                    if (rb)
+                    {
+                        Debug.DrawRay(transform.position, rb.velocity * 5, Color.yellow, 3f);
+                        rb.AddForce(Direction, ForceMode.Impulse);
+                    }
+                    Debugging("Activate Rigid Body", null);
+                    break;
+                default:
+                    break;
+            }
+
+            //Life Impact Logic
+            if (LifeImpact > 0 && impactBehaviour != ImpactBehaviour.DestroyOnImpact)
+            {
+                Destroy(gameObject, LifeImpact); //Reset after has impacted the Destroy Time
+            }
+        }
+
+        void EnableRigidBody()
+        {
+            if (rb)
+            {
+                rb.useGravity = true;
+                rb.isKinematic = false;
+                rb.collisionDetectionMode = CollisionDetectionMode.ContinuousDynamic;
+                rb.constraints = RigidbodyConstraints.None;
+            }
+        }
+
+        void DisableRigidBody()
+        {
+            if (rb)
+            {
+                //For Kinematic!!= CollisionDetectionMode.Discrete;
+                rb.collisionDetectionMode = CollisionDetectionMode.ContinuousSpeculative; 
+                rb.useGravity = false;
+                rb.isKinematic = true;
+            }
         }
 
         public void PrepareDamage(StatModifier modifier, float CriticalChance, float CriticalMultiplier, StatElement element)
@@ -290,83 +427,12 @@ namespace MalbersAnimations.Weapons
                 this.element = element;
             }
         }
-
-        public virtual void ProjectileImpact(Rigidbody targetRB, Collider collider, Vector3 HitPosition, Vector3 normal)
-        {
-            if (!enabled) return;
-
-            Debugging($"<color=yellow> <b>[Projectile Impact] </b> [{collider.name}] </color>",collider);  //Debug
-
-            HasImpacted = true;
-            TargetHitPosition = HitPosition; //Store the Hit position of the Projectile
-
-            StopAllCoroutines();
-
-            if (rb)
-            {
-                if (!m_collider || m_collider.isTrigger) //if there's no collider or the projectile collider is a trigger
-                {
-                    rb.collisionDetectionMode = CollisionDetectionMode.ContinuousSpeculative;
-                    rb.isKinematic = true;
-                    rb.constraints = RigidbodyConstraints.FreezeAll;
-                }
-            }
-
-            TryInteract(collider.gameObject);
-            TryDamage(collider.gameObject, statModifier);
-
-            // TryPhysics(targetRB, collider, Direction, Force);
-            targetRB?.AddForceAtPosition(Direction.normalized * Velocity.magnitude * PushMultiplier, HitPosition, forceMode); //Add a force to the Target RigidBody
-
-            var ClosestTransform = MTools.GetClosestTransform(HitPosition, collider.transform, Layer);
-
-
-
-            OnHit.Invoke(collider.transform);
-            OnHitPosition.Invoke(HitPosition);
-
-            TryHitEffectProjectile(HitPosition, normal, ClosestTransform);
-
-            switch (impactBehaviour)
-            {
-                case ImpactBehaviour.None:
-                    break;
-                case ImpactBehaviour.StickOnSurface:
-                    Stick_On_Surface(ClosestTransform, HitPosition);
-                    break;
-                case ImpactBehaviour.DestroyOnImpact:
-                    DestroyProjectile();
-                    return;
-                case ImpactBehaviour.ActivateRigidBody:
-                    if (rb)
-                    {
-                        rb.useGravity = true;
-                        rb.isKinematic = false;
-                        rb.constraints = RigidbodyConstraints.None;
-                        if (collider)
-                        {
-                            collider.enabled = true;
-                            collider.isTrigger = false;
-                            Destroy(this);
-                        }
-                    }
-                    break;
-                default:
-                    break;
-            }
-
-
-            //Life Impact Logic
-            if (LifeImpact > 0 && impactBehaviour != ImpactBehaviour.DestroyOnImpact)
-            {
-                Destroy(gameObject, LifeImpact); //Reset after has impacted the Destroy Time
-            }
-        }
-
         private void Stick_On_Surface(Transform collider, Vector3 HitPosition)
         {
-            transform.SetParentScaleFixer(collider, HitPosition);
+            Debugging("Stick on Surface", this);
             transform.position += transform.forward * Penetration; //Put the Projectile a bit deeper in the collider
+            transform.SetParentScaleFixer(collider, HitPosition);
+            DisableRigidBody();
         }
 
         protected void TryHitEffectProjectile(Vector3 HitPosition, Vector3 Normal, Transform hitTransform)
@@ -375,7 +441,7 @@ namespace MalbersAnimations.Weapons
             {
                 var HitRotation = Quaternion.FromToRotation(Vector3.up, Normal);
 
-                if (debug) MTools.DrawWireSphere(HitPosition, Color.red, 0.2f, 1);
+                if (debug) MDebug.DrawWireSphere(HitPosition, Color.red, 0.2f, 1);
 
                 if (HitEffect != null)
                 {
@@ -405,16 +471,20 @@ namespace MalbersAnimations.Weapons
                 }
             }
         }
-
-        public void DamageMultiplier(float multiplier) => statModifier.Value *= multiplier;
-
-
+         
 #if UNITY_EDITOR
         protected override void Reset()
         {
             base.Reset();
             rb = GetComponent<Rigidbody>();
             m_collider = GetComponentInChildren<Collider>();
+        }
+
+        private void OnDrawGizmosSelected()
+        {
+            Gizmos.color = Color.yellow + Color.red;
+           // Gizmos.DrawSphere(transform.position, Radius);
+            Gizmos.DrawWireSphere(transform.position, Radius);
         }
 #endif
 
@@ -434,9 +504,9 @@ namespace MalbersAnimations.Weapons
     [CustomEditor(typeof(MProjectile))]
     public class MProjectileEditor : MDamagerEd
     {
-        SerializedProperty gravity, Penetration, /*InstantiateOnImpact,*/ PushMultiplier, Editor_Tabs1, KeepDamageValues,
+        SerializedProperty gravity, Penetration, /*InstantiateOnImpact,*/ PushMultiplier, Editor_Tabs1, KeepDamageValues, Radius,
             Life, LifeImpact,
-            OnFire, impactBehaviour, rotation, torque, torqueAxis, m_PosOffset, m_RotOffset, rb, m_collider;
+            OnFire, impactBehaviour, rotation, torque, torqueAxis, m_PosOffset, m_RotOffset, rb, m_collider, TrajectoryRoll;
 
         protected string[] Tabs1 = new string[] { "General", "Damage", "Physics", "Events" };
         MProjectile M;
@@ -456,6 +526,7 @@ namespace MalbersAnimations.Weapons
             gravity = serializedObject.FindProperty("gravity");
 
             OnFire = serializedObject.FindProperty("OnFire");
+            Radius = serializedObject.FindProperty("Radius");
 
             Life = serializedObject.FindProperty("Life");
             LifeImpact = serializedObject.FindProperty("LifeImpact");
@@ -471,6 +542,7 @@ namespace MalbersAnimations.Weapons
 
 
             torque = serializedObject.FindProperty("torque");
+            TrajectoryRoll = serializedObject.FindProperty("TrajectoryRoll");
             torqueAxis = serializedObject.FindProperty("torqueAxis");
           //  InstantiateOnImpact = serializedObject.FindProperty("InstantiateOnImpact");
             Editor_Tabs1 = serializedObject.FindProperty("Editor_Tabs1");
@@ -522,6 +594,7 @@ namespace MalbersAnimations.Weapons
         protected override void DrawGeneral(bool drawbox = true)
         {
             base.DrawGeneral(drawbox);
+          
 
 
             using (new GUILayout.VerticalScope(EditorStyles.helpBox))
@@ -532,6 +605,7 @@ namespace MalbersAnimations.Weapons
                 {
                     EditorGUILayout.PropertyField(Life);
                     EditorGUILayout.PropertyField(LifeImpact);
+                    EditorGUILayout.PropertyField(Radius);
                 }
 
                 m_PosOffset.isExpanded = MalbersEditor.Foldout(m_PosOffset.isExpanded, "Offsets");
@@ -548,12 +622,24 @@ namespace MalbersAnimations.Weapons
                 {
                     EditorGUILayout.PropertyField(rotation, new GUIContent("Rotation", rotationTooltip[rotation.intValue]));
 
-                    if (rotation.intValue == 2)
-                        EditorGUILayout.PropertyField(torque);
-                    else if (rotation.intValue == 3)
+                    var rot = (ProjectileRotation)rotation.intValue;
+
+                    switch (rot)
                     {
-                        EditorGUILayout.PropertyField(torque);
-                        EditorGUILayout.PropertyField(torqueAxis);
+                        case ProjectileRotation.None:
+                            break;
+                        case ProjectileRotation.FollowTrajectory:
+                            EditorGUILayout.PropertyField(TrajectoryRoll);
+                            break;
+                        case ProjectileRotation.Random:
+                            EditorGUILayout.PropertyField(torque);
+                            break;
+                        case ProjectileRotation.Axis:
+                            EditorGUILayout.PropertyField(torque);
+                            EditorGUILayout.PropertyField(torqueAxis);
+                            break;
+                        default:
+                            break;
                     }
                 }
 

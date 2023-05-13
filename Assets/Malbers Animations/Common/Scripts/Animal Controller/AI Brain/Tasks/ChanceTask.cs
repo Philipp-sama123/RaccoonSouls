@@ -11,8 +11,10 @@ namespace MalbersAnimations.Controller.AI
         public float Chance = 1;
 
         [Tooltip("Task to execute if the chance succeded")]
-      //  [CreateScriptableAsset]
         public MTask Task;
+
+        [Tooltip("Task to execute if the chance failed")]
+        public MTask TaskFailed;
 
 
 
@@ -22,38 +24,43 @@ namespace MalbersAnimations.Controller.AI
 
             var canExecute = Chance >= RandomChance;
 
-            brain.TasksVars[index].boolValue = canExecute; //Store the Result in the Task Vars Value on the Brain
-           // brain.TasksVars[index].AddVar(ChanceKey, canExecute); //Store the Result in the Task Vars Value on the Brain
-
-
+            //Store the Result in the Task Vars Value on the Brain
+            brain.TasksVars[index].boolValue = canExecute; 
+         
             if (brain.debug)
                 Debug.Log($"Probability to execute <B>[{Task.name}]</B>. Value:<B>[{RandomChance:F2}]</B> >= Limit:<B>[{Chance:F2}] ?</B>. Result: [<B>{canExecute}]</B>");
 
             if (canExecute)
             {
-                Task.StartTask(brain, index);
+                Task?.StartTask(brain, index);
             }
             else
             {
-                brain.TaskDone(index);
+                TaskFailed?.StartTask(brain, index);
             }
         }
 
         public override void UpdateTask(MAnimalBrain brain, int index)
         {
-           if (brain.TasksVars[index].boolValue)
-           //if (brain.TasksVars[index].GetBool(ChanceKey))
+            if (brain.TasksVars[index].boolValue)
             {
                 Task.UpdateTask(brain, index);
+            }
+            else
+            {
+                TaskFailed?.UpdateTask(brain, index);
             }
         }
 
         public override void ExitAIState(MAnimalBrain brain, int index)
         {
             if (brain.TasksVars[index].boolValue)
-            //if (brain.TasksVars[index].GetBool(ChanceKey))
             {
                 Task.ExitAIState(brain, index);
+            }
+            else
+            {
+                TaskFailed?.ExitAIState(brain, index);
             }
         }
 
@@ -65,7 +72,7 @@ namespace MalbersAnimations.Controller.AI
     [UnityEditor.CustomEditor(typeof(ChanceTask))]
     public class ChanceTaskEditor : UnityEditor.Editor
     {
-        UnityEditor.SerializedProperty Description, MessageID, Task, Chance, WaitForPreviousTask;
+        UnityEditor.SerializedProperty Description, MessageID, Task, Chance, WaitForPreviousTask, TaskFailed;
 
         private void OnEnable()
         {
@@ -74,6 +81,7 @@ namespace MalbersAnimations.Controller.AI
             MessageID = serializedObject.FindProperty("MessageID");
             Chance = serializedObject.FindProperty("Chance");
             Task = serializedObject.FindProperty("Task");
+            TaskFailed = serializedObject.FindProperty("TaskFailed");
 
         }
         public override void OnInspectorGUI()
@@ -87,11 +95,14 @@ namespace MalbersAnimations.Controller.AI
             UnityEditor.EditorGUILayout.PropertyField(Chance);
             // UnityEditor.EditorGUILayout.PropertyField(Task);
 
-            UnityEditor.EditorGUILayout.BeginVertical(UnityEditor.EditorStyles.helpBox);
-            UnityEditor.EditorGUI.indentLevel++;
-            MTools.DrawScriptableObject(Task, true ,false, "Task");
-            UnityEditor.EditorGUI.indentLevel--;
-            UnityEditor.EditorGUILayout.EndVertical();
+            using (new GUILayout.VerticalScope(UnityEditor.EditorStyles.helpBox))
+            {
+                UnityEditor.EditorGUI.indentLevel++;
+                MTools.DrawScriptableObject(Task, true, false, "Task");
+                MTools.DrawScriptableObject(TaskFailed, true, false, "Failed");
+                UnityEditor.EditorGUI.indentLevel--;
+            }
+           
             serializedObject.ApplyModifiedProperties();
         }
     }

@@ -1,11 +1,20 @@
 ﻿using MalbersAnimations.Scriptables;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace MalbersAnimations.Controller
 {
+
     [CreateAssetMenu(menuName = "Malbers Animations/Modifier/Mode/Directional Dodge")]
     public class ModifierDodge : ModeModifier
     {
+        [System.Serializable]
+        public class DodgeDistance 
+        {
+            public StateID state;
+            public float distance = 1;
+
+        }
         [HelpBox]
         public string Desc ="";
 
@@ -18,21 +27,29 @@ namespace MalbersAnimations.Controller
 
         /// <summary>How Much it will mode if Move Dodge is enabled</summary>
         [Tooltip("How Much it will mode if Move Dodge is enabled")]
-        public FloatReference DodgeDistance = new FloatReference(1);
+        public   List<DodgeDistance> dodgeDistance = new();
 
         private Vector3 DodgeDirection;
-        
+
+        private float Distance = 0;
 
         public override void OnModeEnter(Mode mode)
         {
             int Ability; ;
 
             if (mode.Animal.UsingMoveWithDirection)
-            Ability = MovewithDirection(mode);
+                Ability = MovewithDirection(mode);
             else
-            Ability = MovewithWorld(mode);
+                Ability = MovewithWorld(mode);
 
             DodgeDirection = DodgeDirection.normalized;
+
+
+            var StateDistance = dodgeDistance.Find(x => x.state == mode.Animal.ActiveStateID);
+
+            if (StateDistance != null)
+                Distance = StateDistance.distance;
+
 
             mode.AbilityIndex = Ability; //Sent to the Mode which ability to play
             //Debug.Log("Ability"+Ability);
@@ -231,7 +248,7 @@ namespace MalbersAnimations.Controller
             if (MoveDodge)
             {
                 var animal = mode.Animal;
-                animal.transform.position += animal.transform.TransformDirection(DodgeDirection) * animal.DeltaTime * DodgeDistance;
+                animal.transform.position += animal.DeltaTime * Distance * animal.transform.TransformDirection(DodgeDirection);
             }
         }
 

@@ -1,5 +1,3 @@
-using MalbersAnimations.Scriptables;
-using System.Collections;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using UnityEngine;
@@ -10,14 +8,14 @@ namespace MalbersAnimations.Weapons
     {
         public List<WeaponMessages> weaponActions = new List<WeaponMessages>();
 
-      //  [Space(-22)]
+        //  [Space(-22)]
         public bool debug;
 
         private IWeaponManager manager;
 
         public override void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
         {
-            if (manager == null) manager = animator.FindInterface<IWeaponManager>();
+            manager ??= animator.GetComponent<IWeaponManager>();
 
             if (manager != null)
             {
@@ -26,7 +24,7 @@ namespace MalbersAnimations.Weapons
                     item.MessageSent = false; //Reset all the sent messages
 
                     //WEAPON BEHAVIOR SEND MESSAGE ON ENTER
-                    if (item.time == 0)   item.Execute(animator, manager,debug);
+                    if (item.time == 0) item.Execute(animator, manager, debug);
                 }
             }
         }
@@ -39,7 +37,7 @@ namespace MalbersAnimations.Weapons
                 {
                     //WEAPON BEHAVIOR SEND MESSAGE ON EXIT
                     if (!item.MessageSent) item.Execute(animator, manager, debug); //Sent everything that was not sent
-                     
+
                 }
             }
         }
@@ -51,7 +49,7 @@ namespace MalbersAnimations.Weapons
                 foreach (var item in weaponActions)
                 {
                     //WEAPON BEHAVIOR SEND MESSAGE ON TIME
-                    if (!item.MessageSent && stateInfo.normalizedTime >= item.time)     item.Execute(animator,manager, debug);
+                    if (!item.MessageSent && stateInfo.normalizedTime >= item.time) item.Execute(animator, manager, debug);
                 }
             }
         }
@@ -65,7 +63,7 @@ namespace MalbersAnimations.Weapons
                 item.name = Regex.Replace(item.Action.ToString(), @"((?<=\p{Ll})\p{Lu})|((?!\A)\p{Lu}(?>\p{Ll}))", " $0");
 
                 if (item.Action == WeaponOption.WeaponIsReady) item.name = item.ready ? "Weapon is Ready" : "Weapon is NOT Ready";
-              //  else if (item.Action == WeaponOption.FreeHandIK) item.name = item.IK ? "Weapon IK [ON]" : "Weapon IK [OFF]";
+                //  else if (item.Action == WeaponOption.FreeHandIK) item.name = item.IK ? "Weapon IK [ON]" : "Weapon IK [OFF]";
 
                 if (item.time == 0)
                 {
@@ -82,28 +80,28 @@ namespace MalbersAnimations.Weapons
 #endif
     }
 
-   
-    
+
+
     [System.Serializable]
     public class WeaponMessages
     {
         [HideInInspector]
         public string name;
         public WeaponOption Action = WeaponOption.Equip;
-        [Range(0,1), Tooltip("Normalized Time. \n[0]: On State Enter\n[1]:On State Exit\n[0-1]: On State Update")]
+        [Range(0, 1), Tooltip("Normalized Time. \n[0]: On State Enter\n[1]:On State Exit\n[0-1]: On State Update")]
         public float time = 0.0f;
 
-        [Hide("Action", false, (int) WeaponOption.PlaySound)]
+        [Hide("Action", false, (int)WeaponOption.PlaySound)]
         public int value;
 
-        [Hide("Action",  false, (int)WeaponOption.WeaponIsReady)]
-        public bool ready = true; 
+        [Hide("Action", false, (int)WeaponOption.WeaponIsReady)]
+        public bool ready = true;
 
         //[Hide("Action",  false, (int)WeaponOption.FreeHandIK, (int)WeaponOption.AimIK)]
         //public bool IK = true;
 
         /// <summary> Was the message sent? </summary>
-        public bool MessageSent {get; set;}
+        public bool MessageSent { get; set; }
 
         public void Execute(Animator anim, IWeaponManager manager, bool debug)
         {
@@ -128,13 +126,13 @@ namespace MalbersAnimations.Weapons
                     if (manager.Weapon is MShootable) (manager.Weapon as MShootable).FinishReload();
                     break;
                 case WeaponOption.WeaponIsReady:
-                  if (manager.Weapon != null)  manager.Weapon.WeaponReady(ready);
+                    if (manager.Weapon != null) manager.Weapon.WeaponReady(ready);
                     break;
                 case WeaponOption.CheckAim:
                     manager.CheckAim();
                     break;
                 case WeaponOption.PlaySound:
-                    manager.Weapon.PlaySound(value);
+                    if (manager.Weapon != null) manager.Weapon.PlaySound(value);
                     break;
                 case WeaponOption.UseFreeHand:
                     manager.FreeHandUse();
@@ -145,7 +143,7 @@ namespace MalbersAnimations.Weapons
                 default:
                     break;
             }
-            if (debug) Debug.Log($"[{anim.name}] Weapon Message: <color=white>[{Action}]</color>",anim);
+            if (debug) Debug.Log($"[{anim.name}] Weapon Message: <color=white>[{Action}]</color>", anim);
             MessageSent = true;
         }
     }

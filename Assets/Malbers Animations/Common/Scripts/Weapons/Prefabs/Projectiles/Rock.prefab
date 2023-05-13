@@ -16,7 +16,7 @@ GameObject:
   - component: {fileID: 8261692832011510391}
   - component: {fileID: 8031626858618090936}
   - component: {fileID: 3665117204012973101}
-  m_Layer: 30
+  m_Layer: 2
   m_Name: Rock
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -77,6 +77,7 @@ MonoBehaviour:
     ConstantValue: 1
     Variable: {fileID: 0}
   CustomReaction: {fileID: 0}
+  element: {fileID: 0}
   interact:
     UseConstant: 1
     ConstantValue: 1
@@ -139,9 +140,10 @@ MonoBehaviour:
     UseConstant: 1
     ConstantValue: 0.2
     Variable: {fileID: 0}
-  debug: 0
+  debug: 1
   impactBehaviour: 3
   rotation: 3
+  TrajectoryRoll: 0
   Penetration: 0.002
   m_KeepDamageValues:
     UseConstant: 1
@@ -171,6 +173,10 @@ MonoBehaviour:
   m_PosOffset: {x: 0, y: 0, z: 0}
   m_RotOffset: {x: 0, y: 0, z: 0}
   m_ScaleOffset: {x: 0, y: 0, z: 0}
+  Radius:
+    UseConstant: 1
+    ConstantValue: 0.1
+    Variable: {fileID: 0}
   OnFire:
     m_PersistentCalls:
       m_Calls:
@@ -186,7 +192,9 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 1
         m_CallState: 2
-  Editor_Tabs1: 3
+  rb: {fileID: 0}
+  m_collider: {fileID: 0}
+  Editor_Tabs1: 0
 --- !u!114 &114271608979469062
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -320,7 +328,7 @@ Rigidbody:
   m_IsKinematic: 0
   m_Interpolate: 0
   m_Constraints: 0
-  m_CollisionDetection: 0
+  m_CollisionDetection: 2
 --- !u!33 &8261692832011510391
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -393,7 +401,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4947155006907542}
   - component: {fileID: 96356462734098446}
-  m_Layer: 30
+  m_Layer: 2
   m_Name: Rock_Trail
   m_TagString: Untagged
   m_Icon: {fileID: 0}

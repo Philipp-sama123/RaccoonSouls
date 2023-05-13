@@ -1,8 +1,7 @@
-﻿using MalbersAnimations.Scriptables;
-using System;
-using System.Collections.Generic;
+﻿
+#if UNITY_EDITOR
+
 using UnityEditor;
-using UnityEditorInternal;
 using UnityEngine;
 
 namespace MalbersAnimations
@@ -64,13 +63,13 @@ namespace MalbersAnimations
             {
                 if (MalbersEditor.Foldout(AxisEditor, "Axis Properties"))
                 {
-                    using (new GUILayout.HorizontalScope( ))
+                    using (new GUILayout.HorizontalScope())
                     {
                         MalbersEditor.BoolButton(invertX, new GUIContent("Invert X"));
                         MalbersEditor.BoolButton(invertY, new GUIContent("Invert Y"));
                         MalbersEditor.BoolButton(Drag, new GUIContent("Drag"));
                     }
-                  
+
 
                     EditorGUILayout.PropertyField(deathpoint);
                     EditorGUILayout.PropertyField(sensitivityX);
@@ -89,7 +88,7 @@ namespace MalbersAnimations
                     EditorGUILayout.PropertyField(pressed);
                 }
             }
-             
+
             using (new GUILayout.VerticalScope(EditorStyles.helpBox))
             {
                 EventsEditor.boolValue = MalbersEditor.Foldout(EventsEditor, "Events");
@@ -104,8 +103,9 @@ namespace MalbersAnimations
                     EditorGUILayout.PropertyField(OnXAxisChange);
                     EditorGUILayout.PropertyField(OnYAxisChange);
                 }
-            } 
+            }
             serializedObject.ApplyModifiedProperties();
         }
     }
 }
+#endif

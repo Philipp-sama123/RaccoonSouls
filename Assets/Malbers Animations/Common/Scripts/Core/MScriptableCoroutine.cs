@@ -17,8 +17,8 @@ namespace MalbersAnimations
             {
                 Main = this;
                 ScriptableCoroutines = new List<ScriptableCoroutine>();
-               // Debug.Log("Restart: Create New List = " + ScriptableCoroutines,gameObject);  
-                DontDestroyOnLoad(this);
+                transform.parent = null;
+                DontDestroyOnLoad(transform);
             }
             else
             {

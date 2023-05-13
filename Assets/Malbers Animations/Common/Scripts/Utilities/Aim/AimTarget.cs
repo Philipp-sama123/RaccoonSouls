@@ -1,8 +1,6 @@
 ﻿using MalbersAnimations.Events;
-using MalbersAnimations.Scriptables;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Events;
 
 namespace MalbersAnimations.Utilities
 {
@@ -14,7 +12,7 @@ namespace MalbersAnimations.Utilities
         public static List<AimTarget> AimTargets;
 
         /// <summary>This will set AutoAiming for the Aim Logic</summary>
-        [SerializeField,Tooltip("It will center the Aim Ray into this gameObject's collider")] 
+        [SerializeField, Tooltip("It will center the Aim Ray into this gameObject's collider")]
         private bool aimAssist;
 
         /// <summary>This will set AutoAiming for the Aim Logic</summary>
@@ -24,9 +22,9 @@ namespace MalbersAnimations.Utilities
         [SerializeField, Tooltip("Transform Point for the Aim Assist")]
         private Transform m_AimPoint;
 
-     //   public Vector3Reference Offset;
+        //   public Vector3Reference Offset;
 
-
+        private IAim aim;
 
         public GameObjectEvent OnAimEnter = new GameObjectEvent();
         public GameObjectEvent OnAimExit = new GameObjectEvent();
@@ -41,7 +39,7 @@ namespace MalbersAnimations.Utilities
         /// <summary>This will set AutoAiming for the Aim Logic</summary>
         public bool AimAssist { get => aimAssist; set => aimAssist = value; }
         public bool IsBeingAimed { get; set; }
-       // public bool AimedFocused { get; set; }
+        // public bool AimedFocused { get; set; }
         public Transform AimPoint => m_AimPoint;
 
 
@@ -50,7 +48,7 @@ namespace MalbersAnimations.Utilities
             if (m_AimPoint == null) m_AimPoint = transform;
             if (AimTargets == null) AimTargets = new List<AimTarget>();
             AimTargets.Add(this);
-          //  OnAddedAimTarget(this);
+            //  OnAddedAimTarget(this);
         }
 
         protected virtual void OnDisable()
@@ -68,7 +66,7 @@ namespace MalbersAnimations.Utilities
         /// <summary>Is the target been aimed by the Aim Ray of the Aim Script</summary>
         public void IsBeenAimed(bool enter, GameObject AimedBy)
         {
-           if (debug) Debug.Log($"[{name}] Is Being Aimed by [{AimedBy.name}]",this);
+            if (debug) Debug.Log($"[{name}] Is Being Aimed by [{AimedBy.name}]", this);
 
             IsBeingAimed = enter;
 
@@ -86,12 +84,14 @@ namespace MalbersAnimations.Utilities
             if (other.isTrigger) return; //Ignore if the Collider entering is a Trigger
 
             IAim Aimer = other.FindInterface<IAim>();
-            if (Aimer == null)  Aimer = other.transform.root.FindInterface<IAim>(); //Search in the Root if it was not found
 
-            if (Aimer != null)
+            // Aimer ??= other.FindInterface<IObjectCore>().transform.FindInterface<IAim>();
+
+            if (Aimer != null && aim != Aimer)
             {
                 if (debug) Debug.Log($"OnTrigger Enter [{other.name}]", this);
                 Aimer.AimTarget = AimPoint;
+                aim = Aimer;
                 OnAimEnter.Invoke(other.gameObject);
             }
         }
@@ -101,21 +101,15 @@ namespace MalbersAnimations.Utilities
             if (!UseOnTriggerEnter) return;             //Ignore if we are not using OnTrigger Enter
             if (other.isTrigger) return;                //Ignore if the Collider exiting is a Trigger
 
-            IAim Aimer = other.transform.root.FindInterface<IAim>();
+            IAim Aimer = other.FindInterface<IAim>();
 
-            if (Aimer != null)
+            if (Aimer != null && aim == Aimer)
             {
                 Aimer.AimTarget = null;
+                aim = null;
                 OnAimExit.Invoke(other.gameObject);
+                if (debug) Debug.Log($"OnTrigger Exit [{other.name}]", this);
             }
         }
-
-
-        //public static bool AimAssit(Transform o)
-        //{
-        //    return AimTargets.Exists(x => x.transform == o);
-        //}
-
-        //public void SendOffset(MEvent _event) => _event.Invoke(Offset.Value);
     }
 }

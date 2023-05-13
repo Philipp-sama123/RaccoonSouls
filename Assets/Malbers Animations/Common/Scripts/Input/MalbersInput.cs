@@ -1,8 +1,5 @@
 ﻿using UnityEngine;
-using System.Collections.Generic;
-using UnityEngine.Events;
 using MalbersAnimations.Events;
-using MalbersAnimations.Scriptables;
 
 #if UNITY_EDITOR
 using UnityEditor;
@@ -16,19 +13,19 @@ namespace MalbersAnimations
     {
         #region Variables
         private ICharacterMove mCharacterMove;
-       
+
         public InputAxis Horizontal = new InputAxis("Horizontal", true, true);
         public InputAxis Vertical = new InputAxis("Vertical", true, true);
         public InputAxis UpDown = new InputAxis("UpDown", false, true);
-     //   protected IAIControl AI;  //Referece for AI Input Sources
+        //   protected IAIControl AI;  //Referece for AI Input Sources
 
 
         public float horizontal;        //Horizontal Right & Left   Axis X
         public float vertical;          //Vertical   Forward & Back Axis Z
         public float upDown;            //Up Down value    
-          
+
         public Vector3Event MovementEvent = new Vector3Event();
-            
+
         #endregion
 
         protected Vector3 m_InputAxis;
@@ -37,8 +34,8 @@ namespace MalbersAnimations
 
 
         protected override void OnEnable()
-        { 
-            base.OnEnable(); 
+        {
+            base.OnEnable();
 
             if (UpDown.active)
             {
@@ -46,12 +43,14 @@ namespace MalbersAnimations
                 {
                     var UPDown = Input.GetAxis(UpDown.name);
                 }
-                catch  
+                catch
                 {
-                   // Debug.LogError($"<B>[Up Down]</B> input doesn't exist. Please select any Character with the Malbers Input Component and hit <b>UpDown -> [Create]</b>", this);
-                   // enabled = false;
+                    // Debug.LogError($"<B>[Up Down]</B> input doesn't exist. Please select any Character with the Malbers Input Component and hit <b>UpDown -> [Create]</b>", this);
+                    // enabled = false;
                 }
             }
+
+            mCharacterMove?.Move(Vector3.zero);       //When the Input is Disable make sure the character/animal is not moving.
         }
 
         private void CheckUpDown()
@@ -86,13 +85,13 @@ namespace MalbersAnimations
         protected override void OnDisable()
         {
             base.OnDisable();
-             mCharacterMove?.Move(Vector3.zero);       //When the Input is Disable make sure the character/animal is not moving.
+            mCharacterMove?.Move(Vector3.zero);       //When the Input is Disable make sure the character/animal is not moving.
         }
 
         protected override void Initialize()
         {
             base.Initialize();
-            InitializeCharacter(); 
+            InitializeCharacter();
             Horizontal.InputSystem = Vertical.InputSystem = UpDown.InputSystem = Input_System;
         }
 
@@ -100,7 +99,7 @@ namespace MalbersAnimations
         {
             mCharacterMove = GetComponent<ICharacterMove>();
             MoveCharacter = true;       //Set that the Character can be moved
-         //   AI = this.FindInterface<IAIControl>();
+                                        //   AI = this.FindInterface<IAIControl>();
         }
 
         public virtual void UpAxis(bool input)
@@ -129,7 +128,7 @@ namespace MalbersAnimations
             m_InputAxis = new Vector3(horizontal, upDown, vertical);
 
             MovementEvent.Invoke(m_InputAxis); //Invoke the Event for the Movement AXis
-            
+
 
             if (mCharacterMove != null)
             {
@@ -145,5 +144,5 @@ namespace MalbersAnimations
 
         public void ResetInputAxis() => m_InputAxis = Vector3.zero;
 
-    } 
+    }
 }

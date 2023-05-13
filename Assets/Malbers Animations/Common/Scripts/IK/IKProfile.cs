@@ -56,9 +56,7 @@ namespace MalbersAnimations.Weapons
 
         public virtual void ApplyOffsets(Animator Anim, Vector3 Origin, Vector3 Direction, float Weight)
         {
-
-
-            var transform = Anim.transform.root; //Best to use Root... (Riding)!
+            var transform = Anim.transform;  
 
             for (int i = 0; i < offsets.Count; i++)
             {

@@ -15,41 +15,38 @@ namespace MalbersAnimations.Controller
     [DefaultExecutionOrder(-10)]
     [SelectionBase]
     [AddComponentMenu("Malbers/Animal Controller/Animal")]
-    public partial class MAnimal : MonoBehaviour,   
-        IAnimatorListener, ICharacterMove, IGravity, IObjectCore, 
-        IRandomizer, IMAnimator, ISleepController, IMDamagerSet, 
-        IAnimatorStateCycle, ICharacterAction 
+    public partial class MAnimal : MonoBehaviour,
+        IAnimatorListener, ICharacterMove, IGravity, IObjectCore,
+        IRandomizer, IMAnimator, ISleepController, IMDamagerSet,
+        IAnimatorStateCycle, ICharacterAction
     {
         //Animal Variables: All variables
         //Animal Movement:  All Locomotion Logic
         //Animal CallBacks: All public methods and behaviors that it can be called outside the script
 
         #region Editor Show 
-        [HideInInspector] public int PivotPosDir;
-       // [HideInInspector] public bool ModeShowEvents;
-        [HideInInspector] public int SelectedMode;
-        [HideInInspector] public int SelectedState;
-        [HideInInspector] public int SelectedStance;
-        //[HideInInspector] public bool ShowAnimParametersOptional = false;
-        //[HideInInspector] public bool ShowAnimParameters = false;
-        //[HideInInspector] public bool ShowLockInputs = false;
-        //[HideInInspector] public bool ShowMisc = false;
-        
-        
-        [HideInInspector] public bool ShowStateInInspector = false;
+        [HideInInspector, SerializeField] private int PivotPosDir;
+        [HideInInspector, SerializeField] private int SelectedMode;
+        [HideInInspector, SerializeField] private int SelectedState;
+        [HideInInspector, SerializeField] private int SelectedStance;
 
-        [HideInInspector] public int Editor_Tabs1;
-        [HideInInspector] public int Mode_Tabs1;
-        [HideInInspector] public int Editor_Tabs2;
-        [HideInInspector] public int Ability_Tabs;
-        [HideInInspector] public int Editor_EventTabs;
-      
-        [HideInInspector] public bool showPivots = true;
-        [HideInInspector] public bool debugStates;
-        [HideInInspector] public bool debugStances;
-        [HideInInspector] public bool debugModes;
-        [HideInInspector] public bool debugGizmos = true;
-        #endregion
+        [HideInInspector, SerializeField] internal bool ShowStateInInspector = false;
+
+        [HideInInspector, SerializeField] private int Editor_Tabs1;
+        [HideInInspector, SerializeField] private int Editor_Tabs2;
+        [HideInInspector, SerializeField] private int Mode_Tabs1;
+        [HideInInspector, SerializeField] private int Ability_Tabs;
+        [HideInInspector, SerializeField] private int Editor_EventTabs;
+
+        [HideInInspector, SerializeField] private bool showPivots = true;
+        [HideInInspector, SerializeField] internal bool debugStates;
+        [HideInInspector, SerializeField] internal bool debugStances;
+        [HideInInspector, SerializeField] internal bool debugModes;
+        [HideInInspector, SerializeField] internal bool debugGizmos = true;
+         
+        [HideInInspector, SerializeField] private int Runtime_Tabs1;
+        [HideInInspector, SerializeField] private int Runtime_Tabs2;
+          #endregion
 
 #if UNITY_EDITOR
 
@@ -58,6 +55,7 @@ namespace MalbersAnimations.Controller
             if (Anim == null) Anim = GetComponentInParent<Animator>();   //Cache the Animator
             if (RB == null) RB = GetComponentInParent<Rigidbody>();      //Cache the Rigid Body  
             if (Aimer == null) Aimer = gameObject.FindComponent<Aim>();  //Cache the Aim Component 
+            if (t == null) t = transform;
         }
 
         void Reset()
@@ -69,7 +67,7 @@ namespace MalbersAnimations.Controller
 
             Anim = GetComponentInParent<Animator>();            //Cache the Animator
             RB = GetComponentInParent<Rigidbody>();             //Catche the Rigid Body  
-            
+
             if (RB == null)
             {
                 RB = gameObject.AddComponent<Rigidbody>();
@@ -104,17 +102,23 @@ namespace MalbersAnimations.Controller
             if (defaultStance == null) defaultStance = DefStance;
             if (currentStance == null) currentStance = DefStance;
 
+            var DefaultStance = new Stance() { ID = defaultStance, CanStrafe = new (true) };
+
+            Stances = new List<Stance>() {
+                 DefaultStance
+            };
+
             pivots = new List<MPivots>
-            { 
-                new MPivots("Hip", new Vector3(0,0.7f,-0.7f), 1), 
-                new MPivots("Chest", new Vector3(0,0.7f,0.7f), 1), 
-                new MPivots("Water", new Vector3(0,1,0), 0.05f) 
+            {
+                new MPivots("Hip", new Vector3(0,0.7f,-0.7f), 1),
+                new MPivots("Chest", new Vector3(0,0.7f,0.7f), 1),
+                new MPivots("Water", new Vector3(0,1,0), 0.05f)
             };
 
 
             //Pivot_Hip =  new  MPivots(pivots[0].name, pivots[0].position, pivots[0].multiplier);
             //Pivot_Chest = new MPivots(pivots[1].name, pivots[1].position, pivots[1].multiplier);
-           
+
             //Has_Pivot_Hip = true;
             //Has_Pivot_Chest = true;
             //Starting_PivotChest = true;
@@ -164,7 +168,8 @@ namespace MalbersAnimations.Controller
                 {
                     Event = actionstatus,
                     useVoid = false,
-                    useInt = true, useFloat = true
+                    useInt = true,
+                    useFloat = true
                 };
 
                 ModeID ac = MTools.GetInstance<ModeID>("Action");
@@ -195,9 +200,6 @@ namespace MalbersAnimations.Controller
                 Debug.Log("<B>Sprint Listener</B> Added to the Event Listeners");
             }
 
-
-
-
             MEvent timeline = MTools.GetInstance<MEvent>("Timeline");
             if (listener.Events.Find(item => item.Event == timeline) == null)
             {
@@ -208,7 +210,7 @@ namespace MalbersAnimations.Controller
                     useBool = true,
                 };
 
-                UnityEditor.Events.UnityEventTools.AddPersistentListener(item.ResponseBool,SetTimeline);
+                UnityEditor.Events.UnityEventTools.AddPersistentListener(item.ResponseBool, SetTimeline);
 
                 listener.Events.Add(item);
 
@@ -222,8 +224,8 @@ namespace MalbersAnimations.Controller
             /************************/
         }
 
-        
-        void SetModesListeners(MEventListener listener ,string EventName, string ModeName)
+
+        void SetModesListeners(MEventListener listener, string EventName, string ModeName)
         {
             MEvent e = MTools.GetInstance<MEvent>(EventName);
             if (listener.Events.Find(item => item.Event == e) == null)
@@ -231,7 +233,9 @@ namespace MalbersAnimations.Controller
                 var item = new MEventItemListener()
                 {
                     Event = e,
-                    useVoid = true, useInt = true, useBool = true,
+                    useVoid = true,
+                    useInt = true,
+                    useBool = true,
                 };
 
                 ModeID att2 = MTools.GetInstance<ModeID>(ModeName);
@@ -244,7 +248,7 @@ namespace MalbersAnimations.Controller
 
                 listener.Events.Add(item);
 
-                Debug.Log("<B>"+EventName+"</B> Added to the Event Listeners");
+                Debug.Log("<B>" + EventName + "</B> Added to the Event Listeners");
             }
         }
 
@@ -282,9 +286,11 @@ namespace MalbersAnimations.Controller
 
         void OnDrawGizmos()
         {
-            float sc = transform.localScale.y;
+            var t = transform;
 
-            var pos = transform.position;
+            float sc = t.localScale.y;
+
+            var pos = t.position;
 
             if (showPivots)
             {
@@ -298,33 +304,33 @@ namespace MalbersAnimations.Controller
                         }
 
                         Gizmos.color = pivot.PivotColor;
-                        Gizmos.DrawWireSphere(pivot.World(transform), sc * RayCastRadius);
-                        Gizmos.DrawRay(pivot.World(transform), pivot.WorldDir(transform) * pivot.multiplier * sc);
+                        Gizmos.DrawWireSphere(pivot.World(t), sc * RayCastRadius);
+                        Gizmos.DrawRay(pivot.World(t), pivot.WorldDir(t) * pivot.multiplier * sc);
                     }
                 }
             }
 
             if (!debugGizmos) return;
 
-          if (states.Count>1)
+            if (states.Count > 1)
                 states[SelectedState]?.StateGizmos(this);
 
             if (Application.isPlaying)
             {
 
-                Gizmos.color = Color.green;
-                MTools.Gizmo_Arrow(pos, TargetSpeed * 5 * sc);    //Draw the Target Direction 
-               
-                Gizmos.color = Color.white; 
-                MTools.Gizmo_Arrow(pos, InertiaPositionSpeed * 2 * sc);  //Draw the Intertia Direction 
+               // Gizmos.color = Color.green;
+              //  MDebug.Gizmo_Arrow(pos, TargetSpeed * 5 * sc);    //Draw the Target Direction 
+
+                //Gizmos.color = Color.cyan;
+                //MDebug.Gizmo_Arrow(pos + Vector3.one*0.1f, InertiaPositionSpeed * 2 * sc);  //Draw the Intertia Direction 
 
 
                 Gizmos.color = Color.red;
-              //  MTools.Gizmo_Arrow(pos, Move_Direction * sc*2); //MOVE DIRECTION RED
+                //  MTools.Gizmo_Arrow(pos, Move_Direction * sc*2); //MOVE DIRECTION RED
 
                 Gizmos.color = Color.black;
                 Gizmos.DrawSphere(pos + DeltaPos, 0.02f * sc);
-              
+
                 if (showPivots)
                 {
                     Gizmos.color = Color.yellow;
@@ -338,8 +344,8 @@ namespace MalbersAnimations.Controller
                 if (CurrentExternalForce != Vector3.zero)
                 {
                     Gizmos.color = Color.cyan;
-                    Gizmos.DrawRay(Center, CurrentExternalForce * sc /10);
-                    Gizmos.DrawSphere(Center + (CurrentExternalForce  * sc/10), 0.05f * sc);
+                    Gizmos.DrawRay(Center, CurrentExternalForce * sc / 10);
+                    Gizmos.DrawSphere(Center + (CurrentExternalForce * sc / 10), 0.05f * sc);
                 }
             }
         }

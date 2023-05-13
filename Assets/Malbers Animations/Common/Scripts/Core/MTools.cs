@@ -58,6 +58,17 @@ namespace MalbersAnimations
     /// <summary>Redundant functions to be used all over the assets</summary>
     public static class MTools
     {
+        #region Math
+
+        /// <summary> Takes a number and stores the digits on an array. E.g: 6542 = [6,5,4,2] </summary>
+
+        public static bool DoSpheresIntersect(Vector3 center1, float radius1, Vector3 center2, float radius2)
+        {
+            float squaredDistance = (center1 - center2).sqrMagnitude;
+            float squaredRadii = Mathf.Pow(radius1 + radius2, 2);
+
+            return squaredDistance <= squaredRadii;
+        }
 
         public static float SmoothStep(float min, float max, float value)
         {
@@ -66,26 +77,65 @@ namespace MalbersAnimations
             return p * p * (3 - 2 * p);
         }
 
+        /// <summary> Takes a number and stores the digits on an array. E.g: 6542 = [6,5,4,2] </summary>
+        public static int[] GetDigits(int num)
+        {
+            List<int> listOfInts = new List<int>();
+            while (num > 0)
+            {
+                listOfInts.Add(num % 10);
+                num /= 10;
+            }
+            listOfInts.Reverse();
+            return listOfInts.ToArray();
+        }
+
         /// <summary>Check if x Seconds have elapsed since the Started Time </summary>
         public static bool ElapsedTime(float StartTime, float intervalTime) => (Time.time - StartTime) >= intervalTime;
 
-        public static bool IsPrefab(GameObject go) => !go.scene.IsValid();
+        #endregion
 
-        public static bool IsParent(Transform childObject, Transform parent)
+        #region Comparizon
+        /// <summary> Makes and OR comparison of an Int Value with other Ints</summary>
+        public static bool CompareOR(int source, params int[] comparison)
         {
-            Transform t = childObject.transform;
+            foreach (var item in comparison)
+                if (source == item) return true;
 
-            while (t.parent != null)
-            {
-                if (t.parent == parent)
-                {
-                    return true;
-                }
-                t = t.parent.transform;
-            }
-            return false; // Could not its parent
+            return false;
         }
-          
+
+        /// <summary> Makes and AND comparison of an INT Value with other INTs</summary>
+        public static bool CompareAND(int source, params int[] comparison)
+        {
+            foreach (var item in comparison)
+                if (source != item) return false;
+
+            return true;
+        }
+
+
+        /// <summary> Makes and OR comparison of an Bool Value with other Bools</summary>
+        public static bool CompareOR(bool source, params bool[] comparison)
+        {
+            foreach (var item in comparison)
+                if (source == item) return true;
+
+            return false;
+        }
+
+        /// <summary> Makes and AND comparison of an Bool Value with other Bools</summary>
+        public static bool CompareAND(bool source, params bool[] comparison)
+        {
+            foreach (var item in comparison)
+                if (source != item) return false;
+
+            return true;
+        }
+        #endregion
+
+        #region Types
+        
 
         public static List<Type> GetAllTypes<T>()  
         {
@@ -134,6 +184,18 @@ namespace MalbersAnimations
             return SubTypeList;
         }
 
+        public static List<Type> GetAllTypesFromGeneric(Type type)
+        {
+            var _types = AppDomain.CurrentDomain.GetAssemblies()
+           .SelectMany(assembly => assembly.GetTypes())
+           .Where(t => t.IsSubclassOfGenericTypeDefinition(type) && t != type && !t.IsAbstract).ToList();
+
+            // Convert the list to an array and store it.
+            return _types;
+        }
+
+        #endregion
+
 
         #region Find References
         public static Camera FindMainCamera()
@@ -168,9 +230,7 @@ namespace MalbersAnimations
 
         #region Layers
 
-        /// <summary>
-        /// Returns the Parent Object of a transform if they belong to the same layer
-        /// </summary>
+        /// <summary>  Returns the Parent Object of a transform if they belong to the same layer  </summary>
         public static GameObject FindRealParentByLayer(Transform other)
         {
             if (other.transform.parent == null)
@@ -209,44 +269,6 @@ namespace MalbersAnimations
         public static bool Layer_in_LayerMask(int layer, LayerMask layerMask) => layerMask == (layerMask | (1 << layer));
         #endregion
 
-        #region Comparizon
-        /// <summary> Makes and OR comparison of an Int Value with other Ints</summary>
-        public static bool CompareOR(int source, params int[] comparison)
-        {
-            foreach (var item in comparison)
-                if (source == item) return true;
-
-            return false;
-        }
-
-        /// <summary> Makes and AND comparison of an INT Value with other INTs</summary>
-        public static bool CompareAND(int source, params int[] comparison)
-        {
-            foreach (var item in comparison)
-                if (source != item) return false;
-
-            return true;
-        }
-
-
-        /// <summary> Makes and OR comparison of an Bool Value with other Bools</summary>
-        public static bool CompareOR(bool source, params bool[] comparison)
-        {
-            foreach (var item in comparison)
-                if (source == item) return true;
-
-            return false;
-        }
-
-        /// <summary> Makes and AND comparison of an Bool Value with other Bools</summary>
-        public static bool CompareAND(bool source, params bool[] comparison)
-        {
-            foreach (var item in comparison)
-                if (source != item) return false;
-
-            return true;
-        }
-        #endregion
 
         #region XmlSerializer
         /// <summary> Serialize a Class to XML</summary>
@@ -296,8 +318,12 @@ namespace MalbersAnimations
 
             foreach (RaycastHit item in hits)
             {
-                if (item.transform.root == origin.transform.root) continue; //Dont Hit anything in this hierarchy
-                if (Vector3.Distance(cam.transform.position, item.point) < Vector3.Distance(cam.transform.position, origin.position)) continue; //If I hit something behind me skip
+                //Dont Hit anything in this hierarchy
+                if (item.transform.SameHierarchy(origin.transform)) continue; //Don't Find yourself
+                
+                //If I hit something behind me skip
+                if (Vector3.Distance(cam.transform.position, item.point) < Vector3.Distance(cam.transform.position, origin.position)) continue; 
+                
                 if (hit.distance > item.distance) hit = item;
             }
 
@@ -314,7 +340,8 @@ namespace MalbersAnimations
         /// </summary>
         /// <param name="origin">The start point to calculate the direction</param>
         ///  <param name="hitmask">Just use this layers</param>
-        public static Vector3 DirectionFromCamera(Camera cam,Transform origin, Vector3 ScreenPoint, out RaycastHit hit, LayerMask hitmask, Transform Ignore = null)
+        public static Vector3 DirectionFromCamera
+            (Camera cam,Transform origin, Vector3 ScreenPoint, out RaycastHit hit, LayerMask hitmask, Transform Ignore = null)
         {
             Ray ray = cam.ScreenPointToRay(ScreenPoint);
             Vector3 dir = ray.direction;
@@ -330,10 +357,12 @@ namespace MalbersAnimations
 
             foreach (RaycastHit item in hits)
             {
-              
-                if (item.transform.root == Ignore) continue;                                     //Dont Hit anything the Ingore
-                if (item.transform.root == origin.transform.root) continue;                      //Dont Hit anything in this hierarchy
-                if (Vector3.Distance(cam.transform.position, item.point) < Vector3.Distance(cam.transform.position, origin.position)) continue; //If I hit something behind me skip
+                if (item.transform.SameHierarchy(Ignore)) continue;           //Dont Hit anything the Ingore
+                if (item.transform.SameHierarchy(origin)) continue;           //Dont Hit anything in this hierarchy
+
+                //If I hit something behind me skip
+                if (Vector3.Distance(cam.transform.position, item.point) < Vector3.Distance(cam.transform.position, origin.position)) continue;
+                
                 if (hit.distance > item.distance) hit = item;
             }
 
@@ -373,8 +402,11 @@ namespace MalbersAnimations
 
             foreach (RaycastHit rayhit in hits)
             {
-                if (rayhit.transform.root == origin.root) continue; //Dont Hit anything in this hierarchy
-                if (Vector3.Distance(cam.transform.position, rayhit.point) < Vector3.Distance(cam.transform.position, origin.position)) continue; //If I hit something behind me skip
+                if (rayhit.transform.SameHierarchy(origin)) continue; //Dont Hit anything in this hierarchy
+
+                //If I hit something behind me skip
+                if (Vector3.Distance(cam.transform.position, rayhit.point) < Vector3.Distance(cam.transform.position, origin.position)) continue;
+                
                 if (hit.distance > rayhit.distance) hit = rayhit;
             }
 
@@ -409,11 +441,7 @@ namespace MalbersAnimations
         #endregion
 
         #region Vector Math
-
-
-        /// <summary>
-        /// Gives the force needed to throw something at a target using Physyics
-        /// </summary>
+        /// <summary> Gives the force needed to throw something at a target using Physyics / </summary>
         public static float PowerFromAngle(Vector3 OriginPos, Vector3 TargetPos, float angle)
         {
             Vector2 OriginPos2 = new Vector2(OriginPos.x, OriginPos.z);
@@ -435,6 +463,27 @@ namespace MalbersAnimations
             return Mathf.Sqrt(SquareSpeed);
         }
 
+
+        /// <summary> Get the closest point on a line segment. </summary>
+        /// <param name="p">A point in space</param>
+        /// <param name="s0">Start of line segment</param>
+        /// <param name="s1">End of line segment</param>
+        /// <returns>The interpolation parameter representing the point on the segment, with 0==s0, and 1==s1</returns>
+        public static Vector3 ClosestPointOnLine(Vector3 point, Vector3 a, Vector3 b)
+        {
+            Vector3 aB = b - a;
+            Vector3 aP = point - a;
+            float sqrLenAB = aB.sqrMagnitude;
+
+            if (sqrLenAB < Epsilon) return a;
+
+            float t = Mathf.Clamp01(Vector3.Dot(aP, aB) / sqrLenAB);
+            return a + (aB * t);
+        }
+
+        /// <summary>A useful Epsilon</summary>
+        public const float Epsilon = 0.0001f;
+
         public static Vector3 VelocityFromPower(Vector3 OriginPos, float Power, float angle, Vector3 pos)
         {
             Vector3 hitPos = pos;
@@ -449,22 +498,6 @@ namespace MalbersAnimations
             return vec;
         }
 
-        public static float DeltaAngle(Vector3 rFrom, Vector3 rTo, bool toDegrees = true)
-        {
-            if (rTo == rFrom) { return 0f; }
-
-            Vector3 lCross = Vector3.Cross(rFrom, rTo);
-            float lSign = (lCross.y < -0.0001f ? -1 : 1);
-
-            float lDot = Vector3.Dot(rFrom, rTo);
-
-            return lSign * Mathf.Atan2(lCross.magnitude, lDot) * (toDegrees ? Mathf.Rad2Deg : 1);
-        }
-
-
-        public static Vector3 NullVector = new Vector3(float.MinValue, float.MinValue, float.MinValue);
-        
-        
         /// <summary>Calculate a Direction from an origin to a target</summary>
         public static Vector3 DirectionTarget(Transform origin, Transform Target, bool normalized = true) =>
             DirectionTarget(origin.position, Target.position, normalized);
@@ -522,25 +555,25 @@ namespace MalbersAnimations
             return angle * (Vector3.Dot(axis, Vector3.Cross(dirA, dirB)) < 0 ? -1 : 1);
         }
 
-        /// <summary>Calculate the closest point on a line relative to an external position</summary>
-        public static Vector3 ClosestPointOnLine(Vector3 vA, Vector3 vB, Vector3 vPoint)
-        {
-            var vVector1 = vPoint - vA;
-            var vVector2 = (vB - vA).normalized;
+        ///// <summary>Calculate the closest point on a line relative to an external position</summary>
+        //public static Vector3 ClosestPointOnLine(Vector3 vA, Vector3 vB, Vector3 vPoint)
+        //{
+        //    var vVector1 = vPoint - vA;
+        //    var vVector2 = (vB - vA).normalized;
 
-            var d = Vector3.Distance(vA, vB);
-            var t = Vector3.Dot(vVector2, vVector1);
+        //    var d = Vector3.Distance(vA, vB);
+        //    var t = Vector3.Dot(vVector2, vVector1);
 
-            if (t <= 0)   return vA;
+        //    if (t <= 0)   return vA;
 
-            if (t >= d)   return vB;
+        //    if (t >= d)   return vB;
 
-            var vVector3 = vVector2 * t;
+        //    var vVector3 = vVector2 * t;
 
-            var vClosestPoint = vA + vVector3;
+        //    var vClosestPoint = vA + vVector3;
 
-            return vClosestPoint;
-        }
+        //    return vClosestPoint;
+        //}
 
         /// <summary>Calculate the closest point on a line relative to an external position</summary>
         public static Vector3 ClosestPointOnLineSegment(Vector3 point, Vector3 a, Vector3 b)
@@ -549,7 +582,7 @@ namespace MalbersAnimations
             Vector3 aP = point - a;
             float sqrLenAB = aB.sqrMagnitude;
 
-            if (sqrLenAB == 0)
+            if (sqrLenAB < 0.001f * 0.001f)
                 return a;
 
             float t = Mathf.Clamp01(Vector3.Dot(aP, aB) / sqrLenAB);
@@ -649,7 +682,6 @@ namespace MalbersAnimations
 
                 t1.rotation = Quaternion.SlerpUnclamped(CurrentRot, FinalRot, result);
                 elapsedTime += Time.fixedDeltaTime;
-            
                 yield return wait;
             }
             t1.rotation = FinalRot;
@@ -682,25 +714,34 @@ namespace MalbersAnimations
             float elapsedTime = 0;
             var wait = new WaitForFixedUpdate();
 
+
             Quaternion CurrentRot = t1.rotation;
             Vector3 direction = (targetPosition - t1.position).normalized;
-
-            direction = Vector3.ProjectOnPlane(direction, t1.up); //Remove Y values
-
-            Quaternion FinalRot = Quaternion.LookRotation(direction);
-
-
-            while ((time > 0) && (elapsedTime <= time))
+            if (direction.CloseToZero())
             {
-                float result = curve != null ? curve.Evaluate(elapsedTime / time) : elapsedTime / time;               //Evaluation of the Pos curve
+                Debug.LogWarning("Direction is Zero. Please set a correct rotation", t1);
+                yield return null;
 
-                t1.rotation = Quaternion.SlerpUnclamped(CurrentRot, FinalRot, result);
-
-                elapsedTime += Time.fixedDeltaTime;
-
-                yield return wait;
             }
-            t1.rotation = FinalRot;
+            else
+            {
+                direction = Vector3.ProjectOnPlane(direction, t1.up); //Remove Y values
+
+                Quaternion FinalRot = Quaternion.LookRotation(direction);
+
+
+                while ((time > 0) && (elapsedTime <= time))
+                {
+                    float result = curve != null ? curve.Evaluate(elapsedTime / time) : elapsedTime / time;               //Evaluation of the Pos curve
+
+                    t1.rotation = Quaternion.SlerpUnclamped(CurrentRot, FinalRot, result);
+
+                    elapsedTime += Time.fixedDeltaTime;
+
+                    yield return wait;
+                }
+                t1.rotation = FinalRot;
+            }
         }
 
 
@@ -722,7 +763,7 @@ namespace MalbersAnimations
 
                 TargetToAlign.SendMessage("ResetDeltaRootMotion", SendMessageOptions.DontRequireReceiver); //Send this to the animal
 
-                MTools.DrawWireSphere(TargetPos, Color.red, 0.05f, 3);
+                MDebug.DrawWireSphere(TargetPos, Color.red, 0.05f, 3);
 
                 while ((time > 0) && (elapsedTime <= time))
                 {
@@ -730,7 +771,7 @@ namespace MalbersAnimations
 
                     TargetToAlign.position = Vector3.LerpUnclamped(CurrentPos, TargetPos, result);
 
-                    MTools.DrawWireSphere(TargetToAlign.position, Color.white, 0.05f, 3);
+                    MDebug.DrawWireSphere(TargetToAlign.position, Color.white, 0.05f, 3);
 
 
                     elapsedTime += Time.fixedDeltaTime;
@@ -889,33 +930,6 @@ namespace MalbersAnimations
 
         ///------------------------------------------------------------EDITOR ONLY ------------------------------------------------------------
 
-        #region Debug and Gizmos
-
-        public static void Gizmo_Arrow(Vector3 pos, Vector3 direction, float arrowHeadLength = 0.2f, float arrowHeadAngle = 20.0f)
-        {
-            if (direction == Vector3.zero) return;
-
-            var length = direction.magnitude;
-
-            Gizmos.DrawRay(pos, direction);
-            Vector3 right = Quaternion.LookRotation(direction) * Quaternion.Euler(0, 180 + arrowHeadAngle, 0) * new Vector3(0, 0, 1);
-            Vector3 left = Quaternion.LookRotation(direction) * Quaternion.Euler(0, 180 - arrowHeadAngle, 0) * new Vector3(0, 0, 1);
-            Gizmos.DrawRay(pos + direction, right * (arrowHeadLength* length));
-            Gizmos.DrawRay(pos + direction, left * (arrowHeadLength* length));
-        }
-      
-        public static void Draw_Arrow(Vector3 pos, Vector3 direction, Color color, float duration = 0, float arrowHeadLength = 0.25f, float arrowHeadAngle = 20.0f)
-        {
-            if (direction == Vector3.zero) return;
-            Debug.DrawRay(pos, direction, color,duration);
-
-            Vector3 right = Quaternion.LookRotation(direction) * Quaternion.Euler(0, 180 + arrowHeadAngle, 0) * new Vector3(0, 0, 1);
-            Vector3 left = Quaternion.LookRotation(direction) * Quaternion.Euler(0, 180 - arrowHeadAngle, 0) * new Vector3(0, 0, 1);
-            Debug.DrawRay(pos + direction, right * arrowHeadLength, color,duration);
-            Debug.DrawRay(pos + direction, left * arrowHeadLength, color, duration);
-        }
-
-
         /// <summary>
         /// Starts the recursive function for the closest transform to the specified point
         /// </summary>
@@ -966,42 +980,41 @@ namespace MalbersAnimations
                 GetClosestTransform(rPosition, rTransform.GetChild(i), ref rMinDistance, ref rMinTransform, mask);
             }
         }
-
-
-
-
-        public static void DrawBounds(Bounds b, Color color,float delay = 0)
+        
+        
+        
+        #region Debug and Gizmos 
+        /// <summary>  Draw an arrow Using Gizmos  </summary>
+        public static void Gizmo_Arrow(Vector3 pos, Vector3 direction, float arrowHeadLength = 0.2f, float arrowHeadAngle = 20.0f)
         {
-            // bottom
-            var p1 = new Vector3(b.min.x, b.min.y, b.min.z);
-            var p2 = new Vector3(b.max.x, b.min.y, b.min.z);
-            var p3 = new Vector3(b.max.x, b.min.y, b.max.z);
-            var p4 = new Vector3(b.min.x, b.min.y, b.max.z);
+            if (direction == Vector3.zero) return;
 
-            Debug.DrawLine(p1, p2, color, delay);
-            Debug.DrawLine(p2, p3, color, delay);
-            Debug.DrawLine(p3, p4, color, delay);
-            Debug.DrawLine(p4, p1, color, delay);
+            var length = direction.magnitude;
 
-            // top
-            var p5 = new Vector3(b.min.x, b.max.y, b.min.z);
-            var p6 = new Vector3(b.max.x, b.max.y, b.min.z);
-            var p7 = new Vector3(b.max.x, b.max.y, b.max.z);
-            var p8 = new Vector3(b.min.x, b.max.y, b.max.z);
-
-            Debug.DrawLine(p5, p6, color, delay);
-            Debug.DrawLine(p6, p7, color, delay);
-            Debug.DrawLine(p7, p8, color, delay);
-            Debug.DrawLine(p8, p5, color, delay);
-
-            // sides
-            Debug.DrawLine(p1, p5, color, delay);
-            Debug.DrawLine(p2, p6, color, delay);
-            Debug.DrawLine(p3, p7, color, delay);
-            Debug.DrawLine(p4, p8, color, delay);
+            Gizmos.DrawRay(pos, direction);
+            Vector3 right = Quaternion.LookRotation(direction) * Quaternion.Euler(0, 180 + arrowHeadAngle, 0) * new Vector3(0, 0, 1);
+            Vector3 left = Quaternion.LookRotation(direction) * Quaternion.Euler(0, 180 - arrowHeadAngle, 0) * new Vector3(0, 0, 1);
+            Gizmos.DrawRay(pos + direction, right * (arrowHeadLength * length));
+            Gizmos.DrawRay(pos + direction, left * (arrowHeadLength * length));
         }
 
-        public static void DrawWireSphere(Vector3 position, Color color, float radius = 1.0f,  float drawDuration = 0, int Steps = 36)
+        /// <summary>  Draw an arrow using Debug.Draw</summary>
+        public static void Draw_Arrow(Vector3 pos, Vector3 direction, Color color, float duration = 0, float arrowHeadLength = 0.25f, float arrowHeadAngle = 20.0f)
+        {
+            if (direction == Vector3.zero) return;
+            Debug.DrawRay(pos, direction, color, duration);
+
+            var length = direction.magnitude;
+
+            Vector3 right = Quaternion.LookRotation(direction) * Quaternion.Euler(0, 180 + arrowHeadAngle, 0) * new Vector3(0, 0, 1);
+            Vector3 left = Quaternion.LookRotation(direction) * Quaternion.Euler(0, 180 - arrowHeadAngle, 0) * new Vector3(0, 0, 1);
+            Debug.DrawRay(pos + direction, arrowHeadLength * length * right, color, duration);
+            Debug.DrawRay(pos + direction, arrowHeadLength * length * left, color, duration);
+        }
+
+
+
+        public static void DrawWireSphere(Vector3 position, Color color, float radius = 1.0f, float drawDuration = 0, int Steps = 36)
         {
             DebugWireSphere(position, Quaternion.identity, color, radius, 1, drawDuration, Steps);
         }
@@ -1030,33 +1043,13 @@ namespace MalbersAnimations
                 Vector3 pointY = position + rotation * new Vector3(Mathf.Cos(a), 0, Mathf.Sin(a)) * r;
                 Vector3 pointZ = position + rotation * new Vector3(Mathf.Cos(a), Mathf.Sin(a)) * r;
 
-                Debug.DrawLine(pointX, LastXpoint, color,drawDuration);
+                Debug.DrawLine(pointX, LastXpoint, color, drawDuration);
                 Debug.DrawLine(pointY, LastYpoint, color, drawDuration);
                 Debug.DrawLine(pointZ, LastZpoint, color, drawDuration);
 
                 LastXpoint = pointX;
                 LastYpoint = pointY;
                 LastZpoint = pointZ;
-            }
-#endif
-        }
-
-        public static void DrawCircle(Vector3 position, Quaternion rotation, float radius, Color color,  float scale = 1, int Steps = 36)
-        {
-#if UNITY_EDITOR
-            Vector3 forward = rotation * Vector3.forward;
-            Vector3 endPosition = position;
-
-            var drawAngle = 360 / Steps;
-            Gizmos.color = color;
-            Vector3 Lastpoint = position + rotation * new Vector3(Mathf.Cos(0), Mathf.Sin(0)) * radius * scale;
-            
-            for (int i = 0; i <= Steps; i++)
-            {
-                float a = i * drawAngle * Mathf.Deg2Rad;
-                Vector3 point = position + rotation * new Vector3(Mathf.Cos(a), Mathf.Sin(a)) * radius * scale;
-                Gizmos.DrawLine(point, Lastpoint);
-                Lastpoint = point;
             }
 #endif
         }
@@ -1084,7 +1077,7 @@ namespace MalbersAnimations
                 float a = i * drawAngle * Mathf.Deg2Rad;
                 Vector3 pointX = position + rotation * new Vector3(0, Mathf.Cos(a), Mathf.Sin(a)) * r;
                 Vector3 pointY = position + rotation * new Vector3(Mathf.Cos(a), 0, Mathf.Sin(a)) * r;
-                Vector3 pointZ = position + rotation * new Vector3( Mathf.Cos(a), Mathf.Sin(a)) * r;
+                Vector3 pointZ = position + rotation * new Vector3(Mathf.Cos(a), Mathf.Sin(a)) * r;
 
                 Gizmos.DrawLine(pointX, LastXpoint);
                 Gizmos.DrawLine(pointY, LastYpoint);
@@ -1097,6 +1090,26 @@ namespace MalbersAnimations
 #endif
         }
 
+
+        public static void DrawCircle(Vector3 position, Quaternion rotation, float radius, Color color, float scale = 1, int Steps = 36)
+        {
+#if UNITY_EDITOR
+            Vector3 forward = rotation * Vector3.forward;
+            Vector3 endPosition = position;
+
+            var drawAngle = 360 / Steps;
+            Gizmos.color = color;
+            Vector3 Lastpoint = position + rotation * new Vector3(Mathf.Cos(0), Mathf.Sin(0)) * radius * scale;
+
+            for (int i = 0; i <= Steps; i++)
+            {
+                float a = i * drawAngle * Mathf.Deg2Rad;
+                Vector3 point = position + rotation * new Vector3(Mathf.Cos(a), Mathf.Sin(a)) * radius * scale;
+                Gizmos.DrawLine(point, Lastpoint);
+                Lastpoint = point;
+            }
+#endif
+        }
 
         public static void GizmoWireHemiSphere(Vector3 position, Quaternion rotation, float radius, Color color, float scale = 1, int Steps = 36)
         {
@@ -1115,7 +1128,7 @@ namespace MalbersAnimations
             Vector3 LastZpoint = position + rotation * new Vector3(Mathf.Cos(0), Mathf.Sin(0)) * r;
 
             //draw the 4 lines
-            for (int i = 0; i <= Steps/2; i++)
+            for (int i = 0; i <= Steps / 2; i++)
             {
                 float a = i * drawAngle * Mathf.Deg2Rad;
                 Vector3 pointX = position + rotation * new Vector3(0, Mathf.Cos(a), Mathf.Sin(a)) * r;
@@ -1140,85 +1153,7 @@ namespace MalbersAnimations
 #endif
         }
 
-
-        //internal static void DebugCapsule(Vector3 baseSphere, Vector3 endSphere, Color color, float radius = 1,
-        //  bool colorizeBase = true, float drawDuration = 0,  bool drawDepth = false)
         
-        //{
-        //    Vector3 up = (endSphere - baseSphere).normalized * radius;
-        //    if (up == Vector3.zero)
-        //        up = Vector3.up;
-        //    Vector3 forward = Vector3.Slerp(up, -up, 0.5f);
-        //    Vector3 right = Vector3.Cross(up, forward).normalized * radius;
-
-        //    //Radial circles
-        //    DrawCircle(baseSphere, up, colorizeBase ? color : Color.red, radius, drawDuration, preview, drawDepth);
-        //    DrawCircle(endSphere, -up, color, radius, drawDuration, preview, drawDepth);
-
-        //    bool drawEditor = false;
-        //    bool drawGame = false;
-
-            
-
-        //    if (drawEditor)
-        //    {
-        //        //Side lines
-        //        Debug.DrawLine(baseSphere + right, endSphere + right, color, drawDuration, drawDepth);
-        //        Debug.DrawLine(baseSphere - right, endSphere - right, color, drawDuration, drawDepth);
-
-        //        Debug.DrawLine(baseSphere + forward, endSphere + forward, color, drawDuration, drawDepth);
-        //        Debug.DrawLine(baseSphere - forward, endSphere - forward, color, drawDuration, drawDepth);
-
-        //        //Draw end caps
-        //        for (int i = 1; i < 26; i++)
-        //        {
-        //            //End endcap
-        //            Debug.DrawLine(Vector3.Slerp(right, up, i / 25.0f) + endSphere, Vector3.Slerp(right, up, (i - 1) / 25.0f) + endSphere, color, drawDuration,
-        //                drawDepth);
-        //            Debug.DrawLine(Vector3.Slerp(-right, up, i / 25.0f) + endSphere, Vector3.Slerp(-right, up, (i - 1) / 25.0f) + endSphere, color,
-        //                drawDuration, drawDepth);
-        //            Debug.DrawLine(Vector3.Slerp(forward, up, i / 25.0f) + endSphere, Vector3.Slerp(forward, up, (i - 1) / 25.0f) + endSphere, color,
-        //                drawDuration, drawDepth);
-        //            Debug.DrawLine(Vector3.Slerp(-forward, up, i / 25.0f) + endSphere, Vector3.Slerp(-forward, up, (i - 1) / 25.0f) + endSphere, color,
-        //                drawDuration, drawDepth);
-
-        //            //Start endcap
-        //            Debug.DrawLine(Vector3.Slerp(right, -up, i / 25.0f) + baseSphere, Vector3.Slerp(right, -up, (i - 1) / 25.0f) + baseSphere,
-        //                colorizeBase ? color : Color.red, drawDuration, drawDepth);
-        //            Debug.DrawLine(Vector3.Slerp(-right, -up, i / 25.0f) + baseSphere, Vector3.Slerp(-right, -up, (i - 1) / 25.0f) + baseSphere,
-        //                colorizeBase ? color : Color.red, drawDuration, drawDepth);
-        //            Debug.DrawLine(Vector3.Slerp(forward, -up, i / 25.0f) + baseSphere, Vector3.Slerp(forward, -up, (i - 1) / 25.0f) + baseSphere,
-        //                colorizeBase ? color : Color.red, drawDuration, drawDepth);
-        //            Debug.DrawLine(Vector3.Slerp(-forward, -up, i / 25.0f) + baseSphere, Vector3.Slerp(-forward, -up, (i - 1) / 25.0f) + baseSphere,
-        //                colorizeBase ? color : Color.red, drawDuration, drawDepth);
-        //        }
-        //    }
-        //}
-
-        public static void DrawCone(Vector3 position, Quaternion rotation, float FOV, float length, Color color,  float scale = 1, int Steps = 4)
-        {
-#if UNITY_EDITOR
-            Vector3 forward = rotation * Vector3.forward;
-            Vector3 endPosition = position + forward * length * scale;
-
-            //draw the end of the cone
-            float endRadius = Mathf.Tan(FOV * 0.5f * Mathf.Deg2Rad) * length * scale;
-
-            var drawAngle = 360 / Steps;
-
-            Gizmos.color = color;
-
-            //draw the 4 lines
-            for (int i = 0; i < Steps; i++)
-            {
-                float a = i * drawAngle * Mathf.Deg2Rad;
-                Vector3 point = rotation * new Vector3(Mathf.Cos(a), Mathf.Sin(a)) * endRadius;
-                Gizmos.DrawLine(position, position + point + forward * length * scale);
-            }
-
-                DrawCircle(endPosition, rotation, endRadius, color);
-#endif
-        }
 
         public static void DrawTriggers(Transform transform, Collider col, Color DebugColor, bool always = false)
         {
@@ -1386,14 +1321,14 @@ namespace MalbersAnimations
 
                 for (int i = 0; i < count; i++)
                 {
-                    Vector3 o = 0.99f * n * width * ((float)i / (count - 1) - 0.5f);
+                    Vector3 o = ((float)i / (count - 1) - 0.5f) * 0.99f * width * n;
                     Vector3 origin = c.ScreenToWorldPoint(scp1 + o);
                     Vector3 destiny = c.ScreenToWorldPoint(scp2 + o);
                     Gizmos.DrawLine(origin, destiny);
                 }
             }
 #endif
-        }
+        } 
         #endregion
 
 
@@ -1403,7 +1338,7 @@ namespace MalbersAnimations
         #region Styles      
         public static GUIStyle StyleDarkGray => Style(new Color(0.35f, 0.5f, 0.7f, 0.2f));
         public static GUIStyle StyleGray => Style(new Color(0.35f, 0.5f, 0.7f, 0.2f));
-        public static GUIStyle StyleBlue => Style(new Color(0.1f, 0.6f, .9f, 0.42f));
+        public static GUIStyle StyleBlue => Style(new Color(0.2f, 0.5f, 1f, 0.42f));
         public static GUIStyle StyleGreen => Style(new Color(0f, 1f, 0.4f, 0.3f));
         public static GUIStyle StyleOrange => Style(new Color(1f, 0.5f, 0.0f, 0.3f));
         #endregion
@@ -1421,14 +1356,8 @@ namespace MalbersAnimations
             bg.Apply();
 
             currentStyle.normal.background = bg;
-
-            // MW 04-Jul-2020: Check if system supports newer graphics formats used by Unity GUI
-            Texture2D bgActual = currentStyle.normal.scaledBackgrounds[0];
-
-            if (SystemInfo.IsFormatSupported(bgActual.graphicsFormat, UnityEngine.Experimental.Rendering.FormatUsage.Sample) == false)
-            {
-                currentStyle.normal.scaledBackgrounds = new Texture2D[] { }; // This can't be null
-            }
+            currentStyle.normal.scaledBackgrounds = new Texture2D[] { };
+ 
             return currentStyle;
         }
 
@@ -1628,28 +1557,30 @@ namespace MalbersAnimations
             {
                 if (internalInspector)
                 {
-                    GUILayout.BeginHorizontal();
-                    var title = string.IsNullOrEmpty(labelOverride) ? property.displayName : labelOverride;
-                    property.isExpanded = EditorGUILayout.Foldout(property.isExpanded, title, true);
-
-                    EditorGUILayout.PropertyField(property, GUIContent.none, true);
-
-                    var remove = UnityEditor.EditorGUIUtility.IconContent("d_Toolbar Minus");
-                    remove.tooltip = "Remove";
-
-                    if (property.objectReferenceValue != null)
+                    using (new GUILayout.HorizontalScope())
                     {
-                        if (GUILayout.Button(remove, GUILayout.Width(24), GUILayout.Height(20)))
-                        {
-                            if (AssetDatabase.GetAssetPath(property.objectReferenceValue) == null)
-                            { 
-                                UnityEngine.Object.DestroyImmediate(property.objectReferenceValue); //if the asset exist only in the Monovehaviour
-                            }
-                            property.objectReferenceValue = null;
-                        }
-                    }
+                        var title = string.IsNullOrEmpty(labelOverride) ? property.displayName : labelOverride;
+                        property.isExpanded = EditorGUILayout.Foldout(property.isExpanded, title, true);
 
-                    GUILayout.EndHorizontal();
+                        EditorGUILayout.PropertyField(property, GUIContent.none, true);
+
+                        var remove = EditorGUIUtility.IconContent("d_Toolbar Minus");
+                        remove.tooltip = "Remove";
+
+                        if (property.objectReferenceValue != null)
+                        {
+                            if (GUILayout.Button(remove, GUILayout.Width(24), GUILayout.Height(20)))
+                            {
+                                if (AssetDatabase.GetAssetPath(property.objectReferenceValue) == null)
+                                {
+                                    UnityEngine.Object.DestroyImmediate(property.objectReferenceValue); //if the asset exist only in the Monovehaviour
+                                }
+                                property.objectReferenceValue = null;
+                            }
+                        }
+
+                    }
+                    
 
                     if (GUI.changed) property.serializedObject.ApplyModifiedProperties();
 
@@ -1670,21 +1601,22 @@ namespace MalbersAnimations
             }
             else
             {
-                EditorGUILayout.BeginHorizontal();
-                EditorGUILayout.ObjectField(property);
-
-                var  plus = UnityEditor.EditorGUIUtility.IconContent("d_Toolbar Plus");
-                plus.tooltip = "Create";
-
-
-                if (GUILayout.Button(plus, GUILayout.Width(24), GUILayout.Height(20)))
+                using (new GUILayout.HorizontalScope())
                 {
-                    if (!internalAsset)
-                        MTools.CreateScriptableAsset(property, GetPropertyType(property), GetSelectedPathOrFallback());
-                    else
-                        MTools.CreateScriptableAssetInternal(property, GetPropertyType(property));
+                    EditorGUILayout.ObjectField(property);
+
+                    var plus = EditorGUIUtility.IconContent("d_Toolbar Plus");
+                    plus.tooltip = "Create";
+
+
+                    if (GUILayout.Button(plus, GUILayout.Width(24), GUILayout.Height(20)))
+                    {
+                        if (!internalAsset)
+                            MTools.CreateScriptableAsset(property, GetPropertyType(property), GetSelectedPathOrFallback());
+                        else
+                            MTools.CreateScriptableAssetInternal(property, GetPropertyType(property));
+                    }
                 }
-                EditorGUILayout.EndHorizontal();
             }
 
             property.serializedObject.ApplyModifiedProperties();

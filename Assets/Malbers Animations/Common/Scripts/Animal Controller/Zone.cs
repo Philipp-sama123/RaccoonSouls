@@ -1,9 +1,8 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
-using MalbersAnimations.Scriptables;
-using UnityEngine.Events;
+using MalbersAnimations.Scriptables; 
 using UnityEngine.Serialization;
-using MalbersAnimations.Events;
+using MalbersAnimations.Utilities;
 
 #if UNITY_EDITOR
 using UnityEditor;
@@ -13,7 +12,7 @@ namespace MalbersAnimations.Controller
 {
     /// <summary>When an animal Enter a Zone this will activate a new State or a new Mode </summary>
     [AddComponentMenu("Malbers/Animal Controller/Zone")]
-    public class Zone : MonoBehaviour
+    public class Zone : MonoBehaviour, IObjectCore
     {
         public bool debug;
 
@@ -102,6 +101,9 @@ namespace MalbersAnimations.Controller
         [Tooltip("Can the Animal be controller while on the Air?")]
         public BoolReference ForceAirControl = new BoolReference(true);
 
+        [Tooltip("Plays a mode no matter if another mode is already playing")]
+        public bool ForceMode = false;
+
 
         /// <summary>Currents Animals using the zone</summary>
         public List<MAnimal> CurrentAnimals { get; internal set; }
@@ -111,7 +113,7 @@ namespace MalbersAnimations.Controller
         public MAnimal CurrentAnimal => CurrentAnimals.Count > 0 ? CurrentAnimals[0] : null;
 
         /// <summary>List of all collliders entering the Zone</summary>
-        internal List<Collider> m_Colliders = new List<Collider>();
+        internal List<Collider> m_Colliders = new();
 
 
         [Tooltip("Value Assigned to the Mode Float Value when using the Mode Zone")]
@@ -214,95 +216,108 @@ namespace MalbersAnimations.Controller
         }
 
 
+        private bool IgnoreCollider(Collider other) =>
+          !isActiveAndEnabled ||                                          //Check if the Zone is Active
+          other.isTrigger ||                                              //No Triggers
+          other.transform.SameHierarchy(transform) ||                    //Triggers in the same hierarchy
+          !MTools.CollidersLayer(other, Layer.Value) ||                   //Just accept animal layer only
+          BoneOnly && !other.name.ToLower().Contains(BoneName.ToLower()); //If is Head Only and no head was found Skip
+
+
+        public bool TrueConditions(Collider other)
+        {
+            if (!enabled) return false;
+
+            if (tags != null && tags.Count > 0)
+            {
+                if (!other.transform.HasMalbersTagInParent(Tags.ToArray())) return false;
+            }
+
+       
+            if (other == null) return false; // you are CALLING A ELIMINATED ONE
+            if (other.isTrigger) return false; // Check Trigger Interactions 
+
+            if (!MTools.Layer_in_LayerMask(other.gameObject.layer, Layer)) return false;
+            if (transform.IsChildOf(other.transform)) return false;                 // Do not Interact with yourself
+            
+
+            return true;
+        }
         void OnTriggerEnter(Collider other)
-        { 
-            if (IgnoreCollider(other)) return;                             //If the collider does not fill the requirements skip
+        {
+            if (TrueConditions(other))
+            { 
+                MAnimal animal = other.FindComponent<MAnimal>();             //Get the animal on the entering collider
 
-            if (Tags != null && Tags.Count > 0)                             //Check if we are using Tags and if the entering animal does not have that tag the this zone is not for that animal
-            {
-                bool hasTag = false;
-                foreach (var t in tags)
+                if (!animal || animal.Sleep || !animal.enabled) return;       //If there's no animal, or is Sleep or disabled do nothing
+
+                if (animal == JustExitAnimal) return; //Do not activate the animal that just exit
+
+                if (!m_Colliders.Contains(other))
                 {
-                    if (t != null && other.transform.HasMalbersTagInParent(t))
-                    {
-                        hasTag = true;
-                        break;
-                    }
+                   // Debugging($"[Enter Collider] -> [{other.name}]","white");
+                    m_Colliders.Add(other);            //if the entering collider is not already on the list add it
                 }
+                else return; //The Collider was already there //Kinematic Activation.
 
-                if (!hasTag)
-                {
-                    if (debug)
-                        Debug.LogWarning($"The Zone:<B>[{name}]</B> cannot be activated by <B>[{other.transform.root.name}]</B>. The Zone is using Tags and <B>[{other.transform.root.name}]</B> does not have any.");
-
-                    return;
-                }
-            }
-
-            MAnimal animal = other.GetComponentInParent<MAnimal>();             //Get the animal on the entering collider
-            if (!animal || animal.Sleep || !animal.enabled) return;       //If there's no animal, or is Sleep or disabled do nothing
-
-            if (animal == JustExitAnimal) return; //Do not activate the animal that just exit
-
-            if (!m_Colliders.Contains(other))
-            {
-                if (debug) Debug.Log($"<b>{name}</b> [Entering Collider] -> [{other.name}]",this);
-                m_Colliders.Add(other);            //if the entering collider is not already on the list add it
-            }
-            else return; //The Collider was already there //Kinematic Activation.
-
-            if (CurrentAnimals.Contains(animal)) return;                        //if the animal is already on the list do nothing
-            else
-            {
-                // animal.IsOnZone = true; //Let know the animal is on a zone
-                animal.InZone = this; //Let know the animal is on a zone
-
-                CurrentAnimals.Add(animal);                                     //Set a new Animal
-                OnEnter.Invoke(animal);
-
-                if (automatic)
-                {
-                    ActivateZone(animal);
-                }
+                if (CurrentAnimals.Contains(animal)) return;                        //if the animal is already on the list do nothing
                 else
                 {
-                    PrepareZone(animal);
-                }
-            }
-        }
-        void OnTriggerExit(Collider other)
-        {
-           // if (other.attachedRigidbody.isKinematic) return;                //Ignore Kinematic Exiting Bodies
-            if (IgnoreCollider(other)) return;                             //If the collider does not fill the requirements skip
+                    // animal.IsOnZone = true; //Let know the animal is on a zone
+                    animal.InZone = this; //Let know the animal is on a zone
 
-            MAnimal animal = other.GetComponentInParent<MAnimal>();
+                    CurrentAnimals.Add(animal);                                     //Set a new Animal
+                    OnEnter.Invoke(animal);
 
-            if (animal == null) return;                                            //If there's no animal script found skip all
-
-            if (m_Colliders != null && m_Colliders.Contains(other))
-            {
-                if (debug) Debug.Log($"<b>{name}</b> [Exit Collider] -> [{other.name}]",this);
-                m_Colliders.Remove(other);                              //Remove the collider from the list that is exiting the zone.
-            }
-            
-            CheckMissingColliders();
-
-            if (CurrentAnimals.Contains(animal))    //Means that the Entering animal still exist on the zone
-            {
-                if (!m_Colliders.Exists(x => x != null && x.transform.root == animal.transform))  //Check if the Collider was removed
-                {
-                    OnExit.Invoke(animal);                                      //Invoke On Exit when all animal's colliders has exited the Zone
-                    ResetStoredAnimal(animal);
-                    CurrentAnimals.Remove(animal);
+                    Debugging($"[Enter Animal] -> [{animal.name}]", "yellow");
 
                     if (automatic)
                     {
-                        JustExitAnimal = animal;
-                        this.Delay_Action(() => JustExitAnimal = null);
+                        ActivateZone(animal);
                     }
-                    //animal.IsOnZone = true;   //Let know the animal  Not On the Zone anymore
-                    animal.InZone = null;     //Let know the animal  Not On the Zone anymore
+                    else
+                    {
+                        PrepareZone(animal);
+                    }
+                }
+            }
+        }
 
+
+        void OnTriggerExit(Collider other)
+        {
+            if (TrueConditions(other))
+            {
+                MAnimal animal = other.GetComponentInParent<MAnimal>();
+                if (!animal || animal.Sleep || !animal.enabled) return;       //If there's no animal, or is Sleep or disabled do nothing
+
+
+                if (m_Colliders != null && m_Colliders.Contains(other))
+                {
+                    //Debugging($"[Exit Collider] -> [{other.name}]", "white");
+                    m_Colliders.Remove(other);                              //Remove the collider from the list that is exiting the zone.
+                }
+
+                CheckMissingColliders();
+
+                if (CurrentAnimals.Contains(animal))    //Means that the Entering animal still exist on the zone
+                {
+                    if (!m_Colliders.Exists(col => col != null && col.transform.SameHierarchy(animal.transform)))  //Check if the Collider was removed
+                    {
+                        OnExit.Invoke(animal);                                      //Invoke On Exit when all animal's colliders has exited the Zone
+                        ResetStoredAnimal(animal);
+                        CurrentAnimals.Remove(animal);
+
+                        Debugging($"[Exit Animal] -> [{animal.name}]", "yellow");
+
+                        if (automatic)
+                        {
+                            JustExitAnimal = animal;
+                            this.Delay_Action(() => JustExitAnimal = null);
+                        }
+                        //animal.IsOnZone = true;   //Let know the animal  Not On the Zone anymore
+                        animal.InZone = null;     //Let know the animal  Not On the Zone anymore
+                    }
                 }
             }
         }
@@ -311,16 +326,17 @@ namespace MalbersAnimations.Controller
 
         private void CheckMissingColliders()
         {
-            m_Colliders.RemoveAll(x => x == null || !x.enabled);
+            m_Colliders.RemoveAll(x => x == null || x.gameObject.IsDestroyed());
         }
 
-        private bool IgnoreCollider(Collider other) =>
-            !isActiveAndEnabled ||                                          //Check if the Zone is Active
-            other.isTrigger ||                                              //No Triggers
-            other.transform.root == transform.root ||                       //Triggers in the same hierarchy
-            !MTools.CollidersLayer(other, Layer.Value) ||                   //Just accept animal layer only
-            BoneOnly && !other.name.ToLower().Contains(BoneName.ToLower()); //If is Head Only and no head was found Skip
 
+        public void Debugging(string value, string color = "green")
+        {
+#if UNITY_EDITOR
+            if (debug)
+                Debug.Log($"<B>[{name}]</B> → <color={color}><B>{value}</B></color>", this);
+#endif
+        }
 
         /// <summary>Activate the Zone depending the Zone Type</summary>
         /// <param name="forced"></param>
@@ -365,7 +381,7 @@ namespace MalbersAnimations.Controller
                 }
                 if (isZoneActive)
                 {
-                    if (debug) Debug.Log($"<b>{name}</b> [Zone Activate] -> <b>[{animal.name}]</b>",this);
+                    Debugging($"[Zone Activate] <b>[{animal.name}]</b>");
                     OnZoneActive(animal);
 
                     return true;
@@ -418,7 +434,7 @@ namespace MalbersAnimations.Controller
                     if (animal.ActiveStateID != ZoneID)
                     {
                         animal.State_Activate(ZoneID);
-                        if (stateStatus != -1) animal.State_SetStatus(stateStatus);
+                        if (stateStatus != -1) animal.State_SetEnterStatus(stateStatus);
                         Succesful = true;
                     }
                     break;
@@ -431,7 +447,7 @@ namespace MalbersAnimations.Controller
                     break;
                 case StateAction.ForceActivate:
                     animal.State_Force(ZoneID);
-                    if (stateStatus != -1) animal.State_SetStatus(stateStatus);
+                    if (stateStatus != -1) animal.State_SetEnterStatus(stateStatus);
                     Succesful = true;
                     break;
                 case StateAction.Enable:
@@ -465,10 +481,19 @@ namespace MalbersAnimations.Controller
         /// <summary>Enables the Zone using the Modes</summary>
         private bool ActivateModeZone(MAnimal animal)
         {
-            if (!animal.IsPlayingMode)
+            if (ForceMode)
             {
-                animal.Mode_SetPower(ModeFloat); //Set the correct height for the Animal Animation 
-                return animal.Mode_TryActivate(ZoneID, ModeAbilityIndex, m_abilityStatus, AbilityTime);
+                animal.Mode_ForceActivate(ZoneID, ModeAbilityIndex, m_abilityStatus, AbilityTime);
+                animal.Mode_SetPower(ModeFloat); //Set the correct height for the Animal Animation
+                return true;
+            }
+            else
+            {
+                if (animal.Mode_TryActivate(ZoneID, ModeAbilityIndex, m_abilityStatus, AbilityTime))
+                {
+                    animal.Mode_SetPower(ModeFloat); //Set the correct height for the Animal Animation 
+                    return true;
+                }
             }
             return false;
         }
@@ -667,7 +692,7 @@ namespace MalbersAnimations.Controller
                     }
 
 
-                    MTools.Draw_Arrow(animal.transform.position + Vector3.up*0.05f, animal.Forward, DColor);
+                    MDebug.Draw_Arrow(animal.transform.position + Vector3.up*0.05f, animal.Forward, DColor);
                 }
             }
         }
@@ -725,7 +750,7 @@ namespace MalbersAnimations.Controller
 
         SerializedProperty
             HeadOnly, stateAction, HeadName, zoneType, stateID, modeID, modeIndex, ActionID, auto, DisableAfterUsed, ShowActionID,
-            debug,  m_abilityStatus, AbilityTime, Editor_Tabs1,
+            debug,  m_abilityStatus, AbilityTime, Editor_Tabs1, ForceMode,
             OnZoneActivation, OnExit, OnEnter, ForceGrounded, OnZoneFailed, Angle, DoubleSide, Weight, Flip, ForceAirControl, ZoneCollider,
             stanceAction, layer, stanceID, RemoveAnimalOnActive, m_tag, ModeFloat, Force, EnterAceleration, ExitAceleration, stateStatus, Bounce;
 
@@ -777,6 +802,7 @@ namespace MalbersAnimations.Controller
             ZoneCollider = serializedObject.FindProperty("ZoneCollider");
             Editor_Tabs1 = serializedObject.FindProperty("Editor_Tabs1");
             ShowActionID = serializedObject.FindProperty("ShowActionID");
+            ForceMode = serializedObject.FindProperty("ForceMode");
 
 
             OnEnter = serializedObject.FindProperty("OnEnter");
@@ -889,6 +915,7 @@ namespace MalbersAnimations.Controller
 
                         serializedObject.ApplyModifiedProperties();
 
+
                        if (usingAction)
                             ShowActionID.boolValue = 
                                 GUILayout.Toggle(ShowActionID.boolValue, new GUIContent( "•", "Show/Hide Action ID"), 
@@ -917,6 +944,7 @@ namespace MalbersAnimations.Controller
                         EditorGUILayout.PropertyField(AbilityTime);
                     }
                     EditorGUILayout.PropertyField(ModeFloat, new GUIContent("Mode Power"));
+                    EditorGUILayout.PropertyField(ForceMode);
 
                     break;
                 case ZoneType.State:

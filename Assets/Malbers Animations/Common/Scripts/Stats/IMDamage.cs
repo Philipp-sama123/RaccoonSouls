@@ -1,4 +1,4 @@
-﻿using MalbersAnimations.Controller.Reactions;
+﻿using MalbersAnimations.Reactions;
 using UnityEngine;
 
 namespace MalbersAnimations
@@ -32,13 +32,19 @@ namespace MalbersAnimations
             StatModifier stat, 
             bool IsCritical, 
             bool Default_react, 
-            MReaction custom,  
+            Reaction custom,  
             bool ignoreDamageeM,
             StatElement element);
 
 
         /// <summary>Method to receive damage from an Atacker (Simplified)</summary>
         void ReceiveDamage(StatID stat, float amount);
+
+        /// <summary>Sets a Damage Profile on the main Damageable</summary>
+        void Profile_Set(string name);
+
+        /// <summary>Restore to the Default Profile</summary>
+        void Profile_Restore();
     }
 
     /// <summary>The Damager Interface</summary>
@@ -54,19 +60,16 @@ namespace MalbersAnimations
         GameObject Owner { get; set; }
 
         /// <summary>Do Damage with Attack Triggers</summary>
-        void DoDamage(bool value, float multiplier);
+        void DoDamage(bool value, int profile);
     }
 
     /// <summary>Used to activate Damager GameObject By its ID (Damagers with Triggers). E.g An animal has several Damagers</summary>
     public interface IMDamagerSet
     {
-        /// <summary>
-        ///   Activate an specific Damager by its ID. Zero(0) Deactivate all Damagers. -1 Activate all Damagers 
-        /// </summary>
+        /// <summary> Activate an specific Damager by its ID. Zero(0) Deactivate all Damagers. -1 Activate all Damagers  </summary>
         /// <param name="ID"> ID of the Attack Trigger... this will enable or disable the Colliders</param>
-        /// <param name="multiplier">Multiplier to multipy to the Damage Value</param>
-        /// <param name="StateInfoHash">ID of the Animation to know who's sending the Damager..is it the same Animation or a new one???</param>
-        void ActivateDamager(int ID, float multiplier);
+        /// <param name="profile">Profile needed to activate the Damager</param>
+        void ActivateDamager(int ID, int profile);
 
         void DamagerAnimationStart(int hash);
 

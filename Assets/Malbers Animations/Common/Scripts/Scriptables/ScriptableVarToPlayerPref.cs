@@ -32,7 +32,8 @@ namespace MalbersAnimations.Scriptables
                     break;
             }
 
-            DontDestroyOnLoad(this);
+            transform.parent = null;
+            DontDestroyOnLoad(transform); ;
         }
 
         private void OnDisable()

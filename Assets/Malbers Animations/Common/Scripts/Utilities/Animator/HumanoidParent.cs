@@ -19,8 +19,9 @@ namespace MalbersAnimations.Utilities
         [Tooltip("Additional Local Rotation Offset to add after the gameobject is parented")]
         public Vector3Reference RotOffset;
 
-        private void Awake()
+        private void OnEnable()
         {
+            if (animator == null) { animator = this.FindComponent<Animator>(); }
             Align();
         }
 

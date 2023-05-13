@@ -11,9 +11,9 @@ namespace MalbersAnimations.Utilities
     public class Aligner : MonoBehaviour, IAlign
     {
       
-        public TransformReference mainPoint = new TransformReference();
+        public TransformReference mainPoint = new();
       
-        public TransformReference secondPoint = new TransformReference();
+        public TransformReference secondPoint = new();
 
         /// <summary>The Target will move close to the Aligner equals to the Radius</summary>
         [Min(0)] public float LookAtRadius;
@@ -27,7 +27,7 @@ namespace MalbersAnimations.Utilities
         //[Tooltip("Add an offset to the Position alignment")]
         //public float PosOffset = 0;
         /// <summary></summary>
-        public AnimationCurve AlignCurve = new AnimationCurve(MTools.DefaultCurve);
+        public AnimationCurve AlignCurve = new(MTools.DefaultCurve);
 
         /// <summary></summary>
         public bool AlignPos = true;
@@ -40,29 +40,43 @@ namespace MalbersAnimations.Utilities
       
         ///// <summary>Minimum Distance the animal will move if the Radius is greater than zero</summary>
         //public float LookAtDistance;
-        public Color DebugColor = new Color(1, 0.23f, 0, 1f);
+        public Color DebugColor = new(1, 0.23f, 0, 1f);
 
         public bool Active { get => enabled; set => enabled = value; }
 
         public Transform MainPoint => mainPoint.Value;
         public Transform SecondPoint => secondPoint.Value;
 
-        public virtual void Align(GameObject Target) => Align(Target.transform);
+        public virtual void Align(GameObject Target)
+        {
+            Align(Target.transform);
+        }
 
-        public virtual void Align(Collider Target) => Align(Target.transform.root);
+        public virtual void Align(Collider Target)
+        {
+            Align(Target.transform.FindObjectCore());
+        }
 
-        public virtual void Align(Component Target) => Align(Target.transform.root);
+        public virtual void Align(Component Target)
+        {
+            Align(Target.transform.FindObjectCore());
+        }
+
         public virtual void StopAling() { StopAllCoroutines(); }
         public virtual void Align_Self_To(GameObject Target) => Align_Self_To(Target.transform);
 
-        public virtual void Align_Self_To(Collider Target) => Align_Self_To(Target.transform.root);
+        public virtual void Align_Self_To(Collider Target) => Align_Self_To(Target.transform);
 
-        public virtual void Align_Self_To(Component Target) => Align_Self_To(Target.transform.root);
+        public virtual void Align_Self_To(Component Target) => Align_Self_To(Target.transform);
 
         public virtual void Align_Self_To(Transform reference)
         {
             if (Active && MainPoint && reference != null)
             {
+                var realRoot = reference.FindInterface<IObjectCore>();
+
+                if (realRoot != null) { reference = realRoot.transform; }
+
                 if (AlignLookAt)
                 {
                     StartCoroutine(AlignLookAtTransform(mainPoint, reference, AlignTime, AlignCurve));  //Align Look At the Zone
@@ -121,7 +135,7 @@ namespace MalbersAnimations.Utilities
                     Vector3 AlingPosition = MainPoint.position;
 
                     if (SecondPoint)                //In case there's a line ... move to the closest point between the two transforms
-                        AlingPosition = MTools.ClosestPointOnLine(MainPoint.position, SecondPoint.position, TargetPos);
+                        AlingPosition = TargetPos.ClosestPointOnLine(MainPoint.position, SecondPoint.position);
 
                     Vector3 AlingPosOpposite = transform.InverseTransformPoint(AlingPosition);
                     AlingPosOpposite.z *= -1;
@@ -203,24 +217,24 @@ namespace MalbersAnimations.Utilities
 
 
 
-        IEnumerator AlignTransform_Position(Transform t1, Vector3 NewPosition, float time, AnimationCurve curve = null)
-        {
-            float elapsedTime = 0;
+        //IEnumerator AlignTransform_Position(Transform t1, Vector3 NewPosition, float time, AnimationCurve curve = null)
+        //{
+        //    float elapsedTime = 0;
 
-            Vector3 CurrentPos = t1.position;
+        //    Vector3 CurrentPos = t1.position;
 
-            t1.SendMessage("ResetDeltaRootMotion", SendMessageOptions.DontRequireReceiver); //Nasty but it works
+        //    t1.SendMessage("ResetDeltaRootMotion", SendMessageOptions.DontRequireReceiver); //Nasty but it works
 
-            while ((time > 0) && (elapsedTime <= time))
-            {
-                float result = curve != null ? curve.Evaluate(elapsedTime / time) : elapsedTime / time;               //Evaluation of the Pos curve
-                t1.position = Vector3.LerpUnclamped(CurrentPos, NewPosition, result);
-                elapsedTime += Time.deltaTime;
+        //    while ((time > 0) && (elapsedTime <= time))
+        //    {
+        //        float result = curve != null ? curve.Evaluate(elapsedTime / time) : elapsedTime / time;               //Evaluation of the Pos curve
+        //        t1.position = Vector3.LerpUnclamped(CurrentPos, NewPosition, result);
+        //        elapsedTime += Time.deltaTime;
 
-                yield return null;
-            }
-            t1.position = NewPosition;
-        }
+        //        yield return null;
+        //    }
+        //    t1.position = NewPosition;
+        //}
 
 
 
@@ -353,7 +367,8 @@ namespace MalbersAnimations.Utilities
 
                     if (AlignLookAt.boolValue)
                     {
-                        EditorGUILayout.PropertyField(LookAtRadius, new GUIContent("Radius", "The Target will move close to the Aligner equals to the Radius"));
+                        EditorGUILayout.PropertyField(LookAtRadius,
+                            new GUIContent("Radius", "The Target will move close to the Aligner equals to the Radius. Set it to Zero to ignore moving the character"));
 
                       // if (LookAtRadius.floatValue > 0)
                         //    EditorGUILayout.PropertyField(LookAtRadiusTime, new GUIContent("Look At Align Time", "Time to move The Target to the Aligner "));

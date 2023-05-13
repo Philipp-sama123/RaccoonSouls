@@ -1,8 +1,4 @@
-﻿using MalbersAnimations.Events;
-using System.Collections.Generic;
-using UnityEngine;
-
-
+﻿using UnityEngine;
 
 namespace MalbersAnimations 
 {
@@ -93,7 +89,7 @@ namespace MalbersAnimations
 
             MainArea.Destination = Destination; //Super Important
 
-            MTools.DrawWireSphere(Destination, Color.red, 0.1f, 3);
+            MDebug.DrawWireSphere(Destination, Color.red, 0.1f, 3);
 
             return MainArea.Destination;
         }

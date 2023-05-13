@@ -3,8 +3,7 @@ using UnityEngine.Events;
 using MalbersAnimations.Scriptables;
 using MalbersAnimations.Controller;
 using MalbersAnimations.Events;
-using System;
-using UnityEngine.Serialization;
+using System; 
 
 #if UNITY_EDITOR
 using UnityEditor;
@@ -12,8 +11,6 @@ using UnityEditor;
 
 namespace MalbersAnimations.Weapons
 {
-   
-
     public enum Weapon_Action
     {
         /// <summary>[0] No Weapon is equiped</summary>
@@ -41,14 +38,10 @@ namespace MalbersAnimations.Weapons
         [SerializeField] protected StringReference description = new StringReference(string.Empty);
         #endregion
 
-        #region Physics
-        [SerializeField] protected FloatReference minForce = new FloatReference(500);                        //Weapon min Force to push rigid bodies;
-        #endregion
-
-        #region Damage
-        [SerializeField] protected FloatReference minDamage = new FloatReference(10);                       //Weapon minimum Damage
-        [SerializeField] protected FloatReference maxDamage = new FloatReference(20);                        //Weapon Max Damage
-        #endregion
+        //#region Damage
+        //[SerializeField] protected FloatReference minDamage = new FloatReference(10);                       //Weapon minimum Damage
+        //[SerializeField] protected FloatReference maxDamage = new FloatReference(20);                        //Weapon Max Damage
+        //#endregion
 
         #region Weapon Charge
         [SerializeField] private FloatReference chargeTime = new FloatReference(0);
@@ -87,12 +80,15 @@ namespace MalbersAnimations.Weapons
 
         /// <summary>Holster Transform Slot Index for the Weapon</summary>
         public int HolsterSlot { get => m_holsterIndex; set => m_holsterIndex = value; }
+
+        ///// <summary> Sets if the weapon is stored in a holster or not  </summary>
+        //public bool InHolster { get; set; }
         
         //public Sprite UISprite { get => m_UI; set => m_UI = value; }
 
         #region Aiming
-        [SerializeField] private Transform m_AimOrigin;
-        public virtual Transform AimOrigin { get => m_AimOrigin; set => m_AimOrigin = value; }
+        [SerializeField,RequiredField] private Transform m_AimOrigin;
+         public virtual Transform AimOrigin { get => m_AimOrigin; set => m_AimOrigin = value; }
         public Vector3 AimOriginPos => AimOrigin.position;
 
         [SerializeField] private AimSide m_AimSide;
@@ -285,8 +281,8 @@ namespace MalbersAnimations.Weapons
         /// <summary>Can the weapon Aim?? Overrie with shootables</summary>
         public virtual bool CanAim => false;
 
-        public float MinDamage { get => minDamage.Value; set => minDamage.Value = value; }
-        public float MaxDamage { get => maxDamage.Value; set => maxDamage.Value = value; }
+        public float MinDamage=> statModifier.MinValue.Value;
+        public float MaxDamage=> statModifier.MaxValue.Value; 
 
         /// <summary>Time needed to fully charge the weapon</summary>
         public float ChargeTime { get => chargeTime.Value; set => chargeTime.Value = value; }
@@ -314,11 +310,7 @@ namespace MalbersAnimations.Weapons
         public bool IsRightHanded => rightHand.Value;
         public bool IsLefttHanded => !IsRightHanded;
 
-        /// <summary>Minimun Force the Weapon can do to a Rigid Body</summary>
-        public float MinForce { get => minForce.Value; set => minForce.Value = value; }
-
-        /// <summary>Maximun Force the Weapon can do to a Rigid Body</summary>
-        public float MaxForce { get => m_Force.Value; set => m_Force.Value = value; }
+        
 
         /// <summary>Weapon Rate</summary>
         public float Rate { get => m_rate.Value; set => m_rate.Value = value; }
@@ -466,7 +458,10 @@ namespace MalbersAnimations.Weapons
 
 
         /// <summary> Attack Trigger Behaviour </summary>
-        public virtual void ActivateDamager(int value, float multiplier) { damage_Multiplier = multiplier; }
+        public virtual void ActivateDamager(int value, int prof) 
+        {
+            DoDamage(true, prof);
+        }
 
         /// <summary>Charge the Weapon using time.deltatime</summary>
         public virtual void Charge(float time)
@@ -549,6 +544,9 @@ namespace MalbersAnimations.Weapons
             IsCollectable = GetComponent<ICollectable>(); //Cache if the weapon is a collectable
 
             if (holsterAnim == null) holsterAnim = holster;
+
+
+            SetDefaultProfile();
         }
 
         /// <summary> Apply the Correct offset to the weapon</summary>
@@ -635,10 +633,10 @@ namespace MalbersAnimations.Weapons
         protected GUIStyle DescSTyle;
 
         protected SerializedProperty
-            Sounds, WeaponSound, weaponType, rightHand, StatID, mod, 
+            Sounds, WeaponSound, weaponType, rightHand, 
             ChargeTime, m_MaxCharge,
             chargeCharMultiplier, MaxChargeDamage, m_AimOrigin, m_UI,
-            m_AimSide, OnCharged, OnUnequiped, OnEquiped, /*OnPlaced, */minDamage, maxDamage, minForce, holster, holsterAnim, IKProfile,
+            m_AimSide, OnCharged, OnUnequiped, OnEquiped,  /*OnPlaced, minDamage, maxDamage,*/ holster, holsterAnim, IKProfile,
 
             AimIKRight, AimIKLeft, Rate, TwoHandIK, IKHandPoint, //HandIKLerp,
 
@@ -679,9 +677,8 @@ namespace MalbersAnimations.Weapons
             m_MaxCharge = serializedObject.FindProperty("m_MaxCharge");
 
             rightHand = serializedObject.FindProperty("rightHand");
-            minDamage = serializedObject.FindProperty("minDamage");
-            maxDamage = serializedObject.FindProperty("maxDamage");
-            minForce = serializedObject.FindProperty("minForce");
+            //minDamage = serializedObject.FindProperty("minDamage");
+            //maxDamage = serializedObject.FindProperty("maxDamage");
             m_IgnoreDraw = serializedObject.FindProperty("m_IgnoreDraw");
             m_IgnoreStore = serializedObject.FindProperty("m_IgnoreStore");
 
@@ -722,8 +719,7 @@ namespace MalbersAnimations.Weapons
             Editor_Tabs1 = serializedObject.FindProperty("Editor_Tabs1");
             Editor_Tabs2 = serializedObject.FindProperty("Editor_Tabs2");
 
-            StatID = statModifier.FindPropertyRelative("ID");
-            mod = statModifier.FindPropertyRelative("modify");
+           
            
 
 
@@ -751,10 +747,17 @@ namespace MalbersAnimations.Weapons
 
             //First Tabs
             int Selection = Editor_Tabs1.intValue;
-            if (Selection == 0) DrawWeapon(showAim);
-            else if (Selection == 1) DrawDamage();
-            else if (Selection == 2) DrawIK();
-            else if (Selection == 3) DrawExtras();
+
+            switch (Selection)
+            {
+                case 0: DrawWeapon(showAim); break;
+                case 1: DrawDamage(); break;
+                case 2: DrawIK(); break;
+                case 3: DrawExtras(); break;
+                default:
+                    break;
+            }
+ 
 
 
             //2nd Tabs
@@ -773,8 +776,8 @@ namespace MalbersAnimations.Weapons
 
                 if (minForce.isExpanded)
                 {
-                    EditorGUILayout.PropertyField(minForce, new GUIContent("Min", "Minimun Force to apply to a hitted rigid body"));
-                    EditorGUILayout.PropertyField(Force, new GUIContent("Max", "Maximun Force to apply to a hitted rigid body"));
+                    EditorGUILayout.PropertyField(minForce, new GUIContent("Min Force", "Minimun Force to apply to a hitted rigid body"));
+                    EditorGUILayout.PropertyField(Force, new GUIContent("Max Force", "Maximun Force to apply to a hitted rigid body"));
                     EditorGUILayout.PropertyField(forceMode);
                 }
             }
@@ -788,7 +791,7 @@ namespace MalbersAnimations.Weapons
 
         protected virtual void DrawDamage()
         {
-            using (new GUILayout.VerticalScope(EditorStyles.helpBox)) 
+            using (new GUILayout.VerticalScope(EditorStyles.helpBox))
             {
                 EditorGUILayout.PropertyField(Rate, new GUIContent("Rate", "Time(Delay) between attacks"));
                 EditorGUILayout.PropertyField(m_Automatic, new GUIContent("Automatic", "Continues Attacking if the Main Attack Input is pressed"));
@@ -803,32 +806,20 @@ namespace MalbersAnimations.Weapons
                 else
                     EditorGUILayout.HelpBox("When [Charge Time] is 0 the 'Charge Weapon' logic will be ignored", MessageType.Warning);
             }
-            
 
-            DrawCriticalDamage();
 
-            using (new GUILayout.VerticalScope(EditorStyles.helpBox)) 
+
+
+            using (new GUILayout.VerticalScope(EditorStyles.helpBox))
             {
-                EditorGUILayout.LabelField("Modify Stat", EditorStyles.boldLabel);
+                EditorGUILayout.PropertyField(statModifier);
+                EditorGUILayout.PropertyField(pureDamage);
 
-                using (new GUILayout.HorizontalScope()) 
-                {
-                    EditorGUIUtility.labelWidth = 50;
-                    EditorGUILayout.PropertyField(StatID, new GUIContent("Stat"));
-                    EditorGUILayout.PropertyField(mod, GUIContent.none, GUILayout.MinWidth(50), GUILayout.MaxWidth(120));
-                    EditorGUIUtility.labelWidth = 0;
-                }
+            }
+                DrawCriticalDamage();
 
-                using (new GUILayout.HorizontalScope())
-                {
-                    EditorGUIUtility.labelWidth = 50;
-                    EditorGUILayout.PropertyField(minDamage, new GUIContent("Min", "Minimun Damage"));
-                    EditorGUILayout.PropertyField(maxDamage, new GUIContent("Max", "Minimun Damage"));
-                    EditorGUIUtility.labelWidth = 0;
-                }
 
                 DrawElement();
-            }
         }
 
         protected virtual void DrawWeapon(bool showAim = true)
@@ -873,10 +864,14 @@ namespace MalbersAnimations.Weapons
                 if (weaponType.isExpanded)
                 {
                     var ID = weaponType.objectReferenceValue != null ? weaponType.objectReferenceValue as WeaponID : null;
+                    var color = GUI.color;
+                    if ( weaponType.objectReferenceValue == null ) GUI.color = new Color(1, 0.4f, 0.4f, 1);
 
                     EditorGUILayout.PropertyField(weaponType,
                         new GUIContent($"Type: {(ID != null ? ID.ID.ToString() : "-")} ",
                         "Gets the Weapon Type ID, Used on the Animator to Play the Matching animation for the weapon. It also is the Mode used on the Anima"));
+
+                    GUI.color = color;
 
                     EditorGUILayout.PropertyField(GroundArmPose);
                     EditorGUILayout.PropertyField(RidingArmPose);
@@ -939,6 +934,8 @@ namespace MalbersAnimations.Weapons
                     EditorGUI.indentLevel--;
                 }
             }
+
+            DrawProfiles();
         }
 
         protected virtual void ModeAbilities()

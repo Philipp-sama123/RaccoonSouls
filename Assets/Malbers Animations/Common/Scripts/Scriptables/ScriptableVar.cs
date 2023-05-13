@@ -19,6 +19,7 @@ namespace MalbersAnimations.Scriptables
     /// <summary> Base for all Local Scritable Reference Variables </summary>
     public abstract class ReferenceVar
     {
+        /// <summary> Use Local Value instead of Global Value (Scriptable Var)  </summary>
         public bool UseConstant = true;
     }
 

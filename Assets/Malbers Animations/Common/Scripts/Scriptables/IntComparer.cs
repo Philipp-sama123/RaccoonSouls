@@ -45,7 +45,7 @@ namespace MalbersAnimations
         public void Pin_Comparer_SetValue(IntVar value) => Pin?.SetValue(value.Value);
         public void Pin_Comparer_SetValue(IDs value) => Pin?.SetValue(value.ID);
 
-
+        public void AddWithBool(bool value) => SetValue(value ? Value + 1 : Value - 1);
 
 
         void OnEnable()
@@ -77,6 +77,8 @@ namespace MalbersAnimations
         /// <summary>Compares the Int parameter on this Component and if the condition is made then the event will be invoked</summary>
         public virtual void Compare()
         {
+            if (!enabled) return;
+
             foreach (var item in compare)
                 item.ExecuteAdvanceIntegerEvent(value);
         }
@@ -85,6 +87,7 @@ namespace MalbersAnimations
         /// <summary>Compares an given int Value and if the condition is made then the event will be invoked</summary>
         public virtual void Compare(int value)
         {
+            if (!enabled) return;
             foreach (var item in compare)
                 item.ExecuteAdvanceIntegerEvent(value);
         }
@@ -92,6 +95,7 @@ namespace MalbersAnimations
         /// <summary>Compares an given intVar Value and if the condition is made then the event will be invoked</summary>
         public virtual void Compare(IntVar value)
         {
+            if (!enabled) return;
             foreach (var item in compare)
                 item.ExecuteAdvanceIntegerEvent(value.Value);
         }

@@ -1,7 +1,5 @@
-﻿using MalbersAnimations.Controller;
-using MalbersAnimations.Scriptables;
+﻿using MalbersAnimations.Scriptables;
 using UnityEngine;
-using System.Collections.Generic;
 
 #if UNITY_EDITOR
 using UnityEditor;
@@ -9,7 +7,7 @@ using UnityEditor;
 
 namespace MalbersAnimations.Conditions
 {
-    public enum GOCondition { ActiveInHierarchy, ActiveSelf, Null, Equal, Prefab, Name,  Layer, Tag, MalbersTag}
+    public enum GOCondition { ActiveInHierarchy, ActiveSelf, Null, Equal, Prefab, Name, Layer, Tag, MalbersTag }
 
     [System.Serializable]
     public class C_GameObject : MCondition
@@ -29,18 +27,18 @@ namespace MalbersAnimations.Conditions
 
             if (Target.Value)
             {
-                switch (Condition)
+                return Condition switch
                 {
-                    case GOCondition.Name:              return Target.Value.name.Contains(checkName);
-                    case GOCondition.Prefab:            return Value.Value.IsPrefab();
-                    case GOCondition.ActiveInHierarchy: return Value.Value.activeInHierarchy;
-                    case GOCondition.ActiveSelf:        return Value.Value.activeSelf;
-                    case GOCondition.Equal:             return Value.Value == Target.Value;
-                    case GOCondition.Layer:             return MTools.Layer_in_LayerMask(Value.Value.layer, Layer.Value);
-                    case GOCondition.Tag:               return Value.Value.CompareTag(checkName);
-                    case GOCondition.MalbersTag:        return Value.Value.HasMalbersTag(tags);
-                    default: return false;
-                }
+                    GOCondition.Name => Target.Value.name.Contains(checkName),
+                    GOCondition.Prefab => Target.Value.IsPrefab(),
+                    GOCondition.ActiveInHierarchy => Target.Value.activeInHierarchy,
+                    GOCondition.ActiveSelf => Target.Value.activeSelf,
+                    GOCondition.Equal => Target.Value == Value.Value,
+                    GOCondition.Layer => MTools.Layer_in_LayerMask(Target.Value.layer, Layer.Value),
+                    GOCondition.Tag => Target.Value.CompareTag(checkName),
+                    GOCondition.MalbersTag => Target.Value.HasMalbersTag(tags),
+                    _ => false,
+                };
             }
             return false;
         }
@@ -48,6 +46,11 @@ namespace MalbersAnimations.Conditions
         public override void SetTarget(Object target)
         {
             if (target is GameObject) this.Target.Value = target as GameObject;
+        }
+
+        public void SetValue(Object target)
+        {
+            if (target is GameObject) this.Value.Value = target as GameObject;
         }
 
         private void Reset() => Name = "New GameObject Condition";
@@ -74,8 +77,7 @@ namespace MalbersAnimations.Conditions
             var c = (GOCondition)Condition.intValue;
 
 
-            if (c == GOCondition.Equal || c == GOCondition.Prefab)
-
+            if (c == GOCondition.Equal)
                 EditorGUILayout.PropertyField(Value);
 
             else if (c == GOCondition.Name || c == GOCondition.Tag)

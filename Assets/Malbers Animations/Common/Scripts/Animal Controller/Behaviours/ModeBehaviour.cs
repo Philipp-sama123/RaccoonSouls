@@ -18,10 +18,10 @@ namespace MalbersAnimations.Controller
         public bool EnterMode = true;
         [Tooltip("Calls 'Animation Tag Exit' on the Modes")]
         public bool ExitMode = true;
-
-        [Tooltip("Used for Playing an Ability and Finish on another Ability Mode")]
-        public bool ExitOnAbility = false;
-        [Tooltip("Next Ability to do on the Mode. -1 is the Default and the Exit On Ability Logic will be ignored")] 
+        
+        [Tooltip("Next Ability to do on the Mode.If is set to -1, The Exit On Ability Logic will be ignored.\n" +
+            "Used this when you need an ability to finish on another Ability.\n" +
+            "E.g. If the wolf is in the Ability SIT, and you activate the HOWL; When HOWL finish you can play again SIT right after")] 
         public int ExitAbility = -1;
        
         private MAnimal animal;
@@ -64,7 +64,7 @@ namespace MalbersAnimations.Controller
             //Means is Looping to itself So Skip the Exit Mode EXTREMELY IMPORTANT
             if (animator.GetCurrentAnimatorStateInfo(layerIndex).fullPathHash == stateInfo.fullPathHash) return;
             
-            if (ExitMode) ModeOwner.AnimationTagExit(ActiveAbility, ExitOnAbility ? ExitAbility : -1);
+            if (ExitMode) ModeOwner.AnimationTagExit(ActiveAbility,ExitAbility);
         }
 
         public override void OnStateMove(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
@@ -77,8 +77,8 @@ namespace MalbersAnimations.Controller
     [CustomEditor(typeof(ModeBehaviour))]
     public class ModeBehaviourED : Editor
     {
-        SerializedProperty EnterMode, ExitMode, ModeID, ExitOnAbility, ExitAbility;
-        Color RequiredColor = new Color(1,0.4f,0.4f,1);
+        SerializedProperty EnterMode, ExitMode, ModeID, ExitAbility;
+        Color RequiredColor = new Color(1, 0.4f, 0.4f, 1);
 
         void OnEnable()
         {
@@ -86,49 +86,43 @@ namespace MalbersAnimations.Controller
             ModeID = serializedObject.FindProperty("ModeID");
             EnterMode = serializedObject.FindProperty("EnterMode");
             ExitMode = serializedObject.FindProperty("ExitMode");
-            ExitOnAbility = serializedObject.FindProperty("ExitOnAbility");
             ExitAbility = serializedObject.FindProperty("ExitAbility");
         }
 
         public override void OnInspectorGUI()
         {
             serializedObject.Update();
-            EditorGUILayout.BeginHorizontal();
-          
-            var currentGUIColor = GUI.color;
-            GUI.color = ModeID.objectReferenceValue == null ? RequiredColor : currentGUIColor;
-            EditorGUIUtility.labelWidth = 70;
-            EditorGUILayout.PropertyField(ModeID);
-
-            var width = 42; 
-            GUI.color = EnterMode.boolValue ? Color.green : currentGUIColor;
-
-            EnterMode.boolValue = GUILayout.Toggle(EnterMode.boolValue,
-                               new GUIContent("Enter"), EditorStyles.miniButton, GUILayout.Width(width));
-
-            
-            GUI.color = ExitMode.boolValue ? Color.green : currentGUIColor;
-             
-            ExitMode.boolValue = GUILayout.Toggle(ExitMode.boolValue,
-                               new GUIContent("Exit"), EditorStyles.miniButton, GUILayout.Width(width));
-
-            GUI.color = currentGUIColor;
-           
-            EditorGUILayout.EndHorizontal();
-
-            if (ExitMode.boolValue)
+            using (new GUILayout.VerticalScope(EditorStyles.helpBox))
             {
-                EditorGUILayout.BeginHorizontal();
-                ExitOnAbility.boolValue = EditorGUILayout.ToggleLeft( 
-                    new GUIContent("Exit on Ability", "Used for Playing an Ability and Finish on another Ability Mode."), ExitOnAbility.boolValue, GUILayout.Width(105)); 
-              
-                if (ExitOnAbility.boolValue) 
-                    EditorGUILayout.PropertyField(ExitAbility,
-                    new GUIContent("   ", "Next Ability to do on the Mode. -1 is the Default and the Exit On Ability Logic will be ignored.\n" +
-                    "Used for Playing an Ability and Finish on another Ability Mode. E.g.: The wolf can Howl he is Sit. The Howl Ability will go to the Sit Ability Right After"));
-                EditorGUILayout.EndHorizontal();
+
+
+                using (new GUILayout.HorizontalScope())
+                {
+                    var currentGUIColor = GUI.color;
+                    GUI.color = ModeID.objectReferenceValue == null ? RequiredColor : currentGUIColor;
+                    EditorGUIUtility.labelWidth = 70;
+                    EditorGUILayout.PropertyField(ModeID);
+
+                    var width = 42;
+                    GUI.color = EnterMode.boolValue ? Color.green : currentGUIColor;
+
+                    EnterMode.boolValue = GUILayout.Toggle(EnterMode.boolValue,
+                                       new GUIContent("Enter"), EditorStyles.miniButton, GUILayout.Width(width));
+
+
+                    GUI.color = ExitMode.boolValue ? Color.green : currentGUIColor;
+
+                    ExitMode.boolValue = GUILayout.Toggle(ExitMode.boolValue,
+                                       new GUIContent("Exit"), EditorStyles.miniButton, GUILayout.Width(width));
+
+                    GUI.color = currentGUIColor;
+
+                }
+                EditorGUIUtility.labelWidth = 0;
+
+                if (ExitMode.boolValue) EditorGUILayout.PropertyField(ExitAbility);
+
             }
-            EditorGUIUtility.labelWidth =0;
             serializedObject.ApplyModifiedProperties();
         }
     }

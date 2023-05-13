@@ -1,4 +1,6 @@
-﻿using UnityEngine;
+﻿
+#if UNITY_EDITOR
+using UnityEngine;
 using UnityEditor;
 
 namespace MalbersAnimations
@@ -40,3 +42,4 @@ namespace MalbersAnimations
         }
     }
 }
+#endif

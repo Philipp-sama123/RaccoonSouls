@@ -2,8 +2,7 @@
 using UnityEngine.EventSystems;
 using MalbersAnimations.Events;
 using UnityEngine.AI;
-using UnityEngine.Serialization;
-using MalbersAnimations.Controller.AI;
+using UnityEngine.Serialization; 
 
 namespace MalbersAnimations 
 {
@@ -63,17 +62,18 @@ namespace MalbersAnimations
                 else
                     destinationPosition = pData.pointerCurrentRaycast.worldPosition;
 
-                MTools.DrawWireSphere(destinationPosition, Color.red, radius, 1);
+                MDebug.DrawWireSphere(destinationPosition, Color.red, radius, 1);
 
                 AITargets = Physics.OverlapSphere(destinationPosition, radius); //Find all the AI TARGETS on a Radius
 
                 foreach (var inter in AITargets)
                 {
-                    if (inter.transform.root == this.transform.root) continue;  //Don't click on yourself
+                    if (inter.transform.SameHierarchy(transform)) continue; //Don't click on yourself
 
-                    if (inter.transform.root.FindInterface<IAITarget>() != null)
+                    if (inter.transform.FindInterface<IAITarget>() != null)
                     {
-                        OnAITargetClick.Invoke(inter.transform.root); //Invoke only the first interactable found
+                        OnAITargetClick.Invoke(inter.transform); //Invoke only the first interactable found
+                        
                         if (PointUI)
                             Instantiate(PointUI, inter.transform.position, Quaternion.FromToRotation(PointUI.transform.up, pData.pointerCurrentRaycast.worldNormal));
 

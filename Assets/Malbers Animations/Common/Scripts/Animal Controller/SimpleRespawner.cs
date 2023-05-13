@@ -16,6 +16,8 @@ namespace MalbersAnimations.Controller
 
         private void OnEnable()
         {
+            if (animal == null) return;
+
             if (animal.gameObject.IsPrefab())
                 animal = Instantiate(animal);
 
@@ -24,10 +26,10 @@ namespace MalbersAnimations.Controller
 
             animal.OnStateChange.AddListener(OnCharacterDead);
         }
-        
+
         private void OnDisable()
         {
-            animal.OnStateChange.AddListener(OnCharacterDead);
+            animal?.OnStateChange.AddListener(OnCharacterDead);
         }
 
         public virtual void SetAnimal(MAnimal animal) => this.animal = animal;
@@ -38,7 +40,7 @@ namespace MalbersAnimations.Controller
         {
             if (DeathID.ID == state)
             {
-                this.Delay_Action(RespawnTime, () => 
+                this.Delay_Action(RespawnTime, () =>
                 {
                     animal.transform.SetPositionAndRotation(transform.position, transform.rotation);
                     animal.InputSource?.Enable(true);

@@ -1,27 +1,55 @@
-﻿using MalbersAnimations.Scriptables;
-using MalbersAnimations.Utilities;
-using UnityEngine;
+﻿using MalbersAnimations.Reactions;
+using MalbersAnimations.Scriptables;
+using System.Collections.Generic;
+using UnityEngine; 
 
 namespace MalbersAnimations.Controller
 {
     /// <summary>This will be in charge of the Movement While is on the Ground </summary>
     public class Locomotion : State
     {
+        [System.Serializable]
+        public class WallStopProfiles
+        {
+            [Tooltip("Speed Index to Identify the Profile (Walk = 1, Trot = 2, etc)")]
+            public float SpeedIndex;
+            [Tooltip("Speed Index to Identify the Profile (Walk = 1, Trot = 2, etc)")]
+            public float RayLength;
+            [Tooltip("Reaction to do if the Animal touches a Wall")]
+            [SerializeReference, SubclassSelector]
+            public Reaction reaction;
+
+            [Tooltip("Reaction if there's no wall detected in front of the animal")]
+            [SerializeReference, SubclassSelector]
+            public Reaction NoWallDetected;
+        }
+
         public override string StateName => "Locomotion";
-        [Header("Locomotion Parameters")]  
+        [Header("Locomotion Parameters")]
 
         [Tooltip("Backward Offset Position of the BackFall Ray")]
         public FloatReference FallRayBackwards = new FloatReference(0.3f);
-        
+
         [Tooltip("Reset Inertia On Enter")]
         public BoolReference ResetIntertia = new BoolReference(false);
 
         [Space(10), Tooltip("Makes the Animal Stop Moving when is near a Wall")]
         public bool WallStop = false;
-        [Hide("WallStop")] public float WallRayLength = 1f;
-        [Hide("WallStop")] public LayerMask StopLayer = 1;
-        [Hide("WallStop")] public QueryTriggerInteraction trigger =  QueryTriggerInteraction.UseGlobal;
+        [Hide("WallStop")]
+        public LayerMask StopLayer = 1;
+        /// <summary>  Store what Wall was the last wall hit </summary>
+        private Transform WallHit;
 
+        private WallStopProfiles currentProfile;
+
+        [Tooltip("Profiles to increase or decrease the WallRayLength depending the current Speed (Walk,Trot,Run)." +
+            "\nX:Speed Index (Walk = 1, Trot = 2, etc)" +
+            "\nY:Additional Value for the Ray when the Character is on that speed.")]
+        [Hide("WallStop", false, false)]
+        public List<WallStopProfiles> wallStopProfiles = new List<WallStopProfiles>();
+
+
+       
 
         [Space(10), Tooltip("Makes the Animal avoid ledges, Useful when the Animal without a Fall State, like the Elephant")]
         public bool AntiFall = false;
@@ -49,11 +77,11 @@ namespace MalbersAnimations.Controller
         public override bool TryActivate()
         {
             if (animal.Grounded)
-            { 
+            {
                 if (!HasIdle) return true; //Return true if is grounded (Meaning Locomotion is also the IDLE STATE
 
                 if (animal.MovementAxisSmoothed != Vector3.zero || animal.MovementDetected) //If is moving? 
-                {   
+                {
                     return true;
                 }
             }
@@ -63,21 +91,24 @@ namespace MalbersAnimations.Controller
         public override void Activate()
         {
             base.Activate();
-            
-           // if (animal.Sprint) speed++;
+
+            // if (animal.Sprint) speed++;
             SetEnterStatus((int)animal.CurrentSpeedModifier.Vertical.Value); //When entering Locomotion the State set the Status the current Speed Modifier.
-           // animal.AlignPosition(animal.DeltaTime);
+
+
+            CheckCurrentWallProfile(animal.CurrentSpeedIndex);
         }
+
 
 
         public override void EnterCoreAnimation()
         {
-             if (animal.LastState.ID == StateEnum.Climb) animal.ResetCameraInput(); //HACK
+            if (animal.LastState.ID == StateEnum.Climb) animal.ResetCameraInput(); //HACK
             //Keep the Enter Speed on the State Enter Parameter.
-            SetEnterStatus((int)animal.CurrentSpeedModifier.Vertical.Value); 
+            SetEnterStatus((int)animal.CurrentSpeedModifier.Vertical.Value);
 
             if (ResetIntertia.Value) animal.ResetInertiaSpeed();  //BUG THAT IT WAS MAKING GO FASTER WHEN ENTERING LOCOMOTION
-             
+
         }
 
         public override void EnterTagAnimation()
@@ -94,11 +125,6 @@ namespace MalbersAnimations.Controller
             Anti_Fall();
         }
 
-        public override void SpeedModifierChanged(MSpeed speed, int SpeedIndex)
-        {
-            base.SpeedModifierChanged(speed, SpeedIndex);
-            SetEnterStatus((int)speed.Vertical.Value); //Use the Enter Status to check the speed
-        }
 
         public override void OnStateMove(float deltatime)
         {
@@ -107,52 +133,85 @@ namespace MalbersAnimations.Controller
             //Hack to use gravity with no Fall State
             if (General.Gravity)
             {
-                if (!animal.Grounded) 
+                if (!animal.Grounded)
                 {
-                    animal.CheckIfGrounded_Height(); 
+                    animal.CheckIfGrounded_Height();
                 }
-               else if (!animal.FrontRay && !animal.MainRay)
-                    animal.Grounded = false; 
+                else if (!animal.FrontRay && !animal.MainRay)
+                    animal.Grounded = false;
             }
 
             if (InExitAnimation)
             {
-                
+
                 //Keep Vertical speed here!!!!!!
                 if (Anim.IsInTransition(0) && !animal.MovementDetected)
                 {
                     animal.MovementAxis.z = 1;
-                 //   Debug.Log("VerticalSmooth");
+                    //   Debug.Log("VerticalSmooth");
                 }
             }
         }
 
+        public override void SpeedModifierChanged(MSpeed speed, int SpeedIndex)
+        {
+            SetEnterStatus((int)speed.Vertical.Value); //Use the Enter Status to check the speed
+            CheckCurrentWallProfile(SpeedIndex);
+        }
 
+        //───────────────────────────────────────── Wall Stop ──────────────────────────────────────────────────────────────────
         private void Wall_Stop()
         {
-            if (WallStop && MovementRaw.z > 0)
+            if (WallStop && currentProfile != null && MovementRaw.z > 0)
             {
+                var Length = (currentProfile.RayLength) * ScaleFactor;
                 var MainPivotPoint = animal.Main_Pivot_Point;
-                if (Physics.Raycast(MainPivotPoint, animal.Forward, out _, WallRayLength, StopLayer, trigger))
+
+                Debug.DrawRay(MainPivotPoint, animal.Forward * Length, Color.yellow);
+                MDebug.DrawWireSphere(MainPivotPoint + animal.Forward * Length, Color.yellow, 0.02f);
+
+                if (Physics.Raycast(MainPivotPoint, animal.Forward, out var hit, Length, StopLayer, IgnoreTrigger))
                 {
-                    Gizmos.color = Color.red; 
-                    Debug.DrawRay(MainPivotPoint, animal.Forward * WallRayLength,Color.red);
-                    animal.MovementAxis.z = 0;
+                    animal.MovementAxis.z = 0; //Remove all ForwardMovement
+                    if (hit.transform && WallHit != hit.transform)
+                    {
+                        currentProfile.reaction?.React(animal);
+                        WallHit = hit.transform;
+                    }
                 }
                 else
                 {
-                    Debug.DrawRay(MainPivotPoint, animal.Forward * WallRayLength, DebugColor);
+                    Debug.DrawRay(MainPivotPoint, animal.Forward * Length, DebugColor);
+                    if (WallHit)
+                    {
+                        WallHit = null;
+                        currentProfile.NoWallDetected?.React(animal);
+                    }
                 }
             }
         }
 
+        /// <summary>  Wall Stop Profiles  </summary>
+        /// <param name="SpeedIndex"></param>
+        private void CheckCurrentWallProfile(int SpeedIndex)
+        {
+            if (WallStop)
+            {
+                foreach (var prof in wallStopProfiles)
+                {
+                    if (prof.SpeedIndex <= SpeedIndex)
+                        currentProfile = prof;
+                }
 
+             //   Debug.Log($"Current Wall Stop Index: {currentProfile.SpeedIndex}");
+            }
+        }
 
-        ///// <summary> The Locomotion Uses the Status State Animator Parameter to know which speed Index is using  </summary>
-        //public override void SpeedModifierChanged(MSpeed speed, int SpeedIndex)
-        //{
-        //    if (InCoreAnimation) SetStatus(SpeedIndex); //This is I think for Changing Fly to Locomotion
-        //}
+        public override void ResetStateValues()
+        {
+            currentProfile = null; //Reset the current ProFile
+            WallHit = null;
+        }
 
         //───────────────────────────────────────── ANTI FALL CODE ──────────────────────────────────────────────────────────────────
 
@@ -169,7 +228,7 @@ namespace MalbersAnimations.Controller
                 float SprintMultiplier = (animal.CurrentSpeedModifier.Vertical).Value;
                 SprintMultiplier += animal.Sprint ? 1f : 0f; //Check if the animal is sprinting
 
-               
+
                 var RayMultiplier = animal.Pivot_Multiplier * FallMultiplier; //Get the Multiplier
 
                 var MainPivotPoint = animal.Pivot_Chest.World(animal.transform);
@@ -200,21 +259,21 @@ namespace MalbersAnimations.Controller
                 Debug.DrawRay(Left, Dir * RayMultiplier, DebugColor);
                 Debug.DrawRay(Right, Dir * RayMultiplier, DebugColor);
 
-                var fallHits = Physics.RaycastNonAlloc(Center, Dir, hits, RayMultiplier, GroundLayer, QueryTriggerInteraction.Ignore);
+                var fallHits = Physics.RaycastNonAlloc(Center, Dir, hits, RayMultiplier, GroundLayer, IgnoreTrigger);
 
                 if (fallHits == 0)
                 {
                     BlockForward = true; //Means there's 2 rays that are falling
                 }
                 else
-                    fallHits = Physics.RaycastNonAlloc(Left, Dir, hits, RayMultiplier, GroundLayer, QueryTriggerInteraction.Ignore);
+                    fallHits = Physics.RaycastNonAlloc(Left, Dir, hits, RayMultiplier, GroundLayer, IgnoreTrigger);
                 if (fallHits == 0)
                 {
                     BlockForward = true; //Means there's 2 rays that are falling
                 }
                 else
                 {
-                    fallHits = Physics.RaycastNonAlloc(Right, Dir, hits, RayMultiplier, GroundLayer, QueryTriggerInteraction.Ignore);
+                    fallHits = Physics.RaycastNonAlloc(Right, Dir, hits, RayMultiplier, GroundLayer, IgnoreTrigger);
                     if (fallHits == 0)
                     {
                         BlockForward = true; //Means there's 2 rays that are falling
@@ -233,8 +292,8 @@ namespace MalbersAnimations.Controller
                 var RayMultiplier = animal.Pivot_Multiplier; //Get the Multiplier
                 Debug.DrawRay(MainPivotPoint, -Up * RayMultiplier, Color.white);
 
-                var fallHits = Physics.RaycastNonAlloc(MainPivotPoint, -Up, hits, RayMultiplier, GroundLayer, QueryTriggerInteraction.Ignore);
-               
+                var fallHits = Physics.RaycastNonAlloc(MainPivotPoint, -Up, hits, RayMultiplier, GroundLayer, IgnoreTrigger);
+
                 if (fallHits == 0)
                 {
                     MovementAxisMult.z = 0;
@@ -249,10 +308,16 @@ namespace MalbersAnimations.Controller
         {
             if (AntiFall) PaintRays(animal);
 
-            if (WallStop)
+            if (WallStop && !Application.isPlaying)
             {
-                var MainPivotPoint = Application.isPlaying ? animal.Main_Pivot_Point : animal.transform.position + new Vector3(0, animal.Height, 0);
-                Debug.DrawRay(MainPivotPoint, animal.Forward * WallRayLength, DebugColor);
+                Gizmos.color = Color.yellow;
+                var MainPivotPoint = animal.transform.position + new Vector3(0, animal.Height, 0);
+
+                foreach (var item in wallStopProfiles)
+                {
+                    Gizmos.DrawRay(MainPivotPoint, animal.Forward * item.RayLength);
+                    Gizmos.DrawSphere(MainPivotPoint + animal.Forward * item.RayLength, 0.02f);
+                }
             }
         }
 
@@ -280,6 +345,7 @@ namespace MalbersAnimations.Controller
             Debug.DrawRay(BackRight, Dir * RayMultiplier, DebugColor);
         }
 
+
         public override void SetSpeedSets(MAnimal animal)
         {
             //Do nothing... the Animal Controller already does it on Start
@@ -297,7 +363,7 @@ namespace MalbersAnimations.Controller
                 Sprint = true,
                 OrientToGround = true,
                 CustomRotation = false,
-                IgnoreLowerStates = false, 
+                IgnoreLowerStates = false,
                 AdditivePosition = true,
                 AdditiveRotation = true,
                 Gravity = false,
@@ -308,4 +374,6 @@ namespace MalbersAnimations.Controller
         }
 #endif
     }
+
+
 }

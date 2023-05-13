@@ -3,6 +3,7 @@ using MalbersAnimations.Events;
 using MalbersAnimations.Scriptables;
 using System.Collections.Generic;
 using System;
+using UnityEngine.Events;
 
 #if UNITY_EDITOR
 using UnityEditor;
@@ -32,21 +33,16 @@ namespace MalbersAnimations.Utilities
         public GameObjectEvent OnGameObjectEnter = new GameObjectEvent();
         public GameObjectEvent OnGameObjectExit = new GameObjectEvent();
         public GameObjectEvent OnGameObjectStay = new GameObjectEvent();
+        public UnityEvent OnEmpty = new UnityEvent();
 
         [SerializeField] private bool m_debug = false;
 
-        public BoolReference useOnTriggerStay = new BoolReference();
+        public BoolReference useOnTriggerStay = new();
 
 
-        ///// <summary>All the Gameobjects using the Proxy</summary>
-        //internal List<Type> AllowedTypes = new List<Type>();
-        //public Type ForcedType;
-
-
-
-        internal List<Collider> m_colliders = new List<Collider>();
+        internal List<Collider> m_colliders = new();
         /// <summary>All the Gameobjects using the Proxy</summary>
-        internal List<GameObject> EnteringGameObjects = new List<GameObject>();
+        internal List<GameObject> EnteringGameObjects = new();
 
         public Action<GameObject, Collider> EnterTriggerInteraction = delegate { };
         public Action<GameObject, Collider> ExitTriggerInteraction = delegate { };
@@ -73,10 +69,10 @@ namespace MalbersAnimations.Utilities
             if (trigger == null) return false; // you are 
             if (other == null) return false; // you are CALLING A ELIMINATED ONE
             if (triggerInteraction == QueryTriggerInteraction.Ignore && other.isTrigger) return false; // Check Trigger Interactions 
-            if (!MTools.Layer_in_LayerMask(other.gameObject.layer, Layer)) return false;
 
-            if (transform.IsChildOf(other.transform)) return false;         // Do not Interact with yourself
-            if (Owner != null && other.transform.IsChildOf(Owner)) return false;             // Do not Interact with yourself
+            if (!MTools.Layer_in_LayerMask(other.gameObject.layer, Layer)) return false;
+            if (transform.IsChildOf(other.transform)) return false;                 // Do not Interact with yourself
+            if (Owner != null && other.transform.IsChildOf(Owner)) return false;    // Do not Interact with yourself
 
             return true;
         }
@@ -88,14 +84,10 @@ namespace MalbersAnimations.Utilities
         {
             if (TrueConditions(other))
             {
-                var realRoot = other.transform.root.gameObject;        //Get the animal on the entering collider
+                GameObject realRoot = FindRealRoot(other);
 
-                //Means the Root is not on the real root since its not on the search layer
-                if (realRoot.layer != other.gameObject.layer)          
-                    realRoot = MTools.FindRealParentByLayer(other.transform);         
 
                 OnTrigger_Enter.Invoke(other); //Invoke when a Collider enters the Trigger
-              
 
                 if (m_debug) Debug.Log($"<b>{name}</b> [Entering Collider] -> [{other.name}]", this);
 
@@ -126,10 +118,7 @@ namespace MalbersAnimations.Utilities
         {
             if (TrueConditions(other))
             {
-                var realRoot = other.transform.root.gameObject;         //Get the gameObject on the entering collider
-                //Means the Root is not on the real root since its not on the search layer
-                if (realRoot.layer != other.gameObject.layer)
-                    realRoot = MTools.FindRealParentByLayer(other.transform);
+                GameObject realRoot = FindRealRoot(other);
 
                 OnTrigger_Exit.Invoke(other);
 
@@ -142,7 +131,7 @@ namespace MalbersAnimations.Utilities
 
                 if (EnteringGameObjects.Contains(realRoot))             //Means that the Entering GameObject still exist
                 {
-                    if (!m_colliders.Exists(c => c != null && c.transform.root.gameObject == realRoot)) //Means that all that root colliders are out
+                    if (!m_colliders.Exists(c => c != null && c.transform.SameHierarchy(realRoot.transform))) //Means that all that root colliders are out
                     {
                         EnteringGameObjects.Remove(realRoot);
                         OnGameObjectExit.Invoke(realRoot);
@@ -151,8 +140,30 @@ namespace MalbersAnimations.Utilities
                         if (m_debug) Debug.Log($"<b>{name}</b> [Leaving Gameobject] -> [{realRoot.name}]", this);
                     }
                 }
+
+                if (m_colliders.Count == 0) ResetTrigger();
                 //CheckMissingColliders();
             }
+        }
+
+        private static GameObject FindRealRoot(Collider other)
+        {
+            var realRoot = other.transform.root.gameObject;        //Get the animal on the entering collider
+
+            //Find the Right Root if the objets is a Malbers Core Object
+            var coreRoot = other.FindInterface<IObjectCore>();
+
+            if (coreRoot != null)
+            {
+                realRoot = coreRoot.transform.gameObject;
+            }
+            //Means the Root is not on the real root since its not on the search layer
+            else if (realRoot.layer != other.gameObject.layer)
+            {
+                realRoot = MTools.FindRealParentByLayer(other.transform);
+            }
+
+            return realRoot;
         }
 
         /// <summary>Check Recently destroyed Colliders (Strange bug)</summary>
@@ -202,6 +213,7 @@ namespace MalbersAnimations.Utilities
         {
             m_colliders = new List<Collider>();
             EnteringGameObjects = new List<GameObject>();
+            OnEmpty.Invoke();
         }
 
         private void OnDisable()
@@ -227,7 +239,7 @@ namespace MalbersAnimations.Utilities
                 }
             }
 
-            if (m_debug) Debug.Log($"<b>{name}</b> [Exit All Colliders and Triggers] ");
+            if (m_debug) Debug.Log($"<b>{name}</b> [Exit All Colliders and Triggers] ",this);
 
             ResetTrigger();
         }
@@ -287,6 +299,7 @@ namespace MalbersAnimations.Utilities
                 if (Proxy == null)
                 {
                     Proxy = trigger.gameObject.AddComponent<TriggerProxy>();
+
                     Proxy.SetLayer(Layer, TriggerInteraction, Owner);
                    // Proxy.hideFlags = HideFlags.HideInInspector;
                 }
@@ -318,7 +331,7 @@ namespace MalbersAnimations.Utilities
     [CanEditMultipleObjects, CustomEditor(typeof(TriggerProxy))]
     public class TriggerProxyEditor : Editor
     {
-        SerializedProperty debug, OnTrigger_Enter, OnTrigger_Exit, useOnTriggerStay, OnTrigger_Stay, Editor_Tabs1,
+        SerializedProperty debug, OnTrigger_Enter, OnTrigger_Exit, OnEmpty, useOnTriggerStay, OnTrigger_Stay, Editor_Tabs1,
             triggerInteraction, hitLayer, OnGameObjectEnter, OnGameObjectExit, OnGameObjectStay, Tags;
 
         TriggerProxy m;
@@ -328,6 +341,7 @@ namespace MalbersAnimations.Utilities
         private void OnEnable()
         {
             m = (TriggerProxy)target;
+            OnEmpty = serializedObject.FindProperty("OnEmpty");
             triggerInteraction = serializedObject.FindProperty("triggerInteraction");
             useOnTriggerStay = serializedObject.FindProperty("useOnTriggerStay");
             hitLayer = serializedObject.FindProperty("hitLayer");
@@ -413,6 +427,7 @@ namespace MalbersAnimations.Utilities
             {
                 EditorGUILayout.PropertyField(OnTrigger_Enter, new GUIContent("On Trigger Enter"));
                 EditorGUILayout.PropertyField(OnTrigger_Exit, new GUIContent("On Trigger Exit"));
+                EditorGUILayout.PropertyField(OnEmpty);
                 if (m.useOnTriggerStay.Value)
                     EditorGUILayout.PropertyField(OnTrigger_Stay, new GUIContent("On Trigger Stay"));
 

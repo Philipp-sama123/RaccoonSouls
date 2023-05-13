@@ -34,7 +34,7 @@ namespace MalbersAnimations
         [Min(0)] public float LookAtTime = 0.15f;
         //[Tooltip("Push the Found Animal/Target instead of this character")]
         //public bool pushTarget = true;
-        public Color debugColor = new Color(1, 0.5f, 0, 0.2f);
+        public Color debugColor = new(1, 0.5f, 0, 0.2f);
 
         public bool debug;
 
@@ -84,7 +84,7 @@ namespace MalbersAnimations
                     )
                     continue; //Don't Find yourself or don't find death animals
 
-                if (animal.transform.IsGrandchild(a.transform)) continue; //Meaning that the animal is mounting the other animal.
+                if (animal.transform.SameHierarchy(a.transform)) continue; //Meaning that the animal is mounting the other animal.
 
 
                 var animalsDistance = Vector3.Distance(transform.position, a.Center);
@@ -102,7 +102,7 @@ namespace MalbersAnimations
 
                 if (TargetMultiplier == 0) ClosestAI = null;
                 StartAligning(ClosestAnimal.Center, ClosestAI);
-                if (debug) Debug.Log($"[{name}], Alinging to [{ClosestAnimal.name}]", ClosestAnimal);
+                if (debug) Debug.Log($"[{name}], Alinging to [{ClosestAnimal.name}]", this);
 
                 return true;
             }
@@ -113,36 +113,34 @@ namespace MalbersAnimations
         {
             var pos = animal.Center;
 
-            var AllColliders = Physics.OverlapSphere(pos, SearchRadius, Layer.Value);
+            var AllColliders = Physics.OverlapSphere(pos, SearchRadius, Layer.Value, QueryTriggerInteraction.Ignore);
 
             Collider ClosestCollider = null;
-            IAITarget ClosestAI = null;
+          
             float ClosestDistance = float.MaxValue;
 
             foreach (var col in AllColliders)
             {
-                if (col.transform.root == animal.transform.root) continue; //Don't Find yourself
+                if (col.transform.SameHierarchy(animal.transform)) continue; //Don't Find yourself
                 if (!col.gameObject.activeInHierarchy) continue;  //Don't Find invisible colliders
                 if (col.gameObject.isStatic) continue; //Don't Find Static colliders
                 if (!col.enabled) continue; //Don't disable colliders
 
-                //var Iai = col.FindInterface<IAITarget>();
-
-                var DistCol = Vector3.Distance(transform.position, col.bounds.center);
+                var DistCol = (transform.position - col.transform.position).sqrMagnitude;
 
                 if (ClosestDistance > DistCol)
                 {
                     ClosestDistance = DistCol;
                     ClosestCollider = col;
-                    ClosestAI = col.FindInterface<IAITarget>();
                 }
             }
             if (ClosestCollider)
             {
+                var ClosestAI = ClosestCollider.FindInterface<IAITarget>();
                 if (TargetMultiplier == 0) ClosestAI = null;
-                StartAligning(ClosestCollider.bounds.center, ClosestAI);
+                StartAligning(ClosestCollider.transform.position, ClosestAI);
 
-                if (debug) Debug.Log($"[{name}], Alinging to [{ClosestCollider.transform.name}]", ClosestCollider);
+                if (debug) Debug.Log($"[{name}], Alinging to [{ClosestCollider.transform.name}]", this);
             }
         }
 
@@ -153,11 +151,14 @@ namespace MalbersAnimations
             StartCoroutine(MTools.AlignLookAtTransform(animal.transform, TargetCenter, LookAtTime));
 
             var Dis = Distance * animal.ScaleFactor;
+          
             if (isAI != null)
             {
                 Dis = isAI.StopDistance() * TargetMultiplier;
                 TargetCenter = isAI.GetPosition();
             }
+
+
             //Align Look At the Zone
             if (Dis > 0)
             {

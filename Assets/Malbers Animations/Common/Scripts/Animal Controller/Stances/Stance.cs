@@ -1,11 +1,6 @@
-using UnityEngine;
-using System.Collections.Generic;
-using UnityEngine.Events;
-using MalbersAnimations.Events;
 using MalbersAnimations.Scriptables;
-using System;
-using System.Collections;
-using MalbersAnimations.Utilities;
+using System.Collections.Generic;
+using UnityEngine;
 
 namespace MalbersAnimations.Controller
 {
@@ -24,6 +19,9 @@ namespace MalbersAnimations.Controller
 
         [Tooltip("Lock the Stance if its Active. No other Stances can be enabled.")]
         public BoolReference persistent = new BoolReference();
+
+        [Tooltip("When this stance is active, no other stance can be activated")]
+        public BoolReference activeOnly = new BoolReference();
 
         [Tooltip("Does this Stance allows Straffing?")]
         public BoolReference CanStrafe = new BoolReference();
@@ -59,17 +57,18 @@ namespace MalbersAnimations.Controller
 
         /// <summary> The Stance is Enabled/Disable</summary>
         public bool Enabled { get => enabled.Value; set => enabled.Value = value; }
+        public bool ActiveOnly { get => activeOnly.Value; set => activeOnly.Value = value; }
 
         /// <summary> Lock the Stance if its Active. No other Stances can be enabled.</summary>
-        public bool Persistent { get; set; }
-        //{
-        //    get => persistent.Value;
-        //    set
-        //    {
-        //        persistent.Value = value;
-        //       // Debug.Log($" Persistent [{ID.name} ]" + value);
-        //    }
-        //}
+        public bool Persistent// { get; set; }
+        {
+            get => persistent.Value;
+            set
+            {
+                persistent.Value = value;
+              //  Debug.Log($" Persistent [{ID.name} ]" + value);
+            }
+        }
 
         /// <summary>Current Activated Stance on the Animal</summary>
         public bool Active { get; set; }
@@ -98,18 +97,18 @@ namespace MalbersAnimations.Controller
         public bool InCoolDown => CoolDown > 0 && !MTools.ElapsedTime(ExitTime, CoolDown);
         public OnEnterExitStance events { get; set; }
 
-       
+
         internal virtual void AwakeStance(MAnimal animal)
         {
             if (ID == null)
             {
-                Debug.LogWarning($"<B>[{Animal.name}]</B> Has Empty Stances. Please set the correct Stance ID ",animal.gameObject);
+                Debug.LogWarning($"<B>[{Animal.name}]</B> Has Empty Stances. Please set the correct Stance ID ", animal.gameObject);
             }
 
             Animal = animal;
             events = animal.OnEnterExitStances.Find(x => x.ID == ID);
             ActivationTime = float.MinValue;
-            ExitTime = float.MinValue; 
+            ExitTime = float.MinValue;
             Queued = false;
         }
 
@@ -177,15 +176,22 @@ namespace MalbersAnimations.Controller
         /// <summary> Verifies if the Stance can be activated </summary>
         public bool CanActivate()
         {
-            if (!Enabled)  { Debugging("Failed. Stance is Disabled"); return false; }
-            if (!Animal.enabled)  { Debugging("Failed. Animal disabled"); return false; }
+            if (!Enabled) { Debugging("Failed. Stance is Disabled"); return false; }
+            if (!Animal.enabled) { Debugging("Failed. Animal disabled"); return false; }
             if (DisableTemp) { Debugging($"Failed. Disable by External [{DisableValue}]"); return false; }
 
+          
+
+            if (Animal.ActiveStance.ActiveOnly && Animal.DefaultStanceID != ID) 
+            { Debugging($"Ignored. Active Stance [{Animal.ActiveStance.ID.name}] Is Active Only"); return false; }
+            
             if (Animal.ActiveStance.Persistent) { Debugging($"Ignored. Active Stance [{Animal.ActiveStance.ID.name}] is Persistent"); return false; }
             if (InCoolDown) { Debugging($"Failed. Stance in CoolDown. Time left {CoolDownLeft:F2}"); return false; }
             if (!Animal.ActiveStance.CanExit)
-            { Debugging($"Failed. Active Stance [{Animal.ActiveStance.ID.name}] can't exit yet. Exit After {(Animal.ActiveStance.CanExitTimeLeft):F2}"); 
-                return false; }
+            {
+                Debugging($"Failed. Active Stance [{Animal.ActiveStance.ID.name}] can't exit yet. Exit After {(Animal.ActiveStance.CanExitTimeLeft):F2}");
+                return false;
+            }
 
             if (HasStates)
             {
@@ -194,13 +200,13 @@ namespace MalbersAnimations.Controller
                 var ContainState = states.Contains(ActiveState); //Find if the Active State is on the list
 
                 if (ContainState && !Include)
-                { 
+                {
                     if (OnQueueState(ActiveState)) { Queued = true; }
-                    Debugging($"Failed. Active State [{ActiveState.name}] is Excluded from the allowed States. Set Queued[{Queued}]"); 
+                    Debugging($"Failed. Active State [{ActiveState.name}] is Excluded from the allowed States. Set Queued[{Queued}]");
                     return false;
                 }
                 if (!ContainState && Include)
-                { 
+                {
                     if (OnQueueState(ActiveState)) { Queued = true; }
                     Debugging($"Failed. Active State [{ActiveState.name}] is Not Included in the allowed States. Set Queued[{Queued}]");
                     return false;
@@ -209,11 +215,11 @@ namespace MalbersAnimations.Controller
             return true;
         }
 
-    
+
         internal void Reset()
         {
             InputValue = false;
-            Persistent = false;
+            // Persistent = false;
             Queued = false;
         }
 
@@ -231,9 +237,9 @@ namespace MalbersAnimations.Controller
             ExitTime = Time.time;
             events?.OnExit.Invoke();
 
-          
+
             //Remember to reset the input value of a stance on exit
-          if (!Queued)     Animal.InputSource?.ResetInput(Input);
+            if (!Queued) Animal.InputSource?.ResetInput(Input);
         }
 
         /// <summary> A new State has been activated</summary>
@@ -263,7 +269,7 @@ namespace MalbersAnimations.Controller
         {
             return StateQueue.Contains(activeStateID); //Find if the Active State is on the list
         }
-          
+
 
         private void Debugging(string value)
         {

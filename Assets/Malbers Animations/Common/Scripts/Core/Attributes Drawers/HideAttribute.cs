@@ -14,34 +14,69 @@ namespace MalbersAnimations
     public sealed class HideAttribute : PropertyAttribute
     {
         public string Variable = "";
-        public bool Inverse = false;
+        public bool inverse = false;
+        public bool hide = true;
         public int[] EnumValue;
-       // public bool useOR = false; //Todo: Do thissss lateer?!?!
+        public bool flag = false;
+   
 
         public HideAttribute(string conditionalSourceField)
         {
             this.Variable = conditionalSourceField;
-            this.Inverse = false;
+            this.inverse = false;
+            this.hide = true;
+            flag = false;
         }
 
         public HideAttribute(string conditionalSourceField, bool inverse)
         {
             this.Variable = conditionalSourceField;
-            this.Inverse = inverse;
+            this.inverse = inverse;
+            this.hide = true;
+            flag = false;
+        }
+
+        public HideAttribute(string conditionalSourceField, bool inverse, bool hide)
+        {
+            this.Variable = conditionalSourceField;
+            this.inverse = inverse;
+            this.hide = hide;
+            flag = false;
         }
 
         public HideAttribute(string conditionalSourceField, bool inverse, params int[] EnumValue)
         {
             this.Variable = conditionalSourceField;
-            this.Inverse = inverse;
+            this.inverse = inverse;
             this.EnumValue = EnumValue;
+            this.hide = true;
+            flag = false;
         }
 
-        public HideAttribute(string conditionalSourceField,   params int[] EnumValue)
+        public HideAttribute(string conditionalSourceField, bool inverse, bool hide, params int[] EnumValue)
         {
             this.Variable = conditionalSourceField;
-            this.Inverse = false;
+            this.inverse = inverse;
             this.EnumValue = EnumValue;
+            this.hide = hide;
+        }
+
+        public HideAttribute(string conditionalSourceField, params int[] EnumValue)
+        {
+            this.Variable = conditionalSourceField;
+            this.inverse = false;
+            this.EnumValue = EnumValue;
+            this.hide = true;
+            flag = false;
+        }
+
+        public HideAttribute(string conditionalSourceField, bool inverse, bool hide, bool flag, params int[] EnumValue)
+        {
+            this.Variable = conditionalSourceField;
+            this.inverse = inverse;
+            this.EnumValue = EnumValue;
+            this.hide = hide;
+            this.flag = flag;
         }
     }
 
@@ -57,8 +92,15 @@ namespace MalbersAnimations
 
             enabled = GetConditionalHideAttributeResult(condHAtt, property);
 
-            if (enabled)
-                EditorGUI.PropertyField(position, property, label, true);
+            bool wasEnabled = GUI.enabled;
+            GUI.enabled = enabled;
+
+            if (!condHAtt.hide || enabled)
+            {
+               EditorGUI.PropertyField(position, property, label, true);
+            }
+
+            GUI.enabled = wasEnabled;
         }
 
         public override float GetPropertyHeight(SerializedProperty property, GUIContent label)
@@ -66,7 +108,7 @@ namespace MalbersAnimations
             HideAttribute condHAtt = (HideAttribute)attribute;
             bool enabled = GetConditionalHideAttributeResult(condHAtt, property);
 
-            if (enabled)
+            if (enabled || !condHAtt.hide)
             {
                 return EditorGUI.GetPropertyHeight(property, label);
             }
@@ -84,8 +126,8 @@ namespace MalbersAnimations
 
             //Handle primary property
             SerializedProperty sourcePropertyValue;
-            //Get the full relative property path of the sourcefield so we can have nested hiding.Use old method when dealing with arrays
 
+            //Get the full relative property path of the sourcefield so we can have nested hiding.Use old method when dealing with arrays
             if (!property.isArray)
             {
                 //returns the property path of the property we want to apply the attribute to
@@ -112,15 +154,15 @@ namespace MalbersAnimations
 
             if (sourcePropertyValue != null)
             {
-                enabled = CheckPropertyType(sourcePropertyValue, condHAtt.EnumValue);
+                enabled = CheckPropertyType(sourcePropertyValue, condHAtt);
             }
             
             //wrap it all up
-            if (condHAtt.Inverse) enabled = !enabled;
+            if (condHAtt.inverse) enabled = !enabled;
             return enabled;
         }
 
-        private bool CheckPropertyType(SerializedProperty sourcePropertyValue, int[] EnumValue)
+        private bool CheckPropertyType(SerializedProperty sourcePropertyValue, HideAttribute condHAtt)
         {
             //Note: add others for custom handling if desired
             switch (sourcePropertyValue.propertyType)
@@ -129,11 +171,26 @@ namespace MalbersAnimations
                     return sourcePropertyValue.boolValue;
                 case SerializedPropertyType.ObjectReference:
                     return sourcePropertyValue.objectReferenceValue != null;
+                case SerializedPropertyType.ManagedReference:
+                    return sourcePropertyValue.objectReferenceValue != null;
+                case SerializedPropertyType.ArraySize:
+                    return sourcePropertyValue.arraySize == 0;
                 case SerializedPropertyType.Enum:
-                    for (int i = 0; i < EnumValue.Length; i++)
+                    if (!condHAtt.flag)
                     {
-                        if (sourcePropertyValue.enumValueIndex == EnumValue[i]) 
-                            return true;
+                        for (int i = 0; i < condHAtt.EnumValue.Length; i++)
+                        {
+                            if (sourcePropertyValue.enumValueIndex == condHAtt.EnumValue[i])
+                                return true;
+                        }
+                    }
+                    else
+                    {
+                        for (int i = 0; i < condHAtt.EnumValue.Length; i++)
+                        {
+                            if ((sourcePropertyValue.intValue & condHAtt.EnumValue[i]) == condHAtt.EnumValue[i])
+                                return true;
+                        }
                     }
                     return false;
                 default:

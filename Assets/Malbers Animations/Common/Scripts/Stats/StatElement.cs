@@ -90,6 +90,8 @@ namespace MalbersAnimations
             var multiplier = property.FindPropertyRelative("multiplier");
 
             var indent = EditorGUI.indentLevel;
+
+            EditorGUI.indentLevel = 0;
             var height = EditorGUIUtility.singleLineHeight;
 
             var line = new Rect(position);
@@ -102,6 +104,8 @@ namespace MalbersAnimations
             EditorGUIUtility.labelWidth = 30;
             EditorGUI.PropertyField(RectMultiplier, multiplier,new GUIContent("M","Multiplier to affect the Element"));
             EditorGUIUtility.labelWidth = 0;
+
+            EditorGUI.indentLevel = indent;
             EditorGUI.EndProperty();
         }
     }

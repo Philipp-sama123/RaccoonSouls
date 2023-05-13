@@ -9,6 +9,8 @@ namespace MalbersAnimations.Weapons
         void CheckAim();
         void FreeHandUse();
         void FreeHandRelease();
+
+        Transform transform { get; }
         
         MWeapon Weapon { get; }
     }

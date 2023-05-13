@@ -1,8 +1,6 @@
 ﻿using MalbersAnimations.Events;
 using MalbersAnimations.Scriptables;
 using UnityEngine;
-using UnityEngine.Events;
-using System.Linq;
 using System.Collections.Generic;
 
 #if UNITY_EDITOR
@@ -48,13 +46,15 @@ namespace MalbersAnimations.Utilities
         /// <summary>Interaction Trigger Proxy to Subsribe to OnEnter OnExit Trigger</summary>
         public TriggerProxy Proxy { get; set; }
 
-        
+
 
         private void OnEnable()
         {
             FocusedInteractables = new List<IInteractable>();
 
-            Proxy = TriggerProxy.CheckTriggerProxy(InteractionArea, Layer, TriggerInteraction, transform.root);
+            Transform RealRoot = transform.FindObjectCore();
+
+            Proxy = TriggerProxy.CheckTriggerProxy(InteractionArea, Layer, TriggerInteraction, RealRoot);
 
             if (Proxy)
             {
@@ -68,7 +68,7 @@ namespace MalbersAnimations.Utilities
             var focusCache = FocusedInteractables.ToArray(); //Cache in case the List changes (Crazy Error)
 
             foreach (var item in focusCache) UnFocus(item);
-            
+
 
             FocusedInteractables = null;
 
@@ -84,13 +84,13 @@ namespace MalbersAnimations.Utilities
             if (collider.isTrigger && TriggerInteraction == QueryTriggerInteraction.Ignore) return;    //Skip colliders
 
             var NewInteractables = collider.FindInterfaces<IInteractable>(); //Find all Interactables
- 
+
             if (NewInteractables != null)
-            foreach (var item in NewInteractables)
-            {
-                if (FocusedInteractables.Contains(item)) continue; //The new interactable its already there
-                Focus(item);
-            }
+                foreach (var item in NewInteractables)
+                {
+                    if (FocusedInteractables.Contains(item)) continue; //The new interactable its already there
+                    Focus(item);
+                }
         }
 
         private void TriggerExit(Collider collider)
@@ -109,7 +109,7 @@ namespace MalbersAnimations.Utilities
         }
 
 
-        public virtual void Focus(IInteractable item )
+        public virtual void Focus(IInteractable item)
         {
             if (item != null && item.Active) //Ignore One Disable Interactors
             {
@@ -142,7 +142,7 @@ namespace MalbersAnimations.Utilities
             }
         }
 
-       
+
         /// <summary> Receive an Interaction from the Interacter </summary>
         public bool Interact(IInteractable inter)
         {
@@ -174,7 +174,7 @@ namespace MalbersAnimations.Utilities
         public void Interact(GameObject interactable)
         {
             if (interactable)
-            Interact(interactable.FindInterface<IInteractable>());
+                Interact(interactable.FindInterface<IInteractable>());
         }
 
         public void Interact(Component interactable)
@@ -190,7 +190,7 @@ namespace MalbersAnimations.Utilities
     [UnityEditor.CustomEditor(typeof(MInteractor))]
     public class MInteractorEditor : UnityEditor.Editor
     {
-        SerializedProperty m_ID, InteractionArea, events,  Editor_Tabs1, OnFocusedInteractable, OnUnfocusedInteractable,
+        SerializedProperty m_ID, InteractionArea, events, Editor_Tabs1, OnFocusedInteractable, OnUnfocusedInteractable,
             triggerInteraction, Layer;
         protected string[] Tabs1 = new string[] { "General", "Events" };
 
@@ -225,7 +225,7 @@ namespace MalbersAnimations.Utilities
                 {
                     foreach (var item in M.FocusedInteractables)
                     {
-                        EditorGUILayout.ObjectField($"Focused Item [ID:{item.Index }]", item.Owner, typeof(GameObject), false);
+                        EditorGUILayout.ObjectField($"Focused Item [ID:{item.Index}]", item.Owner, typeof(GameObject), false);
                     }
                 }
                 EditorGUI.EndDisabledGroup();
@@ -250,7 +250,7 @@ namespace MalbersAnimations.Utilities
         private void DrawEvents()
         {
             EditorGUILayout.PropertyField(events);
-            
+
             if (events.isExpanded)
             {
                 EditorGUILayout.PropertyField(OnFocusedInteractable);

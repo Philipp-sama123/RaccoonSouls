@@ -1,8 +1,10 @@
-﻿using MalbersAnimations.Scriptables;
+﻿
+
+#if UNITY_EDITOR
+using MalbersAnimations.Scriptables;
 using MalbersAnimations.Utilities;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using UnityEditor;
 using UnityEditorInternal;
 using UnityEngine;
@@ -12,7 +14,7 @@ namespace MalbersAnimations.Controller
     [CustomEditor(typeof(MAnimal))]
     public class MAnimalEditor : Editor
     {
-        public readonly string version = "Animal Controller [v1.4.1]";
+        public readonly string version = "Animal Controller [v1.4.2]";
 
         public static GUIStyle StyleGray => MTools.Style(new Color(0.5f, 0.5f, 0.5f, 0.3f));
         public static GUIStyle StyleBlue => MTools.Style(new Color(0, 0.5f, 1f, 0.3f));
@@ -33,26 +35,33 @@ namespace MalbersAnimations.Controller
         private int SelectedSpeed = -1;
 
         SerializedProperty
-            S_StateList, S_PivotsList, Height, S_Mode_List, Editor_Tabs1, Editor_Tabs2, StartWithMode, 
+            S_StateList, S_PivotsList, Height, S_Mode_List, 
+            
+            Editor_Tabs1, Editor_Tabs2, Runtime_Tabs1, Runtime_Tabs2,
+
+
+            StartWithMode, 
             OnEnterExitStances, OnEnterExitStates, OnEnterExitSpeeds,
-            RB, Anim, NoParent,
+            RB, Anim,// NoParent,
             m_Vertical, m_Horizontal, m_StateFloat, m_ModeStatus, m_State, m_StateStatus, m_StateExitStatus, m_LastState, m_Mode, m_Grounded, m_Movement, m_Random, m_ModePower,
             m_SpeedMultiplier, m_UpDown, m_DeltaUpDown, m_StateOn, m_StateProfile, m_Sprint, m_ModeOn,// m_StanceOn,
             currentStance, defaultStance, Stances_List,
-            m_Stance, m_LastStance, m_Slope, deepSlope, m_Type, m_StateTime, m_TargetAngle, m_StrafeAnim,
-            lockInput, lockMovement, Rotator, AlignLoop, animalType, RayCastRadius, MainCamera, sleep, m_gravityTime, m_gravityTimeLimit, RootBone,
+            m_Stance, m_LastStance, m_Slope, m_Type, m_StateTime, m_TargetAngle, m_StrafeAnim,
+            lockInput, lockMovement, Rotator, AlignLoop, animalType, RayCastRadius, MainCamera, sleep, m_gravityTime, m_ClampGravitySpeed, RootBone,
 
              m_CanStrafe, Aimer, m_strafe, OnStrafe, m_StrafeNormalize,  /*FallForward, */m_StrafeLerp, OrientToGround,
 
 
             alwaysForward, AnimatorSpeed, m_TimeMultiplier,
-            OnMovementLocked, OnMovementDetected, OnMaxSlopeReached,
-            OnInputLocked, OnSprintEnabled, OnGrounded, OnStanceChange, OnStateChange, OnModeStart, OnModeEnd, OnTeleport,
-            OnSpeedChange, OnAnimationChange, GroundLayer, maxAngleSlope, AlignPosLerp, AlignPosDelta, AlignRotDelta,
+            OnMovementLocked, OnMovementDetected, //OnMaxSlopeReached,
+            OnInputLocked, OnSprintEnabled, OnGrounded, OnStanceChange, OnStateChange, OnStateProfile, OnModeStart, OnModeEnd, OnTeleport,
+            OnSpeedChange, OnAnimationChange, GroundLayer, AlignPosLerp, AlignPosDelta, AlignRotDelta,
             AlignRotLerp, m_gravity, m_gravityPower, useCameraUp, ground_Changes_Gravity,
              useSprintGlobal, SmoothVertical, 
             TurnMultiplier, TurnLimit, InPlaceDamp,
-            Player, OverrideStartState, CloneStates, S_Speed_List, UseCameraInput,
+            Player, OverrideStartState, CloneStates, S_Speed_List, UseCameraInput,// TerrainSlopeLimit, 
+            SlopeLimit, SlideThreshold, SlideAmount, SlideDamp,
+            //maxAngleSlope,  deepSlope,
             LockUpDownMovement, LockHorizontalMovement, LockForwardMovement, DebreeTag;
 
 
@@ -81,7 +90,7 @@ namespace MalbersAnimations.Controller
 
 
             SelectedMode = serializedObject.FindProperty("SelectedMode");
-            NoParent = serializedObject.FindProperty("NoParent");
+            //NoParent = serializedObject.FindProperty("NoParent");
 
 
             DebreeTag = serializedObject.FindProperty("DebrisTag");
@@ -123,6 +132,9 @@ namespace MalbersAnimations.Controller
 
             Editor_Tabs1 = serializedObject.FindProperty("Editor_Tabs1");
             Editor_Tabs2 = serializedObject.FindProperty("Editor_Tabs2");
+
+            Runtime_Tabs1 = serializedObject.FindProperty("Runtime_Tabs1");
+            Runtime_Tabs2 = serializedObject.FindProperty("Runtime_Tabs2");
 
             m_Vertical = serializedObject.FindProperty("m_Vertical");
             // Center = serializedObject.FindProperty("Center");
@@ -173,7 +185,7 @@ namespace MalbersAnimations.Controller
 
 
 
-            OnMaxSlopeReached = serializedObject.FindProperty("OnMaxSlopeReached");
+            //OnMaxSlopeReached = serializedObject.FindProperty("OnMaxSlopeReached");
             OnMovementLocked = serializedObject.FindProperty("OnMovementLocked");
             OnMovementDetected = serializedObject.FindProperty("OnMovementDetected");
             OnInputLocked = serializedObject.FindProperty("OnInputLocked");
@@ -181,6 +193,7 @@ namespace MalbersAnimations.Controller
             OnGrounded = serializedObject.FindProperty("OnGrounded");
             OnStanceChange = serializedObject.FindProperty("OnStanceChange");
             OnStateChange = serializedObject.FindProperty("OnStateChange");
+            OnStateProfile = serializedObject.FindProperty("OnStateProfile");
             OnModeStart = serializedObject.FindProperty("OnModeStart");
 
             OnModeEnd = serializedObject.FindProperty("OnModeEnd");
@@ -193,8 +206,15 @@ namespace MalbersAnimations.Controller
             // ShowpivotColor = serializedObject.FindProperty("ShowpivotColor");
             GroundLayer = serializedObject.FindProperty("groundLayer");
             
-            maxAngleSlope = serializedObject.FindProperty("maxAngleSlope");
-            deepSlope = serializedObject.FindProperty("m_deepSlope");
+            //TerrainSlopeLimit = serializedObject.FindProperty("TerrainSlopeLimit");
+            SlopeLimit = serializedObject.FindProperty("SlopeLimit");
+            SlideThreshold = serializedObject.FindProperty("slideThreshold");
+            SlideAmount = serializedObject.FindProperty("slideAmount");
+            SlideDamp = serializedObject.FindProperty("slideDamp");
+
+            //maxAngleSlope = serializedObject.FindProperty("maxAngleSlope");
+            //deepSlope = serializedObject.FindProperty("m_deepSlope");
+
 
             AlignPosLerp = serializedObject.FindProperty("AlignPosLerp");
             OrientToGround = serializedObject.FindProperty("m_OrientToGround");
@@ -206,7 +226,7 @@ namespace MalbersAnimations.Controller
             m_gravity = serializedObject.FindProperty("m_gravityDir");
             m_gravityPower = serializedObject.FindProperty("m_gravityPower");
             m_gravityTime = serializedObject.FindProperty("m_gravityTime");
-            m_gravityTimeLimit = serializedObject.FindProperty("m_gravityTimeLimit");
+            m_ClampGravitySpeed = serializedObject.FindProperty("m_clampGravitySpeed");
 
             useSprintGlobal = serializedObject.FindProperty("useSprintGlobal");
             SmoothVertical = serializedObject.FindProperty("SmoothVertical");
@@ -239,8 +259,8 @@ namespace MalbersAnimations.Controller
             {
                 drawHeaderCallback = Draw_Header_State,
                 drawElementCallback = Draw_Element_State,
-                // onReorderCallback = OnReorderCallback_States,
-                onReorderCallbackWithDetails = OnReorderCallback_States_Details,
+                onReorderCallback = OnReorderCallback_States,
+                //onReorderCallbackWithDetails = OnReorderCallback_States_Details,
                 onAddCallback = OnAddCallback_State,
                 onRemoveCallback = OnRemove_State,
                 onSelectCallback = Selected_State,
@@ -295,8 +315,25 @@ namespace MalbersAnimations.Controller
         }
 
 
-        private void Selected_Mode(ReorderableList list) => SelectedMode.intValue = list.index;
+        private void Selected_Mode(ReorderableList list)
+        {
+            SelectedMode.intValue = list.index;
+            SelectedAbility = -1;
+        }
+        int SelectedAbility;
+
+
         private void Selected_State(ReorderableList list) => SelectedState.intValue = list.index;
+
+
+        private static string[] tab1 = new string[] { "General", "Speeds", "States", "Modes" };
+        private static string[] tab2 = new string[] { "Advanced", "Stances", "Events", "Debug" };
+
+
+        private static string[] DebugTab1 = new string[] {"Data", "State",  "Ground", "Speeds" };
+        private static string[] DebugTab2 = new string[] { "Input", "Mode", "Forces" , "Movement" };
+
+      
 
         public override void OnInspectorGUI()
         {
@@ -308,10 +345,10 @@ namespace MalbersAnimations.Controller
 
            //using (new GUILayout.VerticalScope(MalbersEditor.StyleGray))
             {
-                Editor_Tabs1.intValue = GUILayout.Toolbar(Editor_Tabs1.intValue, new string[] { "General", "Speeds", "States", "Modes" });
+                Editor_Tabs1.intValue = GUILayout.Toolbar(Editor_Tabs1.intValue, tab1);
                 if (Editor_Tabs1.intValue != 4) Editor_Tabs2.intValue = 4;
 
-                Editor_Tabs2.intValue = GUILayout.Toolbar(Editor_Tabs2.intValue, new string[] { "Advanced", "Stances", "Events", "Debug" });
+                Editor_Tabs2.intValue = GUILayout.Toolbar(Editor_Tabs2.intValue, tab2);
                 if (Editor_Tabs2.intValue != 4) Editor_Tabs1.intValue = 4;
 
                 //First Tabs
@@ -333,6 +370,98 @@ namespace MalbersAnimations.Controller
             serializedObject.ApplyModifiedProperties();
         }
 
+
+        private void ShowGeneral()
+        {
+            using (new GUILayout.VerticalScope(EditorStyles.helpBox))
+                EditorGUILayout.PropertyField(Player, G_Player);
+
+            using (new GUILayout.VerticalScope(EditorStyles.helpBox))
+            {
+                EditorGUI.indentLevel++;
+                EditorGUILayout.PropertyField(S_PivotsList, true);
+                EditorGUI.indentLevel--;
+            }
+
+            using (new GUILayout.VerticalScope(EditorStyles.helpBox))
+            {
+                UseCameraInput.isExpanded = MalbersEditor.Foldout(UseCameraInput.isExpanded, "Movement");
+
+                if (UseCameraInput.isExpanded)
+                {
+                    EditorGUILayout.PropertyField(UseCameraInput, new GUIContent("Camera Input", "The Animal uses the Camera Forward Diretion to Move"));
+                    EditorGUI.BeginChangeCheck();
+                    EditorGUILayout.PropertyField(alwaysForward, new GUIContent("Always Forward", "If true the animal will always go forward. useful for infinite runners"));
+                    if (EditorGUI.EndChangeCheck() && Application.isPlaying) m.AlwaysForward = m.AlwaysForward;
+
+
+                    EditorGUILayout.PropertyField(useCameraUp, new GUIContent("Use Camera Up", "Uses the Camera Up Vector to move UP or Down while flying or Swiming UnderWater. if this is false the Animal will need an UPDOWN Input to move higher or lower"));
+                    EditorGUILayout.PropertyField(SmoothVertical, G_SmoothVertical);
+                    EditorGUILayout.PropertyField(useSprintGlobal, G_useSprintGlobal);
+                    EditorGUILayout.Space();
+                    EditorGUILayout.PropertyField(TurnMultiplier);
+                    EditorGUILayout.PropertyField(InPlaceDamp);
+                    EditorGUILayout.PropertyField(TurnLimit);
+                    EditorGUILayout.PropertyField(AnimatorSpeed);
+                    EditorGUILayout.PropertyField(m_TimeMultiplier);
+                }
+            }
+
+            using (new GUILayout.VerticalScope(EditorStyles.helpBox))
+            {
+                GroundLayer.isExpanded = MalbersEditor.Foldout(GroundLayer.isExpanded, "Ground");
+
+                if (GroundLayer.isExpanded)
+                {
+                    EditorGUILayout.PropertyField(GroundLayer, G_GroundLayer);
+                    EditorGUILayout.PropertyField(OrientToGround);
+                    EditorGUILayout.PropertyField(DebreeTag);
+
+
+                    using (new GUILayout.HorizontalScope())
+                    {
+                        EditorGUILayout.PropertyField(Height, G_Height);
+                        if (GUILayout.Button(new GUIContent("C", "Calculate Height and Animal Center"), GUILayout.Width(26))) m.SetPivots();
+                    }
+
+                    //EditorGUILayout.PropertyField(TerrainSlopeLimit);
+                    EditorGUILayout.PropertyField(SlopeLimit);
+                    EditorGUILayout.PropertyField(SlideThreshold);
+                    EditorGUILayout.PropertyField(SlideAmount);
+                    EditorGUILayout.PropertyField(SlideDamp);
+                    //EditorGUILayout.PropertyField(maxAngleSlope);
+                    //EditorGUILayout.PropertyField(deepSlope);
+
+                    Height.isExpanded = MalbersEditor.Foldout(Height.isExpanded, "Ground Aligment");
+                    if (Height.isExpanded)
+                    {
+                        EditorGUILayout.PropertyField(AlignPosLerp, G_AlignPosLerp);
+                        EditorGUILayout.PropertyField(AlignPosDelta, G_AlignPosDelta);
+                        EditorGUILayout.PropertyField(AlignRotLerp, G_AlignRotLerp);
+                        EditorGUILayout.PropertyField(AlignRotDelta, G_AlignRotDelta);
+                        EditorGUILayout.PropertyField(RayCastRadius, G_RayCastRadius);
+                        EditorGUILayout.PropertyField(AlignLoop, G_AlignLoop);
+                    }
+                }
+            }
+
+
+            using (new GUILayout.VerticalScope(EditorStyles.helpBox))
+            {
+                m_gravity.isExpanded = MalbersEditor.Foldout(m_gravity.isExpanded, "Gravity");
+
+                if (m_gravity.isExpanded)
+                {
+                    //  EditorGUILayout.LabelField("Gravity", EditorStyles.boldLabel);
+                    EditorGUILayout.PropertyField(m_gravity, G_gravityDirection);
+                    EditorGUILayout.PropertyField(m_gravityPower, G_GravityForce);
+                    EditorGUILayout.PropertyField(m_gravityTime, G_GravityCycle);
+                    EditorGUILayout.PropertyField(m_ClampGravitySpeed);
+                    EditorGUILayout.PropertyField(ground_Changes_Gravity, new GUIContent("Ground Changes Gravity", "The Ground will change the gravity direction, allowing the animals to move in any surface"));
+                }
+            }
+            ShowStrafingVars();
+        }
 
         private void Reordable_Stances()
         {
@@ -360,8 +489,6 @@ namespace MalbersAnimations.Controller
 
                     using (var cc = new EditorGUI.ChangeCheckScope())
                     {
-                      
-                     
                         var ModeProperty = Stances_List.GetArrayElementAtIndex(index);
                         var ID = ModeProperty.FindPropertyRelative("ID");
 
@@ -428,8 +555,9 @@ namespace MalbersAnimations.Controller
 
 
                         var dC = GUI.contentColor;
-                       if (!Application.isPlaying)
-                            if (index == Reo_List_Stances.index) GUI.contentColor = new Color(3f, 0.7f,0.5f);
+
+                        if (!Application.isPlaying && isFocused) GUI.contentColor = new Color(3f, 0.7f, 0.5f);
+                            
 
                         EditorGUI.PropertyField(IDRect, ID, GUIContent.none);
                         EditorGUI.LabelField(Rect_Label, st_label);
@@ -511,6 +639,7 @@ namespace MalbersAnimations.Controller
                         var StateQueue = SelectedStance.FindPropertyRelative("StateQueue");
                         var Include = SelectedStance.FindPropertyRelative("Include");
                         var DisableStances = SelectedStance.FindPropertyRelative("DisableStances");
+                        var activeOnly = SelectedStance.FindPropertyRelative("activeOnly");
 
 
                         EditorGUILayout.PropertyField(Active);
@@ -518,6 +647,7 @@ namespace MalbersAnimations.Controller
                         EditorGUILayout.PropertyField(CoolDown);
                         EditorGUILayout.PropertyField(ExitAfter);
                         EditorGUILayout.PropertyField(persistent);
+                        EditorGUILayout.PropertyField(activeOnly);
 
 
                         var stance = m.Stances[SnceIndex];
@@ -551,9 +681,12 @@ namespace MalbersAnimations.Controller
                         EditorGUILayout.PropertyField(StateQueue, true);
                         EditorGUI.indentLevel--;
 
-                        EditorGUI.indentLevel++;
-                        EditorGUILayout.PropertyField(DisableStances, true);
-                        EditorGUI.indentLevel--;
+                        if (!stance.ActiveOnly)
+                        {
+                            EditorGUI.indentLevel++;
+                            EditorGUILayout.PropertyField(DisableStances, true);
+                            EditorGUI.indentLevel--;
+                        }
 
 
                         if (Application.isPlaying && m.HasStances)
@@ -685,11 +818,11 @@ namespace MalbersAnimations.Controller
 
             using (new GUILayout.VerticalScope(EditorStyles.helpBox))
             {
-                NoParent.isExpanded = MalbersEditor.Foldout(NoParent.isExpanded, "Extras");
+                animalType.isExpanded = MalbersEditor.Foldout(animalType.isExpanded, "Extras");
 
-                if (NoParent.isExpanded)
+                if (animalType.isExpanded)
                 {
-                    EditorGUILayout.PropertyField(NoParent);
+                   // EditorGUILayout.PropertyField(NoParent);
                     EditorGUILayout.PropertyField(animalType, G_animalType);
                 }
             }
@@ -806,12 +939,13 @@ namespace MalbersAnimations.Controller
                             EditorGUILayout.PropertyField(OnStrafe);
                         }
                         EditorGUILayout.PropertyField(OnGrounded);
-                        EditorGUILayout.PropertyField(OnMaxSlopeReached);
+                        //EditorGUILayout.PropertyField(OnMaxSlopeReached);
                         EditorGUILayout.PropertyField(OnTeleport);
                         EditorGUILayout.Space();
                         break;
                     case 1:
                         EditorGUILayout.PropertyField(OnStateChange);
+                        EditorGUILayout.PropertyField(OnStateProfile);
                         EditorGUI.indentLevel++;
                         EditorGUILayout.PropertyField(OnEnterExitStates);
                         EditorGUI.indentLevel--;
@@ -869,8 +1003,6 @@ namespace MalbersAnimations.Controller
                 }
             }
         }
-
-
         public static void DrawDebugButton(SerializedProperty property, GUIContent name, Color Highlight)
         {
             var currentGUIColor = GUI.color;
@@ -878,7 +1010,6 @@ namespace MalbersAnimations.Controller
             property.boolValue = GUILayout.Toggle(property.boolValue, name,  EditorStyles.miniButton);
             GUI.color = currentGUIColor;
         }
-
 
         private void ShowDebug()
         {
@@ -901,155 +1032,286 @@ namespace MalbersAnimations.Controller
                 }
             }
 
+            using (new GUILayout.VerticalScope(EditorStyles.helpBox))
+            {
+                EditorGUILayout.LabelField("RUNTIME DATA", EditorStyles.boldLabel);
+
+               // var TypeStyle = new GUIStyle(EditorStyles.objectField);
+
+                Runtime_Tabs1.intValue = GUILayout.Toolbar(Runtime_Tabs1.intValue, DebugTab1, EditorStyles.toolbarButton);
+                if (Runtime_Tabs1.intValue != 4) Runtime_Tabs2.intValue = 4;
+
+                Runtime_Tabs2.intValue = GUILayout.Toolbar(Runtime_Tabs2.intValue, DebugTab2, EditorStyles.toolbarButton);
+                if (Runtime_Tabs2.intValue != 4) Runtime_Tabs1.intValue = 4;
+              
+            }
+
+
             if (Application.isPlaying)
             {
+                
                 using (new EditorGUI.DisabledGroupScope(true))
                 {
-                    if (m.ActiveState)
+
+                    switch (Runtime_Tabs1.intValue)
                     {
-                        using (new GUILayout.VerticalScope(EditorStyles.helpBox))
-                        {
-                            EditorGUILayout.LabelField($"Active State: [{m.ActiveState.ID.name}] ({m.ActiveState.ID.ID})", EditorStyles.boldLabel);
-                            if (m.CurrentSpeedSet != null)
-                                EditorGUILayout.LabelField
-                                    ($"Set: [{m.CurrentSpeedSet.name}] -  Speed: [{m.CurrentSpeedModifier.name}]. " +
-                                    $"Index: [{m.CurrentSpeedIndex}]", EditorStyles.boldLabel);
-                            DisplayActiveSpeed();
-                            EditorGUILayout.LabelField($"RigidBody Horizontal Speed: [{m.HorizontalSpeed:F4}]", EditorStyles.boldLabel);
-                        }
+                        case 0:
+                            DrawDebugData();
+                            break;
+                        case 1: //State
+                            DrawStateData();
+                            break;
 
-                        using (new GUILayout.VerticalScope(EditorStyles.helpBox))
-                        {
-                            EditorGUILayout.ToggleLeft("Using Camera Input", m.UseCameraInput);
-                        }
-
-
-                        EditorGUIUtility.labelWidth = 70;
-                        using (new GUILayout.HorizontalScope())
-                        {
-                            using (new GUILayout.VerticalScope(EditorStyles.helpBox))
-                            {
-                                EditorGUILayout.ToggleLeft("Is Pending", m.ActiveState.IsPending);
-                                EditorGUILayout.ToggleLeft("Can Exit", m.ActiveState.CanExit);
-                                EditorGUILayout.ToggleLeft("++ Pos", m.UseAdditivePos);
-                                EditorGUILayout.ToggleLeft("RootMotion", m.RootMotion);
-                                EditorGUILayout.ToggleLeft("Orient To Ground", m.UseOrientToGround);
-                                EditorGUILayout.ToggleLeft("Chest Ray", m.FrontRay);
-                            }
-
-                            using (new GUILayout.VerticalScope(EditorStyles.helpBox))
-                            {
-                                EditorGUILayout.ToggleLeft("Ignore Lower", m.ActiveState.IgnoreLowerStates);
-                                EditorGUILayout.ToggleLeft("Is Persistent", m.ActiveState.IsPersistent);
-                                EditorGUILayout.ToggleLeft("++ Rot]", m.UseAdditiveRot);
-                                EditorGUILayout.ToggleLeft("Grounded", m.Grounded);
-                                EditorGUILayout.ToggleLeft("Use Custom Rot", m.UseCustomAlign);
-                                EditorGUILayout.ToggleLeft("Hip Ray", m.MainRay);
-                            }
-                        }
-                    }
-
-                    using (new GUILayout.HorizontalScope())
-                    {
-                        using (new GUILayout.VerticalScope(EditorStyles.helpBox))
-                        {
-                            EditorGUILayout.ToggleLeft("Move with Direction", m.UsingMoveWithDirection);
-                            EditorGUILayout.ToggleLeft("Raw Input", m.UseRawInput);
-                            EditorGUILayout.ToggleLeft("Use Sprint", m.UseSprint);
-                            EditorGUILayout.ToggleLeft("Input Locked", m.LockInput);
-                            EditorGUILayout.ToggleLeft("Free Move", m.FreeMovement);
-                        }
-
-
-                        using (new GUILayout.VerticalScope(EditorStyles.helpBox))
-                        {
-                            EditorGUILayout.ToggleLeft("Rotate At Direction", m.Rotate_at_Direction);
-                            EditorGUILayout.ToggleLeft("Movement Detected", m.MovementDetected);
-                            EditorGUILayout.ToggleLeft("Sprint", m.Sprint);
-                            EditorGUILayout.ToggleLeft("Movement Locked", m.LockMovement);
-                            EditorGUILayout.ToggleLeft("Use Gravity", m.UseGravity);
-                        }
-                    }
-
-                    EditorGUIUtility.labelWidth = 0;
-
-                    using (new GUILayout.VerticalScope(EditorStyles.helpBox))
-                    {
-                        EditorGUILayout.ObjectField("Active Mode: ", m.IsPlayingMode ? m.ActiveMode.ID : null, typeof(ModeID), false);
-                        EditorGUILayout.TextField("Ability: ", (m.ActiveMode != null && m.ActiveMode.ActiveAbility != null) ?
-                            "[" + m.ActiveMode.ActiveAbility.Index.Value + "]" + m.ActiveMode.ActiveAbility.Name : "");
-                        EditorGUILayout.ToggleLeft("Playing Mode", m.IsPlayingMode);
-                        EditorGUILayout.ToggleLeft("Preparing Mode", m.IsPreparingMode);
-                        EditorGUILayout.ToggleLeft("Mode In Transition", m.ActiveMode != null && m.ActiveMode.IsInTransition);
-                        EditorGUILayout.IntField("Last Mode ID", m.LastModeID);
-                        EditorGUILayout.IntField("Last Mode Ability", m.LastAbilityIndex);
-                        EditorGUILayout.FloatField("Mode Time", m.ModeTime);
-                    }
-
-                    using (new GUILayout.VerticalScope(EditorStyles.helpBox))
-                    {
-                        EditorGUILayout.PropertyField(serializedObject.FindProperty("platform"));
-                        EditorGUILayout.ObjectField("Is in Zone?", m.InZone, typeof(Zone), false);
-
-                    } 
-
-                    EditorGUIUtility.labelWidth = 80;
-
-                    using (new GUILayout.HorizontalScope())
-                    {
-                        EditorGUILayout.FloatField("Gravity Time", m.GravityTime, GUILayout.MinWidth(50));
-                        EditorGUILayout.FloatField("Gravity Mult", m.GravityMultiplier, GUILayout.MinWidth(50));
-                    }
-
-                    EditorGUIUtility.labelWidth = 0;
-
-                    using (new GUILayout.VerticalScope(EditorStyles.helpBox))
-                    {
-                        EditorGUILayout.Vector3Field("External Force", m.CurrentExternalForce);
-                        EditorGUILayout.Vector3Field("External Force Max", m.ExternalForce);
-                        EditorGUILayout.FloatField("External Force Acel", m.ExternalForceAcel);
-                        EditorGUILayout.ToggleLeft("Force Air Control ?", m.ExternalForceAirControl);
+                        case 2: //Ground
+                            DebugGroundData();
+                            break;
+                        case 3: //Speed
+                            DrawSpeeds();
+                            break;
+                        default:
+                            break;
                     }
 
 
-                    using (new GUILayout.VerticalScope(EditorStyles.helpBox))
+                    switch (Runtime_Tabs2.intValue)
                     {
-                        EditorGUILayout.FloatField("Delta Angle", m.DeltaAngle);
-                        EditorGUILayout.FloatField("Pitch Angle", m.PitchAngle);
-                        EditorGUILayout.FloatField("Bank", m.Bank);
-                        //  EditorGUILayout.FloatField("Forward Multiplier", m.ForwardMultiplier);
-                        EditorGUILayout.Vector2Field("Pitch[x]-Bank[y]", new Vector2(m.PitchAngle, m.Bank));
-                    }
+                        case 0: //Input
+                            DebugInputData();
+                            break;
+                        case 1: //Mode
+                            DebugModeData();
+                            break;
+                        case 2: //Forces
+                            DebugForcesData();
+                            break;
+                        case 3: //Movement
+                            DebugMoveData();
+                            break;
 
-
-                    using (new GUILayout.VerticalScope(EditorStyles.helpBox))
-                    {
-                        EditorGUILayout.FloatField("Terrain Slope", m.TerrainSlope);
-                        EditorGUILayout.FloatField("Main Pivot Slope", m.MainPivotSlope);
-                        EditorGUILayout.FloatField("Slope Normalized", m.SlopeNormalized);
-                    }
-
-                    using (new GUILayout.VerticalScope(EditorStyles.helpBox))
-                    {
-                        EditorGUILayout.Vector3Field("Raw Input Axis", m.RawInputAxis.Round(3));
-                        EditorGUILayout.Vector3Field("Movement Direction", m.Move_Direction.Round(3));
-                        EditorGUILayout.Vector3Field("Movement Axis Raw", m.MovementAxisRaw.Round(3));
-                        EditorGUILayout.Vector3Field("Movement Axis", m.MovementAxis.Round(3));
-                        EditorGUILayout.Vector3Field("Movement Smooth", m.MovementAxisSmoothed.Round(3));
-                    }
-
-                    using (new GUILayout.VerticalScope(EditorStyles.helpBox))
-                    {
-                        EditorGUILayout.Vector3Field("Inertia ", m.Inertia.Round(3));
-                        EditorGUILayout.Vector3Field("Inertia Speed ", m.InertiaPositionSpeed.Round(3));
-                        EditorGUILayout.Vector3Field("Pitch Direction", m.PitchDirection.Round(3));
-                        EditorGUILayout.Space();
-                        EditorGUILayout.IntField("Current Anim Tag", m.AnimStateTag);
-                        EditorGUILayout.Space();
-                        EditorGUILayout.IntField("Stance", m.Stance);
+                        default:
+                            break;
                     }
                 }
             }
+        }
+
+        private void DrawSpeeds()
+        {
+            using (new GUILayout.VerticalScope(EditorStyles.helpBox))
+            {
+                EditorGUILayout.LabelField($"RigidBody Horizontal Speed: [{m.HorizontalSpeed:F4}]", EditorStyles.boldLabel);
+            }
+            using (new GUILayout.VerticalScope(EditorStyles.helpBox))
+            {
+                if (m.CurrentSpeedSet != null)
+                    EditorGUILayout.LabelField
+                        ($"Set: [{m.CurrentSpeedSet.name}] -  Speed: [{m.CurrentSpeedModifier.name}]. " +
+                        $"Current Index: [{m.CurrentSpeedIndex}]", EditorStyles.boldLabel);
+                DisplayActiveSpeed();
+            }
+        }
+
+        private void DrawStateData()
+        {
+            using (new GUILayout.VerticalScope(EditorStyles.helpBox))
+                EditorGUILayout.ObjectField($"Active State: [{m.ActiveState.ID.name}] ({m.ActiveState.ID.ID})", m.ActiveState, typeof(State), false);
+
+            using (new GUILayout.HorizontalScope())
+            {
+                using (new GUILayout.VerticalScope(EditorStyles.helpBox))
+                {
+                    if (m.ActiveState)
+                    {
+                        EditorGUILayout.ToggleLeft("Input", m.ActiveState.InputValue);
+                        EditorGUILayout.ToggleLeft("Ignore Lower", m.ActiveState.IgnoreLowerStates);
+                        EditorGUILayout.ToggleLeft("Is Persistent", m.ActiveState.IsPersistent);
+                    }
+                }
+
+                using (new GUILayout.VerticalScope(EditorStyles.helpBox))
+                {
+                    if (m.ActiveState)
+                    {
+                        EditorGUILayout.ToggleLeft("Exit Input", m.ActiveState.ExitInputValue);
+                        EditorGUILayout.ToggleLeft("Is Pending", m.ActiveState.IsPending);
+                        EditorGUILayout.ToggleLeft("Can Exit", m.ActiveState.CanExit);
+                    }
+                }
+            }
+
+            using (new GUILayout.VerticalScope(EditorStyles.helpBox))
+            {
+                EditorGUILayout.ObjectField("Stance", m.Stance, typeof(StanceID),false);
+                EditorGUILayout.ToggleLeft("Stance Input", m.ActiveStance.InputValue);
+            }
+        }
+
+        private void DebugMoveData()
+        {
+            using (new GUILayout.VerticalScope(EditorStyles.helpBox))
+            {
+                EditorGUILayout.FloatField("HorizontalSpeed ", m.HorizontalSpeed);
+                EditorGUILayout.Vector3Field("Inertia ", m.Inertia.Round(3));
+                EditorGUILayout.Vector3Field("Inertia Speed ", m.InertiaPositionSpeed.Round(3));
+                EditorGUILayout.Vector3Field("Pitch Direction", m.PitchDirection.Round(3));
+                EditorGUILayout.Vector3Field("Delta Pos ", m.DeltaPos.Round(3));
+                EditorGUILayout.Vector3Field("Delta RM ", m.DeltaRootMotion.Round(3));
+            }
+
+            using (new GUILayout.VerticalScope(EditorStyles.helpBox))
+            {
+                EditorGUILayout.Vector3Field("Raw Input Axis", m.RawInputAxis.Round(3));
+                EditorGUILayout.Vector3Field("Movement Direction", m.Move_Direction.Round(3));
+                EditorGUILayout.Vector3Field("Movement Axis Raw", m.MovementAxisRaw.Round(3));
+                EditorGUILayout.Vector3Field("Movement Axis", m.MovementAxis.Round(3));
+                EditorGUILayout.Vector3Field("Movement Smooth", m.MovementAxisSmoothed.Round(3));
+            }
+        }
+        private void DebugInputData()
+        {
+            using (new GUILayout.VerticalScope(EditorStyles.helpBox))
+            {
+                EditorGUILayout.FloatField("Delta Angle", m.DeltaAngle);
+                EditorGUILayout.FloatField("Pitch Angle", m.PitchAngle);
+                EditorGUILayout.FloatField("Bank", m.Bank);
+            }
+
+            using (new GUILayout.VerticalScope(EditorStyles.helpBox))
+            {
+                EditorGUILayout.Vector3Field("Raw Input Axis", m.RawInputAxis.Round(3));
+                EditorGUILayout.Vector3Field("Movement Direction", m.Move_Direction.Round(3));
+                EditorGUILayout.Vector3Field("Movement Axis Raw", m.MovementAxisRaw.Round(3));
+                EditorGUILayout.Vector3Field("Movement Axis", m.MovementAxis.Round(3));
+                EditorGUILayout.Vector3Field("Movement Smooth", m.MovementAxisSmoothed.Round(3));
+            }
+        }
+
+        private void DebugGroundData()
+        {
+            using (new GUILayout.VerticalScope(EditorStyles.helpBox))
+            {
+                EditorGUILayout.ObjectField("Platform",m.platform, typeof(Transform),false);
+                EditorGUILayout.FloatField("Terrain Slope", m.TerrainSlope);
+                EditorGUILayout.FloatField("Main Pivot Slope", m.MainPivotSlope);
+                EditorGUILayout.FloatField("Slope Normalized", m.SlopeNormalized);
+                EditorGUILayout.FloatField("Slope Ground Angle", m.SlopeDirectionAngle);
+                EditorGUILayout.FloatField("Slope Limit", m.SlopeLimit);
+                EditorGUILayout.FloatField("Slope  Angle Difference", m.SlopeAngleDifference);
+                EditorGUILayout.ToggleLeft("Deep Slope", m.DeepSlope);
+                EditorGUILayout.Vector3Field("Slope Direction", m.SlopeDirection);
+                EditorGUILayout.Vector3Field("Slope Direction Sm", m.SlopeDirectionSmooth);
+                EditorGUILayout.Vector3Field("Surface Normal", m.SurfaceNormal);
+            }
+        }
+
+        private void DebugForcesData()
+        {
+            EditorGUIUtility.labelWidth = 80;
+            using (new GUILayout.VerticalScope(EditorStyles.helpBox))
+            {
+
+                using (new GUILayout.HorizontalScope())
+                {
+                    EditorGUILayout.FloatField("Gravity Time", m.GravityTime, GUILayout.MinWidth(50));
+                    EditorGUILayout.FloatField("Gravity Mult", m.GravityMultiplier, GUILayout.MinWidth(50));
+                }
+                EditorGUILayout.Vector3Field("Gravity Velocity", m.GravityStoredVelocity);
+                EditorGUILayout.Vector3Field("Gravity Offset", m.GravityOffset);
+            }
+
+            EditorGUIUtility.labelWidth = 0;
+
+            using (new GUILayout.VerticalScope(EditorStyles.helpBox))
+            {
+                EditorGUILayout.Vector3Field("External Force", m.CurrentExternalForce);
+                EditorGUILayout.Vector3Field("External Force Max", m.ExternalForce);
+                EditorGUILayout.FloatField("External Force Acel", m.ExternalForceAcel);
+                EditorGUILayout.ToggleLeft("Force Air Control ?", m.ExternalForceAirControl);
+            } 
+            
+            using (new GUILayout.VerticalScope(EditorStyles.helpBox))
+            {
+                EditorGUILayout.Vector3Field("Slope Direction", m.SlopeDirection);
+                EditorGUILayout.Vector3Field("Slope Dir Smooth", m.SlopeDirectionSmooth);
+                EditorGUILayout.FloatField("SlopeAngle", m.SlopeDirectionAngle);
+            }
+        }
+
+        private void DebugModeData()
+        {
+            using (new GUILayout.VerticalScope(EditorStyles.helpBox))
+            {
+                EditorGUILayout.ObjectField("Active Mode: ", m.IsPlayingMode ? m.ActiveMode.ID : null, typeof(ModeID), false);
+                EditorGUILayout.TextField("Ability: ", (m.ActiveMode != null && m.ActiveMode.ActiveAbility != null) ?
+                    "[" + m.ActiveMode.ActiveAbility.Index.Value + "]" + m.ActiveMode.ActiveAbility.Name : "");
+                EditorGUILayout.ToggleLeft("Playing Mode", m.IsPlayingMode);
+                EditorGUILayout.ToggleLeft("Preparing Mode", m.IsPreparingMode);
+                EditorGUILayout.ToggleLeft("Mode In Transition", m.ActiveMode != null && m.ActiveMode.IsInTransition);
+                EditorGUILayout.IntField("Last Mode ID", m.LastModeID);
+                EditorGUILayout.IntField("Last Mode Ability", m.LastAbilityIndex);
+                EditorGUILayout.FloatField("Mode Time", m.ModeTime);
+            }
+        }
+
+        private void DrawDebugData()
+        {
+            using (new GUILayout.VerticalScope(EditorStyles.helpBox))
+            {
+                EditorGUILayout.ToggleLeft("Using Camera Input", m.UseCameraInput);
+                EditorGUILayout.ObjectField("Is in Zone?", m.InZone, typeof(Zone), false);
+                EditorGUILayout.IntField("Current Anim Tag", m.AnimStateTag);
+            }
+
+
+            using (new GUILayout.VerticalScope(EditorStyles.helpBox))
+            {
+                EditorGUILayout.ToggleLeft("Strafe", m.Strafe);
+            }
+
+            EditorGUIUtility.labelWidth = 70;
+            using (new GUILayout.HorizontalScope())
+            {
+                using (new GUILayout.VerticalScope(EditorStyles.helpBox))
+                {
+                    EditorGUILayout.ToggleLeft("++ [Pos]", m.UseAdditivePos);
+                    EditorGUILayout.ToggleLeft("RootMotion", m.RootMotion);
+                    EditorGUILayout.ToggleLeft("Orient To Ground", m.UseOrientToGround);
+                    EditorGUILayout.ToggleLeft("Chest Ray", m.FrontRay);
+                }
+
+                using (new GUILayout.VerticalScope(EditorStyles.helpBox))
+                {
+                    EditorGUILayout.ToggleLeft("++ [Rotation]", m.UseAdditiveRot);
+                    EditorGUILayout.ToggleLeft("Grounded", m.Grounded);
+                    EditorGUILayout.ToggleLeft("Use Custom Rot", m.UseCustomRotation);
+                    EditorGUILayout.ToggleLeft("Hip Ray", m.MainRay);
+                }
+            }
+
+
+            using (new GUILayout.HorizontalScope())
+            {
+                using (new GUILayout.VerticalScope(EditorStyles.helpBox))
+                {
+                    EditorGUILayout.ToggleLeft("Move with Direction", m.UsingMoveWithDirection);
+                    EditorGUILayout.ToggleLeft("Raw Input", m.UseRawInput);
+                    EditorGUILayout.ToggleLeft("Use Sprint", m.UseSprint);
+                    EditorGUILayout.ToggleLeft("Input Locked", m.LockInput);
+                    EditorGUILayout.ToggleLeft("Free Move", m.FreeMovement);
+                }
+
+
+                using (new GUILayout.VerticalScope(EditorStyles.helpBox))
+                {
+                    EditorGUILayout.ToggleLeft("Rotate At Direction", m.Rotate_at_Direction);
+                    EditorGUILayout.ToggleLeft("Movement Detected", m.MovementDetected);
+                    EditorGUILayout.ToggleLeft("Sprint", m.Sprint);
+                    EditorGUILayout.ToggleLeft("Movement Locked", m.LockMovement);
+                    EditorGUILayout.ToggleLeft("Use Gravity", m.UseGravity);
+                }
+            }
+
+            EditorGUIUtility.labelWidth = 0;
         }
 
         private void ShowModes()
@@ -1159,7 +1421,6 @@ namespace MalbersAnimations.Controller
                                     EditorGUILayout.PropertyField(OnAbilityIndex, new GUIContent($"On [{ModeName}] Active Ability Index changed "));
                                     break;
                             }
-
                         }
                     }
                 }
@@ -1232,11 +1493,18 @@ namespace MalbersAnimations.Controller
                             }
                         }
 
+                        var dC = GUI.contentColor;
+
+                        if (isFocused) GUI.contentColor = Color.green;
+                        
+
                         EditorGUI.PropertyField(NameRect, name, GUIContent.none);
 
                         EditorGUIUtility.labelWidth = 56;
                         EditorGUI.PropertyField(IDRect, IndexValue, GUIContent.none);
                         EditorGUIUtility.labelWidth = 0;
+
+                        GUI.contentColor = dC;
                     },
 
                     drawHeaderCallback = rect =>
@@ -1264,7 +1532,9 @@ namespace MalbersAnimations.Controller
                         var index = list.count == 0 ? 0 : list.count - 1;
                         Abilities.InsertArrayElementAtIndex(list.count == 0 ? 0 : list.count - 1);
                         list.index = -1;
-                    }
+                    }, 
+                     onSelectCallback = (list) =>
+                     { SelectedAbility = list.index; }
                 };
 
                 innerListDict.Add(listKey, Reo_AbilityList);  //Store it on the Editor
@@ -1272,7 +1542,7 @@ namespace MalbersAnimations.Controller
 
             Reo_AbilityList.DoLayoutList();
 
-            int SelectedAbility = Reo_AbilityList.index;
+            Reo_AbilityList.index = SelectedAbility; 
 
 
             if (SelectedAbility != -1 && SelectedAbility < Abilities.arraySize)
@@ -1298,6 +1568,9 @@ namespace MalbersAnimations.Controller
                     var OnExit = ability.FindPropertyRelative("OnExit");
                     var OnCharged = ability.FindPropertyRelative("OnCharged");
                     var Name = ability.FindPropertyRelative("Name");
+                    var IgnoreGrounded = ability.FindPropertyRelative("IgnoreGrounded");
+                    var IgnoreGravity = ability.FindPropertyRelative("IgnoreGravity");
+                    var Persistent = ability.FindPropertyRelative("Persistent");
 
                     using (new GUILayout.VerticalScope(EditorStyles.helpBox))
                     {
@@ -1307,9 +1580,9 @@ namespace MalbersAnimations.Controller
                             var valu = m.modes[ModeIndex].Abilities[SelectedAbility].Index.Value;
                             var neg = valu > 0 ? 1 : -1;
 
-                            EditorGUILayout.LabelField(new GUIContent($"Combined Index → " +
+                            EditorGUILayout.LabelField(new GUIContent($"[{Name.stringValue}] Combined Index → " +
                             $"[{(m.modes[ModeIndex].ID.ID * 1000 + Mathf.Abs(valu)) * neg}]",
-                             "The combined index is set using this formula: (Mode_ID * 1000 + Ability_Index)"), DescriptionStyle);
+                             "The combined index is set using this formula: (Mode_ID * 1000 + Ability_Index)\nThis is used in the Animator Controller Transition values for activating Mode Abilities"), DescriptionStyle);
                         }
                         Ability_Tabs.intValue = GUILayout.Toolbar(Ability_Tabs.intValue, new string[5] { "General", "Status", "Limits", "Audio", "Events" });
 
@@ -1323,6 +1596,9 @@ namespace MalbersAnimations.Controller
                                     EditorGUILayout.PropertyField(modifier);
                                     var AdditivePosition = ability.FindPropertyRelative("AdditivePosition");
                                     EditorGUILayout.PropertyField(AdditivePosition);
+                                    EditorGUILayout.PropertyField(IgnoreGrounded);
+                                    EditorGUILayout.PropertyField(IgnoreGravity);
+                                    EditorGUILayout.PropertyField(Persistent);
                                     break;
                                 }
                             //Status
@@ -1477,8 +1753,7 @@ namespace MalbersAnimations.Controller
            // using (new GUILayout.VerticalScope())
             {
                 EditorGUILayout.HelpBox("For [In Place] animations <Not Root Motion>, Increse [Position] and [Rotation] values for each Speed Set", MessageType.Info);
-                Reo_List_Speeds.DoLayoutList();        //Paint the Reordable List speeds
-
+                Reo_List_Speeds.DoLayoutList();        //Paint the Reordable List speeds 
 
                 Reo_List_Speeds.index = SelectedSpeed;
 
@@ -1543,7 +1818,10 @@ namespace MalbersAnimations.Controller
                                         var BankLerp = SelectedSpeed.FindPropertyRelative("BankLerp");
                                         var m_LockSpeed = SelectedSpeed.FindPropertyRelative("m_LockSpeed");
                                         var m_SprintIndex = SelectedSpeed.FindPropertyRelative("m_SprintIndex");
+
                                         var m_LockIndex = SelectedSpeed.FindPropertyRelative("m_LockIndex");
+                                        var m_RootMotionPos = SelectedSpeed.FindPropertyRelative("m_RootMotionPos");
+                                        var m_RootMotionRot = SelectedSpeed.FindPropertyRelative("m_RootMotionRot");
 
 
 
@@ -1554,6 +1832,13 @@ namespace MalbersAnimations.Controller
                                             EditorGUILayout.PropertyField(TopIndex);
                                             EditorGUILayout.PropertyField(m_SprintIndex);
                                             EditorGUILayout.PropertyField(BackSpeedMult, new GUIContent("Back Speed Mult", BackSpeedMult.tooltip));
+                                        }
+
+                                        m_RootMotionPos.isExpanded = MalbersEditor.Foldout(m_RootMotionPos.isExpanded, "RootMotion");
+                                        if (m_RootMotionPos.isExpanded)
+                                        {
+                                            EditorGUILayout.PropertyField(m_RootMotionPos);
+                                            EditorGUILayout.PropertyField(m_RootMotionRot);
                                         }
 
 
@@ -1624,92 +1909,7 @@ namespace MalbersAnimations.Controller
             }
         }
 
-        private void ShowGeneral()
-        {
-            using (new GUILayout.VerticalScope(EditorStyles.helpBox))
-                EditorGUILayout.PropertyField(Player, G_Player);
-
-            using (new GUILayout.VerticalScope(EditorStyles.helpBox))
-            {
-                EditorGUI.indentLevel++;
-                EditorGUILayout.PropertyField(S_PivotsList, true);
-                EditorGUI.indentLevel--;
-            }
-
-            using (new GUILayout.VerticalScope(EditorStyles.helpBox))
-            {
-                UseCameraInput.isExpanded = MalbersEditor.Foldout(UseCameraInput.isExpanded, "Movement");
-
-                if (UseCameraInput.isExpanded)
-                {
-                    EditorGUILayout.PropertyField(UseCameraInput, new GUIContent("Camera Input", "The Animal uses the Camera Forward Diretion to Move"));
-                    EditorGUI.BeginChangeCheck();
-                    EditorGUILayout.PropertyField(alwaysForward, new GUIContent("Always Forward", "If true the animal will always go forward. useful for infinite runners"));
-                    if (EditorGUI.EndChangeCheck() && Application.isPlaying) m.AlwaysForward = m.AlwaysForward;
-
-
-                    EditorGUILayout.PropertyField(useCameraUp, new GUIContent("Use Camera Up", "Uses the Camera Up Vector to move UP or Down while flying or Swiming UnderWater. if this is false the Animal will need an UPDOWN Input to move higher or lower"));
-                    EditorGUILayout.PropertyField(SmoothVertical, G_SmoothVertical);
-                    EditorGUILayout.PropertyField(useSprintGlobal, G_useSprintGlobal);
-                    EditorGUILayout.Space();
-                    EditorGUILayout.PropertyField(TurnMultiplier);
-                    EditorGUILayout.PropertyField(InPlaceDamp);
-                    EditorGUILayout.PropertyField(TurnLimit);
-                    EditorGUILayout.PropertyField(AnimatorSpeed);
-                    EditorGUILayout.PropertyField(m_TimeMultiplier);
-                }
-            }
-
-            using (new GUILayout.VerticalScope(EditorStyles.helpBox)) 
-            {
-                GroundLayer.isExpanded = MalbersEditor.Foldout(GroundLayer.isExpanded, "Ground");
-
-                if (GroundLayer.isExpanded)
-                {
-                    EditorGUILayout.PropertyField(GroundLayer, G_GroundLayer);
-                    EditorGUILayout.PropertyField(OrientToGround);
-                    EditorGUILayout.PropertyField(DebreeTag);
-
-
-                    using (new GUILayout.HorizontalScope())
-                    {
-                        EditorGUILayout.PropertyField(Height, G_Height);
-                        if (GUILayout.Button(new GUIContent("C", "Calculate Height and Animal Center"), GUILayout.Width(26))) m.SetPivots();
-                    }
-
-                    EditorGUILayout.PropertyField(maxAngleSlope);
-                    EditorGUILayout.PropertyField(deepSlope);
-
-                    maxAngleSlope.isExpanded = MalbersEditor.Foldout(maxAngleSlope.isExpanded, "Ground Aligment");
-                    if (maxAngleSlope.isExpanded)
-                    {
-                        EditorGUILayout.PropertyField(AlignPosLerp, G_AlignPosLerp);
-                        EditorGUILayout.PropertyField(AlignPosDelta, G_AlignPosDelta);
-                        EditorGUILayout.PropertyField(AlignRotLerp, G_AlignRotLerp);
-                        EditorGUILayout.PropertyField(AlignRotDelta, G_AlignRotDelta);
-                        EditorGUILayout.PropertyField(RayCastRadius, G_RayCastRadius);
-                        EditorGUILayout.PropertyField(AlignLoop, G_AlignLoop);
-                    }
-                }
-            }
-
-
-            using (new GUILayout.VerticalScope(EditorStyles.helpBox))
-            {
-                m_gravity.isExpanded = MalbersEditor.Foldout(m_gravity.isExpanded, "Gravity");
-
-                if (m_gravity.isExpanded)
-                {
-                    //  EditorGUILayout.LabelField("Gravity", EditorStyles.boldLabel);
-                    EditorGUILayout.PropertyField(m_gravity, G_gravityDirection);
-                    EditorGUILayout.PropertyField(m_gravityPower, G_GravityForce);
-                    EditorGUILayout.PropertyField(m_gravityTime, G_GravityCycle);
-                    EditorGUILayout.PropertyField(m_gravityTimeLimit, G_GravityLimitCycle);
-                    EditorGUILayout.PropertyField(ground_Changes_Gravity, new GUIContent("Ground Changes Gravity", "The Ground will change the gravity direction, allowing the animals to move in any surface"));
-                }
-            } 
-            ShowStrafingVars();
-        }
+       
         private void ShowStrafingVars()
         {
             using (new GUILayout.VerticalScope(EditorStyles.helpBox))
@@ -1749,14 +1949,16 @@ namespace MalbersAnimations.Controller
             }
         }
 
+        #region Draw Speeds
+
         private void Draw_Header_Speed(Rect rect)
         {
             var height = EditorGUIUtility.singleLineHeight;
-            var name = new Rect(rect.x + 20, rect.y, rect.width / 2, height);
+            var nameRec = new Rect(rect.x + 30, rect.y, rect.width / 2, height);
 
-            EditorGUI.LabelField(name, " Speed Sets");
+            EditorGUI.LabelField(nameRec, "Speed Sets");
 
-            Rect R_1 = new Rect(rect.x - 5, rect.y, 20, EditorGUIUtility.singleLineHeight);
+            Rect R_1 = new Rect(rect.width+5, rect.y, 20, EditorGUIUtility.singleLineHeight);
 
             if (GUI.Button(R_1, "?"))
                 Application.OpenURL("https://malbersanimations.gitbook.io/animal-controller/main-components/manimal-controller/speeds");
@@ -1790,31 +1992,36 @@ namespace MalbersAnimations.Controller
         {
             if (S_Speed_List.arraySize <= index) return;
 
-            var nameRect = rect;
+            var nameRect = new Rect(rect);
+            var IndexRect = new Rect(rect);
 
             nameRect.y += 1;
-            nameRect.height -= 3;
-            Rect activeRect = nameRect;
+            nameRect.x += 25;
+            nameRect.height = EditorGUIUtility.singleLineHeight;
+            IndexRect.height = EditorGUIUtility.singleLineHeight;
+            IndexRect.width = 20f;
+
+            Rect activeRect = new Rect( nameRect);
 
             var speedSet = S_Speed_List.GetArrayElementAtIndex(index);
             var nameSpeedSet = speedSet.FindPropertyRelative("name");
             nameRect.width /= 2;
             nameRect.width += 10;
+            EditorGUI.LabelField(IndexRect, $"[{index}]");
             EditorGUI.PropertyField(nameRect, nameSpeedSet, GUIContent.none);
 
-            activeRect.x = rect.width / 2 + 60;
-            activeRect.width = rect.width / 2 - 20;
-
-            //    EditorGUI.TextField(activeRect, "(Active)");
+            activeRect.x = rect.width / 2 + 80;
+            activeRect.width = rect.width / 2 - 40;
 
             if (Application.isPlaying)
             {
                 if (m.speedSets[index] == m.CurrentSpeedSet)
                 {
-                    EditorGUI.LabelField(activeRect, "(" + m.CurrentSpeedModifier.name + ")", EditorStyles.boldLabel);
+                    EditorGUI.LabelField(activeRect, "  (" + m.CurrentSpeedModifier.name + ")", EditorStyles.boldLabel);
                 }
             }
         } 
+        #endregion
 
         #region DrawStates 
         //-------------------------STATES-----------------------------------------------------------
@@ -1824,13 +2031,12 @@ namespace MalbersAnimations.Controller
             r.x += 13;
             r.width -= 60;
 
-            //var Head = "     States. ";
-            var Head = "Selected: ";
+            var Head = "    States";
 
             if (m.states != null && m.states.Count > 0 && SelectedState.intValue != -1 && SelectedState.intValue < m.states.Count) 
             {
                 var s = m.states[SelectedState.intValue];
-                Head += $" [{s.GetType().Name}]";
+              //  Head += $" [{s.GetType().Name}]";
 
                 if (s.ID)
                 {
@@ -1900,7 +2106,7 @@ namespace MalbersAnimations.Controller
             }
 
             var dC = GUI.contentColor;
-            if (index == Reo_List_States.index) GUI.contentColor = new Color(0.7f,0.7f,2f);
+            if (isFocused) GUI.contentColor = new Color(0.7f,0.7f,2f);
             EditorGUI.ObjectField(StateRect, stateProperty, GUIContent.none);
             GUI.contentColor = dC;
 
@@ -1943,6 +2149,7 @@ namespace MalbersAnimations.Controller
                 Undo.RecordObject(target, "MAnimal Inspector Changed");
             }
         }
+       
         private void OnReorderCallback_States(ReorderableList list)
         {
             for (int i = 0; i < S_StateList.arraySize; ++i)
@@ -1952,15 +2159,15 @@ namespace MalbersAnimations.Controller
             }
             EditorUtility.SetDirty(target);
         }
-        private void OnReorderCallback_States_Details(ReorderableList list, int oldIndex, int newIndex)
-        {
-            for (int i = 0; i < m.states.Count; i++)
-            {
-                m.states[i].Priority = m.states.Count - i;
-                EditorUtility.SetDirty(m.states[i]);
-            }
-            EditorUtility.SetDirty(target);
-        }
+        //private void OnReorderCallback_States_Details(ReorderableList list, int oldIndex, int newIndex)
+        //{
+        //    for (int i = 0; i < m.states.Count; i++)
+        //    {
+        //        m.states[i].Priority = m.states.Count - i;
+        //        EditorUtility.SetDirty(m.states[i]);
+        //    }
+        //    EditorUtility.SetDirty(target);
+        //}
 
         private void OnAddCallback_State(ReorderableList list)
         {
@@ -2052,6 +2259,8 @@ namespace MalbersAnimations.Controller
 
         #endregion
 
+        #region DrawModes
+
         //-------------------------MODES-----------------------------------------------------------
         private void Draw_Header_Modes(Rect rect)
         {
@@ -2094,14 +2303,11 @@ namespace MalbersAnimations.Controller
                 var IDVal = new Rect(rectan.width + 9, rectan.y + 3, 35, rectan.height);
 
                 var dC = GUI.contentColor;
-                if (index == Reo_List_Modes.index) GUI.contentColor = Color.green;
+                if (isFocused) GUI.contentColor = Color.green;
 
                 active.boolValue = EditorGUI.Toggle(activeRect1, GUIContent.none, active.boolValue);
 
-             
-
                 EditorGUI.PropertyField(IDRect, ID, GUIContent.none);
-
                 GUI.contentColor = dC;
 
 
@@ -2159,6 +2365,8 @@ namespace MalbersAnimations.Controller
 
             EditorUtility.SetDirty(m);
         }
+        #endregion
+
         public void SetPivots()
         {
             m.Pivot_Hip = m.pivots.Find(item => item.name.ToUpper() == "HIP");
@@ -2192,7 +2400,6 @@ namespace MalbersAnimations.Controller
         readonly GUIContent G_gravityDirection = new GUIContent("Direction", "Direction of the Gravity applied to the animal");
         readonly GUIContent G_GravityForce = new GUIContent("Force", "Force of the Gravity, by Default it 9.8");
         readonly GUIContent G_GravityCycle = new GUIContent("Start Gravity Cycle", "Start the gravity with an extra time to push the animal down.... higher values stronger Gravity");
-        readonly GUIContent G_GravityLimitCycle = new GUIContent("Limit Gravity Cycle", "If greater than zero, Limits the Gravity Cycle, making a steady fall after a time");
 
         readonly GUIContent G_useSprintGlobal = new GUIContent("Can Sprint", "Can the Animal Sprint?");
         readonly GUIContent G_CanStrafe = new GUIContent("Can Strafe", "Can the Animal Strafe?\nStrafing requires new sets of strafe animations. Make sure you have proper animations to Use this feature. Check the Help button for more Info [?]");
@@ -2247,3 +2454,4 @@ namespace MalbersAnimations.Controller
         }
     }
 }
+#endif

@@ -3,9 +3,7 @@ using UnityEngine;
 
 namespace MalbersAnimations.Utilities
 {
-    /// <summary>
-    /// Based on 3DKit Controller from Unity
-    /// </summary>
+    /// <summary>  Based on 3DKit Controller from Unity  </summary>
     [AddComponentMenu("Malbers/Utilities/Transform/Simple Rotator")]
     [SelectionBase]
     public class MSimpleRotator : MSimpleTransformer

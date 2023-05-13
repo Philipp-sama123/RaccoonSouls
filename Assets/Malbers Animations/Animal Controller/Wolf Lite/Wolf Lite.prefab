@@ -88,7 +88,8 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1369733098890578}
-  m_LocalRotation: {x: -0.00000008940697, y: 0.00000062584877, z: 0.00000008940697, w: 1}
+  m_LocalRotation: {x: -0.00000008940697, y: 0.00000062584877, z: 0.00000008940697,
+    w: 1}
   m_LocalPosition: {x: -0.14797945, y: 0.034257233, z: -0.026984453}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -104,17 +105,9 @@ SphereCollider:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1369733098890578}
   m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
   m_IsTrigger: 1
-  m_ProvidesContacts: 0
   m_Enabled: 1
-  serializedVersion: 3
+  serializedVersion: 2
   m_Radius: 0.04
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!114 &114546342431709790
@@ -217,17 +210,9 @@ BoxCollider:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1393744931466200}
   m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
   m_IsTrigger: 1
-  m_ProvidesContacts: 0
   m_Enabled: 0
-  serializedVersion: 3
+  serializedVersion: 2
   m_Size: {x: 0.65, y: 1, z: 1.15}
   m_Center: {x: 0, y: 0.5, z: 0.25}
 --- !u!114 &114523052757254038
@@ -260,16 +245,17 @@ MonoBehaviour:
     ConstantValue: {fileID: 4653085296718725689}
     Variable: {fileID: 0}
   DestroyHitEffect: 0
-  interactorID:
-    UseConstant: 1
-    ConstantValue: 10
-    Variable: {fileID: 0}
   dontHitOwner:
     UseConstant: 1
     ConstantValue: 1
     Variable: {fileID: 0}
-  CustomReaction: {fileID: 0}
+  CustomReaction:
+    rid: -2
   element: {fileID: 0}
+  interactorID:
+    UseConstant: 1
+    ConstantValue: 10
+    Variable: {fileID: 0}
   interact:
     UseConstant: 1
     ConstantValue: 1
@@ -285,9 +271,17 @@ MonoBehaviour:
   statModifier:
     ID: {fileID: 11400000, guid: d6b3e636d59a6c547a2cad40b69f4432, type: 2}
     modify: 3
-    Value:
+    MinValue:
       UseConstant: 1
       ConstantValue: 10
+      Variable: {fileID: 0}
+    MaxValue:
+      UseConstant: 1
+      ConstantValue: 10
+      Variable: {fileID: 0}
+    enable:
+      UseConstant: 1
+      ConstantValue: 1
       Variable: {fileID: 0}
   m_cChance:
     UseConstant: 1
@@ -300,6 +294,10 @@ MonoBehaviour:
   m_Force:
     UseConstant: 1
     ConstantValue: 100
+    Variable: {fileID: 0}
+  minForce:
+    UseConstant: 1
+    ConstantValue: 20
     Variable: {fileID: 0}
   forceMode: 0
   OnHit:
@@ -323,6 +321,9 @@ MonoBehaviour:
   OnHitInteractable:
     m_PersistentCalls:
       m_Calls: []
+  OnProfileChanged:
+    m_PersistentCalls:
+      m_Calls: []
   animator: {fileID: 95706822463566262}
   AnimatorSpeed:
     UseConstant: 1
@@ -332,26 +333,109 @@ MonoBehaviour:
     UseConstant: 1
     ConstantValue: 0.2
     Variable: {fileID: 0}
+  Profiles: []
+  DefaultProfile:
+    Name: 
+    modify: 0
+    interact:
+      UseConstant: 1
+      ConstantValue: 0
+      Variable: {fileID: 0}
+    interactorID:
+      UseConstant: 1
+      ConstantValue: 0
+      Variable: {fileID: 0}
+    react:
+      UseConstant: 1
+      ConstantValue: 0
+      Variable: {fileID: 0}
+    pureDamage:
+      UseConstant: 1
+      ConstantValue: 0
+      Variable: {fileID: 0}
+    statModifier:
+      ID: {fileID: 0}
+      modify: 0
+      MinValue:
+        UseConstant: 1
+        ConstantValue: 0
+        Variable: {fileID: 0}
+      MaxValue:
+        UseConstant: 1
+        ConstantValue: 10
+        Variable: {fileID: 0}
+      enable:
+        UseConstant: 1
+        ConstantValue: 1
+        Variable: {fileID: 0}
+    m_cChance:
+      UseConstant: 1
+      ConstantValue: 0
+      Variable: {fileID: 0}
+    cMultiplier:
+      UseConstant: 1
+      ConstantValue: 0
+      Variable: {fileID: 0}
+    maxForce:
+      UseConstant: 1
+      ConstantValue: 0
+      Variable: {fileID: 0}
+    minForce:
+      UseConstant: 1
+      ConstantValue: 0
+      Variable: {fileID: 0}
+    forceMode: 0
+    m_HitEffect:
+      UseConstant: 1
+      ConstantValue: {fileID: 0}
+      Variable: {fileID: 0}
+    CustomReaction:
+      rid: -2
+    element: {fileID: 0}
   debug: 0
   Trigger: {fileID: 65525002523984878}
   SelfStatEnter:
     ID: {fileID: 0}
     modify: 0
-    Value:
+    MinValue:
+      UseConstant: 1
+      ConstantValue: 1
+      Variable: {fileID: 0}
+    MaxValue:
+      UseConstant: 1
+      ConstantValue: 10
+      Variable: {fileID: 0}
+    enable:
       UseConstant: 1
       ConstantValue: 1
       Variable: {fileID: 0}
   SelfStatExit:
     ID: {fileID: 0}
     modify: 0
-    Value:
+    MinValue:
+      UseConstant: 1
+      ConstantValue: 1
+      Variable: {fileID: 0}
+    MaxValue:
+      UseConstant: 1
+      ConstantValue: 10
+      Variable: {fileID: 0}
+    enable:
       UseConstant: 1
       ConstantValue: 1
       Variable: {fileID: 0}
   EnemyStatExit:
     ID: {fileID: 0}
     modify: 0
-    Value:
+    MinValue:
+      UseConstant: 1
+      ConstantValue: 1
+      Variable: {fileID: 0}
+    MaxValue:
+      UseConstant: 1
+      ConstantValue: 10
+      Variable: {fileID: 0}
+    enable:
       UseConstant: 1
       ConstantValue: 1
       Variable: {fileID: 0}
@@ -362,7 +446,12 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   DebugColor: {r: 1, g: 0.25, b: 0, a: 0.15}
-  Editor_Tabs1: 2
+  Editor_Tabs1: 0
+  references:
+    version: 2
+    RefIds:
+    - rid: -2
+      type: {class: , ns: , asm: }
 --- !u!114 &7524590618557686706
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -451,7 +540,7 @@ MonoBehaviour:
   animal: {fileID: 114222225517902476}
   modes:
   - {fileID: 11400000, guid: 1286867ad3c4cdd4baacac3373aff92c, type: 2}
-  Animals: 0
+  Animals: 1
   Layer:
     UseConstant: 1
     ConstantValue:
@@ -480,7 +569,7 @@ MonoBehaviour:
   animal: {fileID: 114222225517902476}
   modes:
   - {fileID: 11400000, guid: dc411047be38d924fbfc67128f6957f2, type: 2}
-  Animals: 0
+  Animals: 1
   Layer:
     UseConstant: 1
     ConstantValue:
@@ -568,21 +657,10 @@ Rigidbody:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1438017827249262}
-  serializedVersion: 4
+  serializedVersion: 2
   m_Mass: 40
   m_Drag: 0
   m_AngularDrag: 0.05
-  m_CenterOfMass: {x: 0, y: 0, z: 0}
-  m_InertiaTensor: {x: 1, y: 1, z: 1}
-  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ImplicitCom: 1
-  m_ImplicitTensor: 1
   m_UseGravity: 0
   m_IsKinematic: 0
   m_Interpolate: 0
@@ -652,14 +730,30 @@ MonoBehaviour:
     gameObjects:
     - {fileID: 831426989002301917}
     monoBehaviours: []
-  - name: Root Axis
-    tooltip: 'Shows the Exact position and Rotation of the Root
-
-      Used for Debug
-      purposes'
-    active: 0
+  - name: Lock On Target
+    tooltip: Lock on Target component, to find possible Lock On targets
+    active: 1
+    gameObjects:
+    - {fileID: 7776402098345217213}
+    monoBehaviours:
+    - {fileID: 0}
+  - name: Enemy Search Health
+    tooltip: 
+    active: 1
+    gameObjects:
+    - {fileID: 5193703386021988088}
+    monoBehaviours: []
+  - name: Axis
+    tooltip: Show/Hide an Axis Model (Debug(
+    active: 1
     gameObjects:
     - {fileID: 1517622598339786180}
+    monoBehaviours: []
+  - name: Combos
+    tooltip: Combo Manager Component
+    active: 1
+    gameObjects:
+    - {fileID: 2802576240082429538}
     monoBehaviours: []
   edit: 0
 --- !u!114 &114392047167580918
@@ -683,9 +777,8 @@ MonoBehaviour:
     type: 1
     input: InputValue
     key: 32
+    debug: 0
     GetPressed: 0
-    InputValue: 0
-    ToggleValue: 0
     ResetOnDisable: 1
     OnInputDown:
       m_PersistentCalls:
@@ -694,6 +787,9 @@ MonoBehaviour:
       m_PersistentCalls:
         m_Calls: []
     OnLongPress:
+      m_PersistentCalls:
+        m_Calls: []
+    OnLongPressReleased:
       m_PersistentCalls:
         m_Calls: []
     OnDoubleTap:
@@ -714,7 +810,7 @@ MonoBehaviour:
     OnInputPressed:
       m_PersistentCalls:
         m_Calls: []
-    OnPressedNormalized:
+    OnInputFloat:
       m_PersistentCalls:
         m_Calls: []
   - name: Sprint
@@ -725,9 +821,8 @@ MonoBehaviour:
     type: 1
     input: InputValue
     key: 304
+    debug: 0
     GetPressed: 0
-    InputValue: 0
-    ToggleValue: 0
     ResetOnDisable: 1
     OnInputDown:
       m_PersistentCalls:
@@ -736,6 +831,9 @@ MonoBehaviour:
       m_PersistentCalls:
         m_Calls: []
     OnLongPress:
+      m_PersistentCalls:
+        m_Calls: []
+    OnLongPressReleased:
       m_PersistentCalls:
         m_Calls: []
     OnDoubleTap:
@@ -768,7 +866,7 @@ MonoBehaviour:
     OnInputPressed:
       m_PersistentCalls:
         m_Calls: []
-    OnPressedNormalized:
+    OnInputFloat:
       m_PersistentCalls:
         m_Calls: []
   - name: Speed--
@@ -779,9 +877,8 @@ MonoBehaviour:
     type: 1
     input: InputValue
     key: 49
+    debug: 0
     GetPressed: 1
-    InputValue: 0
-    ToggleValue: 0
     ResetOnDisable: 1
     OnInputDown:
       m_PersistentCalls:
@@ -804,6 +901,9 @@ MonoBehaviour:
     OnLongPress:
       m_PersistentCalls:
         m_Calls: []
+    OnLongPressReleased:
+      m_PersistentCalls:
+        m_Calls: []
     OnDoubleTap:
       m_PersistentCalls:
         m_Calls: []
@@ -822,7 +922,7 @@ MonoBehaviour:
     OnInputPressed:
       m_PersistentCalls:
         m_Calls: []
-    OnPressedNormalized:
+    OnInputFloat:
       m_PersistentCalls:
         m_Calls: []
   - name: Speed++
@@ -833,9 +933,8 @@ MonoBehaviour:
     type: 1
     input: InputValue
     key: 50
+    debug: 0
     GetPressed: 1
-    InputValue: 0
-    ToggleValue: 0
     ResetOnDisable: 1
     OnInputDown:
       m_PersistentCalls:
@@ -858,6 +957,9 @@ MonoBehaviour:
     OnLongPress:
       m_PersistentCalls:
         m_Calls: []
+    OnLongPressReleased:
+      m_PersistentCalls:
+        m_Calls: []
     OnDoubleTap:
       m_PersistentCalls:
         m_Calls: []
@@ -876,7 +978,7 @@ MonoBehaviour:
     OnInputPressed:
       m_PersistentCalls:
         m_Calls: []
-    OnPressedNormalized:
+    OnInputFloat:
       m_PersistentCalls:
         m_Calls: []
   - name: PickDrop
@@ -887,9 +989,8 @@ MonoBehaviour:
     type: 1
     input: InputValue
     key: 101
+    debug: 0
     GetPressed: 1
-    InputValue: 0
-    ToggleValue: 0
     ResetOnDisable: 1
     OnInputDown:
       m_PersistentCalls:
@@ -912,6 +1013,9 @@ MonoBehaviour:
     OnLongPress:
       m_PersistentCalls:
         m_Calls: []
+    OnLongPressReleased:
+      m_PersistentCalls:
+        m_Calls: []
     OnDoubleTap:
       m_PersistentCalls:
         m_Calls: []
@@ -930,7 +1034,7 @@ MonoBehaviour:
     OnInputPressed:
       m_PersistentCalls:
         m_Calls: []
-    OnPressedNormalized:
+    OnInputFloat:
       m_PersistentCalls:
         m_Calls: []
   - name: Attack1
@@ -941,9 +1045,8 @@ MonoBehaviour:
     type: 1
     input: InputValue
     key: 323
+    debug: 0
     GetPressed: 0
-    InputValue: 0
-    ToggleValue: 0
     ResetOnDisable: 1
     OnInputDown:
       m_PersistentCalls:
@@ -952,6 +1055,9 @@ MonoBehaviour:
       m_PersistentCalls:
         m_Calls: []
     OnLongPress:
+      m_PersistentCalls:
+        m_Calls: []
+    OnLongPressReleased:
       m_PersistentCalls:
         m_Calls: []
     OnDoubleTap:
@@ -972,7 +1078,7 @@ MonoBehaviour:
     OnInputPressed:
       m_PersistentCalls:
         m_Calls: []
-    OnPressedNormalized:
+    OnInputFloat:
       m_PersistentCalls:
         m_Calls: []
   - name: Action
@@ -983,9 +1089,8 @@ MonoBehaviour:
     type: 1
     input: InputValue
     key: 101
+    debug: 0
     GetPressed: 0
-    InputValue: 0
-    ToggleValue: 0
     ResetOnDisable: 1
     OnInputDown:
       m_PersistentCalls:
@@ -994,6 +1099,9 @@ MonoBehaviour:
       m_PersistentCalls:
         m_Calls: []
     OnLongPress:
+      m_PersistentCalls:
+        m_Calls: []
+    OnLongPressReleased:
       m_PersistentCalls:
         m_Calls: []
     OnDoubleTap:
@@ -1014,7 +1122,7 @@ MonoBehaviour:
     OnInputPressed:
       m_PersistentCalls:
         m_Calls: []
-    OnPressedNormalized:
+    OnInputFloat:
       m_PersistentCalls:
         m_Calls: []
   - name: Attack2
@@ -1025,9 +1133,8 @@ MonoBehaviour:
     type: 1
     input: Fire2
     key: 324
+    debug: 0
     GetPressed: 0
-    InputValue: 0
-    ToggleValue: 0
     ResetOnDisable: 1
     OnInputDown:
       m_PersistentCalls:
@@ -1036,6 +1143,9 @@ MonoBehaviour:
       m_PersistentCalls:
         m_Calls: []
     OnLongPress:
+      m_PersistentCalls:
+        m_Calls: []
+    OnLongPressReleased:
       m_PersistentCalls:
         m_Calls: []
     OnDoubleTap:
@@ -1056,7 +1166,7 @@ MonoBehaviour:
     OnInputPressed:
       m_PersistentCalls:
         m_Calls: []
-    OnPressedNormalized:
+    OnInputFloat:
       m_PersistentCalls:
         m_Calls: []
   - name: Sneak
@@ -1067,9 +1177,8 @@ MonoBehaviour:
     type: 1
     input: InputValue
     key: 99
+    debug: 0
     GetPressed: 5
-    InputValue: 0
-    ToggleValue: 0
     ResetOnDisable: 0
     OnInputDown:
       m_PersistentCalls:
@@ -1078,6 +1187,9 @@ MonoBehaviour:
       m_PersistentCalls:
         m_Calls: []
     OnLongPress:
+      m_PersistentCalls:
+        m_Calls: []
+    OnLongPressReleased:
       m_PersistentCalls:
         m_Calls: []
     OnDoubleTap:
@@ -1091,7 +1203,8 @@ MonoBehaviour:
           m_MethodName: Stance_Toggle
           m_Mode: 2
           m_Arguments:
-            m_ObjectArgument: {fileID: 11400000, guid: fbd7296ce55e10746a1ec32a2fcd406a, type: 2}
+            m_ObjectArgument: {fileID: 11400000, guid: fbd7296ce55e10746a1ec32a2fcd406a,
+              type: 2}
             m_ObjectArgumentAssemblyTypeName: MalbersAnimations.StanceID, Assembly-CSharp
             m_IntArgument: 0
             m_FloatArgument: 0
@@ -1110,7 +1223,7 @@ MonoBehaviour:
     OnInputPressed:
       m_PersistentCalls:
         m_Calls: []
-    OnPressedNormalized:
+    OnInputFloat:
       m_PersistentCalls:
         m_Calls: []
   - name: LockTarget
@@ -1121,9 +1234,8 @@ MonoBehaviour:
     type: 1
     input: LockTarget
     key: 325
+    debug: 0
     GetPressed: 1
-    InputValue: 0
-    ToggleValue: 0
     ResetOnDisable: 1
     OnInputDown:
       m_PersistentCalls:
@@ -1146,6 +1258,9 @@ MonoBehaviour:
     OnLongPress:
       m_PersistentCalls:
         m_Calls: []
+    OnLongPressReleased:
+      m_PersistentCalls:
+        m_Calls: []
     OnDoubleTap:
       m_PersistentCalls:
         m_Calls: []
@@ -1164,7 +1279,7 @@ MonoBehaviour:
     OnInputPressed:
       m_PersistentCalls:
         m_Calls: []
-    OnPressedNormalized:
+    OnInputFloat:
       m_PersistentCalls:
         m_Calls: []
   - name: Dash
@@ -1175,9 +1290,8 @@ MonoBehaviour:
     type: 1
     input: InputValue
     key: 113
+    debug: 0
     GetPressed: 1
-    InputValue: 0
-    ToggleValue: 0
     ResetOnDisable: 1
     OnInputDown:
       m_PersistentCalls:
@@ -1186,6 +1300,9 @@ MonoBehaviour:
       m_PersistentCalls:
         m_Calls: []
     OnLongPress:
+      m_PersistentCalls:
+        m_Calls: []
+    OnLongPressReleased:
       m_PersistentCalls:
         m_Calls: []
     OnDoubleTap:
@@ -1206,7 +1323,7 @@ MonoBehaviour:
     OnInputPressed:
       m_PersistentCalls:
         m_Calls: []
-    OnPressedNormalized:
+    OnInputFloat:
       m_PersistentCalls:
         m_Calls: []
   AllInputs: []
@@ -1226,9 +1343,8 @@ MonoBehaviour:
       type: 1
       input: InputValue
       key: 32
+      debug: 0
       GetPressed: 0
-      InputValue: 0
-      ToggleValue: 0
       ResetOnDisable: 1
       OnInputDown:
         m_PersistentCalls:
@@ -1237,6 +1353,9 @@ MonoBehaviour:
         m_PersistentCalls:
           m_Calls: []
       OnLongPress:
+        m_PersistentCalls:
+          m_Calls: []
+      OnLongPressReleased:
         m_PersistentCalls:
           m_Calls: []
       OnDoubleTap:
@@ -1257,7 +1376,7 @@ MonoBehaviour:
       OnInputPressed:
         m_PersistentCalls:
           m_Calls: []
-      OnPressedNormalized:
+      OnInputFloat:
         m_PersistentCalls:
           m_Calls: []
     - name: Sprint
@@ -1268,9 +1387,8 @@ MonoBehaviour:
       type: 1
       input: InputValue
       key: 304
+      debug: 0
       GetPressed: 0
-      InputValue: 0
-      ToggleValue: 0
       ResetOnDisable: 1
       OnInputDown:
         m_PersistentCalls:
@@ -1279,6 +1397,9 @@ MonoBehaviour:
         m_PersistentCalls:
           m_Calls: []
       OnLongPress:
+        m_PersistentCalls:
+          m_Calls: []
+      OnLongPressReleased:
         m_PersistentCalls:
           m_Calls: []
       OnDoubleTap:
@@ -1311,7 +1432,7 @@ MonoBehaviour:
       OnInputPressed:
         m_PersistentCalls:
           m_Calls: []
-      OnPressedNormalized:
+      OnInputFloat:
         m_PersistentCalls:
           m_Calls: []
     - name: Speed--
@@ -1322,9 +1443,8 @@ MonoBehaviour:
       type: 1
       input: InputValue
       key: 49
+      debug: 0
       GetPressed: 1
-      InputValue: 0
-      ToggleValue: 0
       ResetOnDisable: 1
       OnInputDown:
         m_PersistentCalls:
@@ -1347,6 +1467,9 @@ MonoBehaviour:
       OnLongPress:
         m_PersistentCalls:
           m_Calls: []
+      OnLongPressReleased:
+        m_PersistentCalls:
+          m_Calls: []
       OnDoubleTap:
         m_PersistentCalls:
           m_Calls: []
@@ -1365,7 +1488,7 @@ MonoBehaviour:
       OnInputPressed:
         m_PersistentCalls:
           m_Calls: []
-      OnPressedNormalized:
+      OnInputFloat:
         m_PersistentCalls:
           m_Calls: []
     - name: Speed++
@@ -1376,9 +1499,8 @@ MonoBehaviour:
       type: 1
       input: InputValue
       key: 50
+      debug: 0
       GetPressed: 1
-      InputValue: 0
-      ToggleValue: 0
       ResetOnDisable: 1
       OnInputDown:
         m_PersistentCalls:
@@ -1401,6 +1523,9 @@ MonoBehaviour:
       OnLongPress:
         m_PersistentCalls:
           m_Calls: []
+      OnLongPressReleased:
+        m_PersistentCalls:
+          m_Calls: []
       OnDoubleTap:
         m_PersistentCalls:
           m_Calls: []
@@ -1419,7 +1544,7 @@ MonoBehaviour:
       OnInputPressed:
         m_PersistentCalls:
           m_Calls: []
-      OnPressedNormalized:
+      OnInputFloat:
         m_PersistentCalls:
           m_Calls: []
     - name: PickDrop
@@ -1430,9 +1555,8 @@ MonoBehaviour:
       type: 1
       input: InputValue
       key: 101
+      debug: 0
       GetPressed: 1
-      InputValue: 0
-      ToggleValue: 0
       ResetOnDisable: 1
       OnInputDown:
         m_PersistentCalls:
@@ -1455,6 +1579,9 @@ MonoBehaviour:
       OnLongPress:
         m_PersistentCalls:
           m_Calls: []
+      OnLongPressReleased:
+        m_PersistentCalls:
+          m_Calls: []
       OnDoubleTap:
         m_PersistentCalls:
           m_Calls: []
@@ -1473,7 +1600,7 @@ MonoBehaviour:
       OnInputPressed:
         m_PersistentCalls:
           m_Calls: []
-      OnPressedNormalized:
+      OnInputFloat:
         m_PersistentCalls:
           m_Calls: []
     - name: Attack1
@@ -1484,9 +1611,8 @@ MonoBehaviour:
       type: 1
       input: InputValue
       key: 323
+      debug: 0
       GetPressed: 0
-      InputValue: 0
-      ToggleValue: 0
       ResetOnDisable: 1
       OnInputDown:
         m_PersistentCalls:
@@ -1495,6 +1621,9 @@ MonoBehaviour:
         m_PersistentCalls:
           m_Calls: []
       OnLongPress:
+        m_PersistentCalls:
+          m_Calls: []
+      OnLongPressReleased:
         m_PersistentCalls:
           m_Calls: []
       OnDoubleTap:
@@ -1515,7 +1644,7 @@ MonoBehaviour:
       OnInputPressed:
         m_PersistentCalls:
           m_Calls: []
-      OnPressedNormalized:
+      OnInputFloat:
         m_PersistentCalls:
           m_Calls: []
     - name: Action
@@ -1526,9 +1655,8 @@ MonoBehaviour:
       type: 1
       input: InputValue
       key: 101
+      debug: 0
       GetPressed: 0
-      InputValue: 0
-      ToggleValue: 0
       ResetOnDisable: 1
       OnInputDown:
         m_PersistentCalls:
@@ -1537,6 +1665,9 @@ MonoBehaviour:
         m_PersistentCalls:
           m_Calls: []
       OnLongPress:
+        m_PersistentCalls:
+          m_Calls: []
+      OnLongPressReleased:
         m_PersistentCalls:
           m_Calls: []
       OnDoubleTap:
@@ -1557,7 +1688,7 @@ MonoBehaviour:
       OnInputPressed:
         m_PersistentCalls:
           m_Calls: []
-      OnPressedNormalized:
+      OnInputFloat:
         m_PersistentCalls:
           m_Calls: []
     - name: Attack2
@@ -1568,9 +1699,8 @@ MonoBehaviour:
       type: 1
       input: Fire2
       key: 324
+      debug: 0
       GetPressed: 0
-      InputValue: 0
-      ToggleValue: 0
       ResetOnDisable: 1
       OnInputDown:
         m_PersistentCalls:
@@ -1579,6 +1709,9 @@ MonoBehaviour:
         m_PersistentCalls:
           m_Calls: []
       OnLongPress:
+        m_PersistentCalls:
+          m_Calls: []
+      OnLongPressReleased:
         m_PersistentCalls:
           m_Calls: []
       OnDoubleTap:
@@ -1599,7 +1732,7 @@ MonoBehaviour:
       OnInputPressed:
         m_PersistentCalls:
           m_Calls: []
-      OnPressedNormalized:
+      OnInputFloat:
         m_PersistentCalls:
           m_Calls: []
     - name: Sneak
@@ -1610,9 +1743,8 @@ MonoBehaviour:
       type: 1
       input: InputValue
       key: 99
+      debug: 0
       GetPressed: 5
-      InputValue: 0
-      ToggleValue: 0
       ResetOnDisable: 0
       OnInputDown:
         m_PersistentCalls:
@@ -1621,6 +1753,9 @@ MonoBehaviour:
         m_PersistentCalls:
           m_Calls: []
       OnLongPress:
+        m_PersistentCalls:
+          m_Calls: []
+      OnLongPressReleased:
         m_PersistentCalls:
           m_Calls: []
       OnDoubleTap:
@@ -1634,7 +1769,8 @@ MonoBehaviour:
             m_MethodName: Stance_Toggle
             m_Mode: 2
             m_Arguments:
-              m_ObjectArgument: {fileID: 11400000, guid: fbd7296ce55e10746a1ec32a2fcd406a, type: 2}
+              m_ObjectArgument: {fileID: 11400000, guid: fbd7296ce55e10746a1ec32a2fcd406a,
+                type: 2}
               m_ObjectArgumentAssemblyTypeName: MalbersAnimations.StanceID, Assembly-CSharp
               m_IntArgument: 0
               m_FloatArgument: 0
@@ -1653,7 +1789,7 @@ MonoBehaviour:
       OnInputPressed:
         m_PersistentCalls:
           m_Calls: []
-      OnPressedNormalized:
+      OnInputFloat:
         m_PersistentCalls:
           m_Calls: []
     - name: LockTarget
@@ -1664,9 +1800,8 @@ MonoBehaviour:
       type: 1
       input: LockTarget
       key: 325
+      debug: 0
       GetPressed: 1
-      InputValue: 0
-      ToggleValue: 0
       ResetOnDisable: 1
       OnInputDown:
         m_PersistentCalls:
@@ -1689,6 +1824,9 @@ MonoBehaviour:
       OnLongPress:
         m_PersistentCalls:
           m_Calls: []
+      OnLongPressReleased:
+        m_PersistentCalls:
+          m_Calls: []
       OnDoubleTap:
         m_PersistentCalls:
           m_Calls: []
@@ -1707,7 +1845,7 @@ MonoBehaviour:
       OnInputPressed:
         m_PersistentCalls:
           m_Calls: []
-      OnPressedNormalized:
+      OnInputFloat:
         m_PersistentCalls:
           m_Calls: []
     - name: Dash
@@ -1718,9 +1856,8 @@ MonoBehaviour:
       type: 1
       input: InputValue
       key: 113
+      debug: 0
       GetPressed: 1
-      InputValue: 0
-      ToggleValue: 0
       ResetOnDisable: 1
       OnInputDown:
         m_PersistentCalls:
@@ -1729,6 +1866,9 @@ MonoBehaviour:
         m_PersistentCalls:
           m_Calls: []
       OnLongPress:
+        m_PersistentCalls:
+          m_Calls: []
+      OnLongPressReleased:
         m_PersistentCalls:
           m_Calls: []
       OnDoubleTap:
@@ -1749,7 +1889,7 @@ MonoBehaviour:
       OnInputPressed:
         m_PersistentCalls:
           m_Calls: []
-      OnPressedNormalized:
+      OnInputFloat:
         m_PersistentCalls:
           m_Calls: []
   ActiveMap:
@@ -1766,9 +1906,8 @@ MonoBehaviour:
       type: 1
       input: InputValue
       key: 32
+      debug: 0
       GetPressed: 0
-      InputValue: 0
-      ToggleValue: 0
       ResetOnDisable: 1
       OnInputDown:
         m_PersistentCalls:
@@ -1777,6 +1916,9 @@ MonoBehaviour:
         m_PersistentCalls:
           m_Calls: []
       OnLongPress:
+        m_PersistentCalls:
+          m_Calls: []
+      OnLongPressReleased:
         m_PersistentCalls:
           m_Calls: []
       OnDoubleTap:
@@ -1797,7 +1939,7 @@ MonoBehaviour:
       OnInputPressed:
         m_PersistentCalls:
           m_Calls: []
-      OnPressedNormalized:
+      OnInputFloat:
         m_PersistentCalls:
           m_Calls: []
     - name: Sprint
@@ -1808,9 +1950,8 @@ MonoBehaviour:
       type: 1
       input: InputValue
       key: 304
+      debug: 0
       GetPressed: 0
-      InputValue: 0
-      ToggleValue: 0
       ResetOnDisable: 1
       OnInputDown:
         m_PersistentCalls:
@@ -1819,6 +1960,9 @@ MonoBehaviour:
         m_PersistentCalls:
           m_Calls: []
       OnLongPress:
+        m_PersistentCalls:
+          m_Calls: []
+      OnLongPressReleased:
         m_PersistentCalls:
           m_Calls: []
       OnDoubleTap:
@@ -1851,7 +1995,7 @@ MonoBehaviour:
       OnInputPressed:
         m_PersistentCalls:
           m_Calls: []
-      OnPressedNormalized:
+      OnInputFloat:
         m_PersistentCalls:
           m_Calls: []
     - name: Speed--
@@ -1862,9 +2006,8 @@ MonoBehaviour:
       type: 1
       input: InputValue
       key: 49
+      debug: 0
       GetPressed: 1
-      InputValue: 0
-      ToggleValue: 0
       ResetOnDisable: 1
       OnInputDown:
         m_PersistentCalls:
@@ -1887,6 +2030,9 @@ MonoBehaviour:
       OnLongPress:
         m_PersistentCalls:
           m_Calls: []
+      OnLongPressReleased:
+        m_PersistentCalls:
+          m_Calls: []
       OnDoubleTap:
         m_PersistentCalls:
           m_Calls: []
@@ -1905,7 +2051,7 @@ MonoBehaviour:
       OnInputPressed:
         m_PersistentCalls:
           m_Calls: []
-      OnPressedNormalized:
+      OnInputFloat:
         m_PersistentCalls:
           m_Calls: []
     - name: Speed++
@@ -1916,9 +2062,8 @@ MonoBehaviour:
       type: 1
       input: InputValue
       key: 50
+      debug: 0
       GetPressed: 1
-      InputValue: 0
-      ToggleValue: 0
       ResetOnDisable: 1
       OnInputDown:
         m_PersistentCalls:
@@ -1941,6 +2086,9 @@ MonoBehaviour:
       OnLongPress:
         m_PersistentCalls:
           m_Calls: []
+      OnLongPressReleased:
+        m_PersistentCalls:
+          m_Calls: []
       OnDoubleTap:
         m_PersistentCalls:
           m_Calls: []
@@ -1959,7 +2107,7 @@ MonoBehaviour:
       OnInputPressed:
         m_PersistentCalls:
           m_Calls: []
-      OnPressedNormalized:
+      OnInputFloat:
         m_PersistentCalls:
           m_Calls: []
     - name: PickDrop
@@ -1970,9 +2118,8 @@ MonoBehaviour:
       type: 1
       input: InputValue
       key: 101
+      debug: 0
       GetPressed: 1
-      InputValue: 0
-      ToggleValue: 0
       ResetOnDisable: 1
       OnInputDown:
         m_PersistentCalls:
@@ -1995,6 +2142,9 @@ MonoBehaviour:
       OnLongPress:
         m_PersistentCalls:
           m_Calls: []
+      OnLongPressReleased:
+        m_PersistentCalls:
+          m_Calls: []
       OnDoubleTap:
         m_PersistentCalls:
           m_Calls: []
@@ -2013,7 +2163,7 @@ MonoBehaviour:
       OnInputPressed:
         m_PersistentCalls:
           m_Calls: []
-      OnPressedNormalized:
+      OnInputFloat:
         m_PersistentCalls:
           m_Calls: []
     - name: Attack1
@@ -2024,9 +2174,8 @@ MonoBehaviour:
       type: 1
       input: InputValue
       key: 323
+      debug: 0
       GetPressed: 0
-      InputValue: 0
-      ToggleValue: 0
       ResetOnDisable: 1
       OnInputDown:
         m_PersistentCalls:
@@ -2035,6 +2184,9 @@ MonoBehaviour:
         m_PersistentCalls:
           m_Calls: []
       OnLongPress:
+        m_PersistentCalls:
+          m_Calls: []
+      OnLongPressReleased:
         m_PersistentCalls:
           m_Calls: []
       OnDoubleTap:
@@ -2055,7 +2207,7 @@ MonoBehaviour:
       OnInputPressed:
         m_PersistentCalls:
           m_Calls: []
-      OnPressedNormalized:
+      OnInputFloat:
         m_PersistentCalls:
           m_Calls: []
     - name: Action
@@ -2066,9 +2218,8 @@ MonoBehaviour:
       type: 1
       input: InputValue
       key: 101
+      debug: 0
       GetPressed: 0
-      InputValue: 0
-      ToggleValue: 0
       ResetOnDisable: 1
       OnInputDown:
         m_PersistentCalls:
@@ -2077,6 +2228,9 @@ MonoBehaviour:
         m_PersistentCalls:
           m_Calls: []
       OnLongPress:
+        m_PersistentCalls:
+          m_Calls: []
+      OnLongPressReleased:
         m_PersistentCalls:
           m_Calls: []
       OnDoubleTap:
@@ -2097,7 +2251,7 @@ MonoBehaviour:
       OnInputPressed:
         m_PersistentCalls:
           m_Calls: []
-      OnPressedNormalized:
+      OnInputFloat:
         m_PersistentCalls:
           m_Calls: []
     - name: Attack2
@@ -2108,9 +2262,8 @@ MonoBehaviour:
       type: 1
       input: Fire2
       key: 324
+      debug: 0
       GetPressed: 0
-      InputValue: 0
-      ToggleValue: 0
       ResetOnDisable: 1
       OnInputDown:
         m_PersistentCalls:
@@ -2119,6 +2272,9 @@ MonoBehaviour:
         m_PersistentCalls:
           m_Calls: []
       OnLongPress:
+        m_PersistentCalls:
+          m_Calls: []
+      OnLongPressReleased:
         m_PersistentCalls:
           m_Calls: []
       OnDoubleTap:
@@ -2139,7 +2295,7 @@ MonoBehaviour:
       OnInputPressed:
         m_PersistentCalls:
           m_Calls: []
-      OnPressedNormalized:
+      OnInputFloat:
         m_PersistentCalls:
           m_Calls: []
     - name: Sneak
@@ -2150,9 +2306,8 @@ MonoBehaviour:
       type: 1
       input: InputValue
       key: 99
+      debug: 0
       GetPressed: 5
-      InputValue: 0
-      ToggleValue: 0
       ResetOnDisable: 0
       OnInputDown:
         m_PersistentCalls:
@@ -2161,6 +2316,9 @@ MonoBehaviour:
         m_PersistentCalls:
           m_Calls: []
       OnLongPress:
+        m_PersistentCalls:
+          m_Calls: []
+      OnLongPressReleased:
         m_PersistentCalls:
           m_Calls: []
       OnDoubleTap:
@@ -2174,7 +2332,8 @@ MonoBehaviour:
             m_MethodName: Stance_Toggle
             m_Mode: 2
             m_Arguments:
-              m_ObjectArgument: {fileID: 11400000, guid: fbd7296ce55e10746a1ec32a2fcd406a, type: 2}
+              m_ObjectArgument: {fileID: 11400000, guid: fbd7296ce55e10746a1ec32a2fcd406a,
+                type: 2}
               m_ObjectArgumentAssemblyTypeName: MalbersAnimations.StanceID, Assembly-CSharp
               m_IntArgument: 0
               m_FloatArgument: 0
@@ -2193,7 +2352,7 @@ MonoBehaviour:
       OnInputPressed:
         m_PersistentCalls:
           m_Calls: []
-      OnPressedNormalized:
+      OnInputFloat:
         m_PersistentCalls:
           m_Calls: []
     - name: LockTarget
@@ -2204,9 +2363,8 @@ MonoBehaviour:
       type: 1
       input: LockTarget
       key: 325
+      debug: 0
       GetPressed: 1
-      InputValue: 0
-      ToggleValue: 0
       ResetOnDisable: 1
       OnInputDown:
         m_PersistentCalls:
@@ -2229,6 +2387,9 @@ MonoBehaviour:
       OnLongPress:
         m_PersistentCalls:
           m_Calls: []
+      OnLongPressReleased:
+        m_PersistentCalls:
+          m_Calls: []
       OnDoubleTap:
         m_PersistentCalls:
           m_Calls: []
@@ -2247,7 +2408,7 @@ MonoBehaviour:
       OnInputPressed:
         m_PersistentCalls:
           m_Calls: []
-      OnPressedNormalized:
+      OnInputFloat:
         m_PersistentCalls:
           m_Calls: []
     - name: Dash
@@ -2258,9 +2419,8 @@ MonoBehaviour:
       type: 1
       input: InputValue
       key: 113
+      debug: 0
       GetPressed: 1
-      InputValue: 0
-      ToggleValue: 0
       ResetOnDisable: 1
       OnInputDown:
         m_PersistentCalls:
@@ -2269,6 +2429,9 @@ MonoBehaviour:
         m_PersistentCalls:
           m_Calls: []
       OnLongPress:
+        m_PersistentCalls:
+          m_Calls: []
+      OnLongPressReleased:
         m_PersistentCalls:
           m_Calls: []
       OnDoubleTap:
@@ -2289,7 +2452,7 @@ MonoBehaviour:
       OnInputPressed:
         m_PersistentCalls:
           m_Calls: []
-      OnPressedNormalized:
+      OnInputFloat:
         m_PersistentCalls:
           m_Calls: []
   showInputEvents: 0
@@ -2348,20 +2511,24 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   PivotPosDir: 0
-  SelectedMode: 8
-  SelectedState: 3
-  SelectedStance: 1
+  SelectedMode: 3
+  SelectedState: 5
+  SelectedStance: 0
   ShowStateInInspector: 0
-  Editor_Tabs1: 4
-  Mode_Tabs1: 2
-  Editor_Tabs2: 1
+  Editor_Tabs1: 2
+  Editor_Tabs2: 4
+  Mode_Tabs1: 0
   Ability_Tabs: 0
   Editor_EventTabs: 1
   showPivots: 1
   debugStates: 0
   debugStances: 0
   debugModes: 0
-  debugGizmos: 0
+  debugGizmos: 1
+  Runtime_Tabs1: 0
+  Runtime_Tabs2: 4
+  t: {fileID: 4417229628137580}
+  InGroundChanger: 0
   states:
   - {fileID: 11400000, guid: 059fcb0b5c50a2947ad6e5356e369291, type: 2}
   - {fileID: 11400000, guid: b6d2ef2213aab244aa8bbcb979ea7635, type: 2}
@@ -2369,6 +2536,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: bf6a413d378fd8e4993093bf5b0c8aad, type: 2}
   - {fileID: 11400000, guid: 26f1295640c15b14f988cee8a3814aaa, type: 2}
   - {fileID: 11400000, guid: 47af1b04b47957f4ca466d23cbb16cf6, type: 2}
+  - {fileID: 11400000, guid: 56c79209d28dc4e4a86002d4b86931c2, type: 2}
   - {fileID: 11400000, guid: bdb4bb76e2b782f42b909978af887428, type: 2}
   - {fileID: 11400000, guid: c31051ac4cd486e4f9ac40015fdef3a6, type: 2}
   Stances:
@@ -2385,9 +2553,13 @@ MonoBehaviour:
       UseConstant: 1
       ConstantValue: 0
       Variable: {fileID: 0}
-    CanStrafe:
+    activeOnly:
       UseConstant: 1
       ConstantValue: 0
+      Variable: {fileID: 0}
+    CanStrafe:
+      UseConstant: 1
+      ConstantValue: 1
       Variable: {fileID: 0}
     CoolDown:
       UseConstant: 1
@@ -2411,6 +2583,10 @@ MonoBehaviour:
       ConstantValue: 
       Variable: {fileID: 0}
     persistent:
+      UseConstant: 1
+      ConstantValue: 0
+      Variable: {fileID: 0}
+    activeOnly:
       UseConstant: 1
       ConstantValue: 0
       Variable: {fileID: 0}
@@ -2523,6 +2699,9 @@ MonoBehaviour:
         Variable: {fileID: 0}
       Release: 0
       AdditivePosition: 1
+      IgnoreGrounded: 0
+      IgnoreGravity: 0
+      Persistent: 0
       OnEnter:
         m_PersistentCalls:
           m_Calls:
@@ -2684,7 +2863,7 @@ MonoBehaviour:
     modifier: {fileID: 0}
     CoolDown:
       UseConstant: 1
-      ConstantValue: 0
+      ConstantValue: 0.2
       Variable: {fileID: 0}
     Abilities:
     - active:
@@ -2698,7 +2877,7 @@ MonoBehaviour:
         Variable: {fileID: 0}
       Input:
         UseConstant: 1
-        ConstantValue: 
+        ConstantValue: T
         Variable: {fileID: 0}
       audioClip:
         UseConstant: 1
@@ -2754,6 +2933,9 @@ MonoBehaviour:
         Variable: {fileID: 0}
       Release: 0
       AdditivePosition: 1
+      IgnoreGrounded: 0
+      IgnoreGravity: 0
+      Persistent: 0
       OnEnter:
         m_PersistentCalls:
           m_Calls:
@@ -2786,7 +2968,7 @@ MonoBehaviour:
         Variable: {fileID: 0}
       Input:
         UseConstant: 1
-        ConstantValue: 
+        ConstantValue: Y
         Variable: {fileID: 0}
       audioClip:
         UseConstant: 1
@@ -2842,6 +3024,9 @@ MonoBehaviour:
         Variable: {fileID: 0}
       Release: 0
       AdditivePosition: 1
+      IgnoreGrounded: 0
+      IgnoreGravity: 0
+      Persistent: 0
       OnEnter:
         m_PersistentCalls:
           m_Calls: []
@@ -2918,6 +3103,9 @@ MonoBehaviour:
         Variable: {fileID: 0}
       Release: 0
       AdditivePosition: 1
+      IgnoreGrounded: 0
+      IgnoreGravity: 0
+      Persistent: 0
       OnEnter:
         m_PersistentCalls:
           m_Calls: []
@@ -2994,6 +3182,9 @@ MonoBehaviour:
         Variable: {fileID: 0}
       Release: 0
       AdditivePosition: 1
+      IgnoreGrounded: 0
+      IgnoreGravity: 0
+      Persistent: 0
       OnEnter:
         m_PersistentCalls:
           m_Calls: []
@@ -3047,7 +3238,7 @@ MonoBehaviour:
         Variable: {fileID: 0}
       Input:
         UseConstant: 1
-        ConstantValue: 
+        ConstantValue: U
         Variable: {fileID: 0}
       audioClip:
         UseConstant: 1
@@ -3103,6 +3294,9 @@ MonoBehaviour:
         Variable: {fileID: 0}
       Release: 0
       AdditivePosition: 1
+      IgnoreGrounded: 0
+      IgnoreGravity: 0
+      Persistent: 0
       OnEnter:
         m_PersistentCalls:
           m_Calls: []
@@ -3179,6 +3373,9 @@ MonoBehaviour:
         Variable: {fileID: 0}
       Release: 0
       AdditivePosition: 1
+      IgnoreGrounded: 0
+      IgnoreGravity: 0
+      Persistent: 0
       OnEnter:
         m_PersistentCalls:
           m_Calls: []
@@ -3288,6 +3485,9 @@ MonoBehaviour:
         Variable: {fileID: 0}
       Release: 0
       AdditivePosition: 1
+      IgnoreGrounded: 0
+      IgnoreGravity: 0
+      Persistent: 0
       OnEnter:
         m_PersistentCalls:
           m_Calls: []
@@ -3364,6 +3564,9 @@ MonoBehaviour:
         Variable: {fileID: 0}
       Release: 0
       AdditivePosition: 1
+      IgnoreGrounded: 0
+      IgnoreGravity: 0
+      Persistent: 0
       OnEnter:
         m_PersistentCalls:
           m_Calls: []
@@ -3473,6 +3676,9 @@ MonoBehaviour:
         Variable: {fileID: 0}
       Release: 0
       AdditivePosition: 1
+      IgnoreGrounded: 0
+      IgnoreGravity: 0
+      Persistent: 0
       OnEnter:
         m_PersistentCalls:
           m_Calls: []
@@ -3549,6 +3755,9 @@ MonoBehaviour:
         Variable: {fileID: 0}
       Release: 0
       AdditivePosition: 1
+      IgnoreGrounded: 0
+      IgnoreGravity: 0
+      Persistent: 0
       OnEnter:
         m_PersistentCalls:
           m_Calls: []
@@ -3625,6 +3834,9 @@ MonoBehaviour:
         Variable: {fileID: 0}
       Release: 0
       AdditivePosition: 1
+      IgnoreGrounded: 0
+      IgnoreGravity: 0
+      Persistent: 0
       OnEnter:
         m_PersistentCalls:
           m_Calls: []
@@ -3701,6 +3913,9 @@ MonoBehaviour:
         Variable: {fileID: 0}
       Release: 0
       AdditivePosition: 1
+      IgnoreGrounded: 0
+      IgnoreGravity: 0
+      Persistent: 0
       OnEnter:
         m_PersistentCalls:
           m_Calls: []
@@ -3777,6 +3992,9 @@ MonoBehaviour:
         Variable: {fileID: 0}
       Release: 0
       AdditivePosition: 1
+      IgnoreGrounded: 0
+      IgnoreGravity: 0
+      Persistent: 0
       OnEnter:
         m_PersistentCalls:
           m_Calls: []
@@ -3853,6 +4071,9 @@ MonoBehaviour:
         Variable: {fileID: 0}
       Release: 0
       AdditivePosition: 1
+      IgnoreGrounded: 0
+      IgnoreGravity: 0
+      Persistent: 0
       OnEnter:
         m_PersistentCalls:
           m_Calls: []
@@ -3929,6 +4150,9 @@ MonoBehaviour:
         Variable: {fileID: 0}
       Release: 0
       AdditivePosition: 1
+      IgnoreGrounded: 0
+      IgnoreGravity: 0
+      Persistent: 0
       OnEnter:
         m_PersistentCalls:
           m_Calls: []
@@ -4005,6 +4229,9 @@ MonoBehaviour:
         Variable: {fileID: 0}
       Release: 0
       AdditivePosition: 1
+      IgnoreGrounded: 0
+      IgnoreGravity: 0
+      Persistent: 0
       OnEnter:
         m_PersistentCalls:
           m_Calls: []
@@ -4081,6 +4308,9 @@ MonoBehaviour:
         Variable: {fileID: 0}
       Release: 0
       AdditivePosition: 1
+      IgnoreGrounded: 0
+      IgnoreGravity: 0
+      Persistent: 0
       OnEnter:
         m_PersistentCalls:
           m_Calls: []
@@ -4157,6 +4387,9 @@ MonoBehaviour:
         Variable: {fileID: 0}
       Release: 0
       AdditivePosition: 1
+      IgnoreGrounded: 0
+      IgnoreGravity: 0
+      Persistent: 0
       OnEnter:
         m_PersistentCalls:
           m_Calls: []
@@ -4233,6 +4466,9 @@ MonoBehaviour:
         Variable: {fileID: 0}
       Release: 0
       AdditivePosition: 1
+      IgnoreGrounded: 0
+      IgnoreGravity: 0
+      Persistent: 0
       OnEnter:
         m_PersistentCalls:
           m_Calls: []
@@ -4309,6 +4545,9 @@ MonoBehaviour:
         Variable: {fileID: 0}
       Release: 0
       AdditivePosition: 1
+      IgnoreGrounded: 0
+      IgnoreGravity: 0
+      Persistent: 0
       OnEnter:
         m_PersistentCalls:
           m_Calls: []
@@ -4385,6 +4624,9 @@ MonoBehaviour:
         Variable: {fileID: 0}
       Release: 0
       AdditivePosition: 1
+      IgnoreGrounded: 0
+      IgnoreGravity: 0
+      Persistent: 0
       OnEnter:
         m_PersistentCalls:
           m_Calls: []
@@ -4419,7 +4661,7 @@ MonoBehaviour:
           m_CallState: 2
     ResetToDefault: 1
     allowRotation: 0
-    allowMovement: 0
+    allowMovement: 1
     OnEnterMode:
       m_PersistentCalls:
         m_Calls: []
@@ -4509,6 +4751,9 @@ MonoBehaviour:
         Variable: {fileID: 0}
       Release: 0
       AdditivePosition: 1
+      IgnoreGrounded: 0
+      IgnoreGravity: 0
+      Persistent: 0
       OnEnter:
         m_PersistentCalls:
           m_Calls: []
@@ -4656,6 +4901,9 @@ MonoBehaviour:
         Variable: {fileID: 0}
       Release: 0
       AdditivePosition: 1
+      IgnoreGrounded: 0
+      IgnoreGravity: 0
+      Persistent: 0
       OnEnter:
         m_PersistentCalls:
           m_Calls: []
@@ -4733,6 +4981,9 @@ MonoBehaviour:
         Variable: {fileID: 0}
       Release: 0
       AdditivePosition: 1
+      IgnoreGrounded: 0
+      IgnoreGravity: 0
+      Persistent: 0
       OnEnter:
         m_PersistentCalls:
           m_Calls: []
@@ -4810,6 +5061,9 @@ MonoBehaviour:
         Variable: {fileID: 0}
       Release: 0
       AdditivePosition: 1
+      IgnoreGrounded: 0
+      IgnoreGravity: 0
+      Persistent: 0
       OnEnter:
         m_PersistentCalls:
           m_Calls: []
@@ -4887,6 +5141,9 @@ MonoBehaviour:
         Variable: {fileID: 0}
       Release: 0
       AdditivePosition: 1
+      IgnoreGrounded: 0
+      IgnoreGravity: 0
+      Persistent: 0
       OnEnter:
         m_PersistentCalls:
           m_Calls: []
@@ -4998,6 +5255,9 @@ MonoBehaviour:
         Variable: {fileID: 0}
       Release: 0
       AdditivePosition: 1
+      IgnoreGrounded: 0
+      IgnoreGravity: 0
+      Persistent: 0
       OnEnter:
         m_PersistentCalls:
           m_Calls: []
@@ -5076,6 +5336,9 @@ MonoBehaviour:
         Variable: {fileID: 0}
       Release: 0
       AdditivePosition: 1
+      IgnoreGrounded: 0
+      IgnoreGravity: 0
+      Persistent: 0
       OnEnter:
         m_PersistentCalls:
           m_Calls: []
@@ -5187,6 +5450,9 @@ MonoBehaviour:
         Variable: {fileID: 0}
       Release: 0
       AdditivePosition: 1
+      IgnoreGrounded: 0
+      IgnoreGravity: 0
+      Persistent: 0
       OnEnter:
         m_PersistentCalls:
           m_Calls: []
@@ -5265,6 +5531,9 @@ MonoBehaviour:
         Variable: {fileID: 0}
       Release: 0
       AdditivePosition: 1
+      IgnoreGrounded: 0
+      IgnoreGravity: 0
+      Persistent: 0
       OnEnter:
         m_PersistentCalls:
           m_Calls: []
@@ -5297,7 +5566,6 @@ MonoBehaviour:
     m_Source: {fileID: 0}
     ActivationTime: 0
   CloneStates: 1
-  NoParent: 1
   OverrideStartState: {fileID: 0}
   groundLayer:
     UseConstant: 1
@@ -5350,12 +5618,11 @@ MonoBehaviour:
     UseConstant: 1
     ConstantValue: {fileID: 0}
     Variable: {fileID: 0}
-  additivePosLog: 0
-  additiveRotLog: 0
   isPlayer:
     UseConstant: 1
     ConstantValue: 1
     Variable: {fileID: 0}
+  AdditiveRotation: {x: 0, y: 0, z: 0, w: 0}
   SmoothVertical:
     UseConstant: 0
     ConstantValue: 1
@@ -5382,7 +5649,7 @@ MonoBehaviour:
     Variable: {fileID: 0}
   AlignRotLerp:
     UseConstant: 1
-    ConstantValue: 5
+    ConstantValue: 8
     Variable: {fileID: 0}
   AlignLoop:
     UseConstant: 1
@@ -5392,8 +5659,13 @@ MonoBehaviour:
     UseConstant: 1
     ConstantValue: Stair
     Variable: {fileID: 0}
-  maxAngleSlope: 35
-  m_deepSlope: 5
+  TerrainSlopeLimit:
+    minValue: -50
+    maxValue: 45
+  SlopeLimit: 50
+  slideThreshold: 10
+  slideAmount: 0.5
+  slideDamp: 15
   Rotator: {fileID: 1735201838}
   RootBone: {fileID: 7156273184025713823}
   grounded:
@@ -5477,11 +5749,6 @@ MonoBehaviour:
   Has_Pivot_Chest: 1
   speedSets:
   - name: Sneak
-    states:
-    - {fileID: 11400000, guid: 7370df9c769c2764381ad7c76eb3d949, type: 2}
-    - {fileID: 11400000, guid: 3787b6d94d5454740bf36d57436185b0, type: 2}
-    stances:
-    - {fileID: 11400000, guid: fbd7296ce55e10746a1ec32a2fcd406a, type: 2}
     StartVerticalIndex:
       UseConstant: 1
       ConstantValue: 1
@@ -5502,6 +5769,14 @@ MonoBehaviour:
       UseConstant: 1
       ConstantValue: 0
       Variable: {fileID: 0}
+    m_RootMotionPos:
+      UseConstant: 1
+      ConstantValue: 1
+      Variable: {fileID: 0}
+    m_RootMotionRot:
+      UseConstant: 1
+      ConstantValue: 1
+      Variable: {fileID: 0}
     BackSpeedMult:
       UseConstant: 1
       ConstantValue: 0.5
@@ -5518,6 +5793,11 @@ MonoBehaviour:
       UseConstant: 1
       ConstantValue: 10
       Variable: {fileID: 0}
+    states:
+    - {fileID: 11400000, guid: 7370df9c769c2764381ad7c76eb3d949, type: 2}
+    - {fileID: 11400000, guid: 3787b6d94d5454740bf36d57436185b0, type: 2}
+    stances:
+    - {fileID: 11400000, guid: fbd7296ce55e10746a1ec32a2fcd406a, type: 2}
     Speeds:
     - name: Sneak
       Vertical:
@@ -5610,10 +5890,6 @@ MonoBehaviour:
         ConstantValue: 4
         Variable: {fileID: 0}
   - name: Ground
-    states:
-    - {fileID: 11400000, guid: 7370df9c769c2764381ad7c76eb3d949, type: 2}
-    - {fileID: 11400000, guid: 3787b6d94d5454740bf36d57436185b0, type: 2}
-    stances: []
     StartVerticalIndex:
       UseConstant: 1
       ConstantValue: 2
@@ -5624,7 +5900,7 @@ MonoBehaviour:
       Variable: {fileID: 0}
     m_SprintIndex:
       UseConstant: 1
-      ConstantValue: 10
+      ConstantValue: 4
       Variable: {fileID: 0}
     m_LockIndex:
       UseConstant: 1
@@ -5633,6 +5909,14 @@ MonoBehaviour:
     m_LockSpeed:
       UseConstant: 1
       ConstantValue: 0
+      Variable: {fileID: 0}
+    m_RootMotionPos:
+      UseConstant: 1
+      ConstantValue: 1
+      Variable: {fileID: 0}
+    m_RootMotionRot:
+      UseConstant: 1
+      ConstantValue: 1
       Variable: {fileID: 0}
     BackSpeedMult:
       UseConstant: 1
@@ -5650,6 +5934,10 @@ MonoBehaviour:
       UseConstant: 1
       ConstantValue: 10
       Variable: {fileID: 0}
+    states:
+    - {fileID: 11400000, guid: 7370df9c769c2764381ad7c76eb3d949, type: 2}
+    - {fileID: 11400000, guid: 3787b6d94d5454740bf36d57436185b0, type: 2}
+    stances: []
     Speeds:
     - name: Walk
       Vertical:
@@ -5832,9 +6120,6 @@ MonoBehaviour:
         ConstantValue: 4
         Variable: {fileID: 0}
   - name: Swim
-    states:
-    - {fileID: 11400000, guid: 7e364e53b77644c47aa3abdaa2e2c08c, type: 2}
-    stances: []
     StartVerticalIndex:
       UseConstant: 1
       ConstantValue: 1
@@ -5855,6 +6140,14 @@ MonoBehaviour:
       UseConstant: 1
       ConstantValue: 0
       Variable: {fileID: 0}
+    m_RootMotionPos:
+      UseConstant: 1
+      ConstantValue: 1
+      Variable: {fileID: 0}
+    m_RootMotionRot:
+      UseConstant: 1
+      ConstantValue: 1
+      Variable: {fileID: 0}
     BackSpeedMult:
       UseConstant: 1
       ConstantValue: 0.5
@@ -5871,6 +6164,9 @@ MonoBehaviour:
       UseConstant: 1
       ConstantValue: 10
       Variable: {fileID: 0}
+    states:
+    - {fileID: 11400000, guid: 7e364e53b77644c47aa3abdaa2e2c08c, type: 2}
+    stances: []
     Speeds:
     - name: Swim
       Vertical:
@@ -5963,9 +6259,6 @@ MonoBehaviour:
         ConstantValue: 0
         Variable: {fileID: 0}
   - name: Wall Run
-    states:
-    - {fileID: 11400000, guid: 2f7727669c8fcdf4999e66cb669e2608, type: 2}
-    stances: []
     StartVerticalIndex:
       UseConstant: 1
       ConstantValue: 1
@@ -5986,6 +6279,14 @@ MonoBehaviour:
       UseConstant: 1
       ConstantValue: 0
       Variable: {fileID: 0}
+    m_RootMotionPos:
+      UseConstant: 1
+      ConstantValue: 1
+      Variable: {fileID: 0}
+    m_RootMotionRot:
+      UseConstant: 1
+      ConstantValue: 1
+      Variable: {fileID: 0}
     BackSpeedMult:
       UseConstant: 1
       ConstantValue: 0.5
@@ -6002,6 +6303,9 @@ MonoBehaviour:
       UseConstant: 1
       ConstantValue: 5
       Variable: {fileID: 0}
+    states:
+    - {fileID: 11400000, guid: 2f7727669c8fcdf4999e66cb669e2608, type: 2}
+    stances: []
     Speeds:
     - name: Wall Run
       Vertical:
@@ -6053,19 +6357,19 @@ MonoBehaviour:
     name: Default
     Vertical:
       UseConstant: 1
-      ConstantValue: 0
+      ConstantValue: 1
       Variable: {fileID: 0}
     position:
       UseConstant: 1
-      ConstantValue: 0
+      ConstantValue: 4.908939
       Variable: {fileID: 0}
     lerpPosition:
       UseConstant: 1
-      ConstantValue: 0
+      ConstantValue: 4
       Variable: {fileID: 0}
     lerpPosAnim:
       UseConstant: 1
-      ConstantValue: 0
+      ConstantValue: 4
       Variable: {fileID: 0}
     rotation:
       UseConstant: 1
@@ -6073,19 +6377,19 @@ MonoBehaviour:
       Variable: {fileID: 0}
     lerpRotation:
       UseConstant: 1
-      ConstantValue: 0
+      ConstantValue: 4
       Variable: {fileID: 0}
     lerpRotAnim:
       UseConstant: 1
-      ConstantValue: 0
+      ConstantValue: 4
       Variable: {fileID: 0}
     animator:
       UseConstant: 1
-      ConstantValue: 0
+      ConstantValue: 1
       Variable: {fileID: 0}
     lerpAnimator:
       UseConstant: 1
-      ConstantValue: 0
+      ConstantValue: 5
       Variable: {fileID: 0}
     strafeSpeed:
       UseConstant: 1
@@ -6093,7 +6397,7 @@ MonoBehaviour:
       Variable: {fileID: 0}
     lerpStrafe:
       UseConstant: 1
-      ConstantValue: 0
+      ConstantValue: 4
       Variable: {fileID: 0}
   m_gravityDir:
     UseConstant: 1
@@ -6107,9 +6411,9 @@ MonoBehaviour:
     UseConstant: 1
     ConstantValue: 22
     Variable: {fileID: 0}
-  m_gravityTimeLimit:
+  m_clampGravitySpeed:
     UseConstant: 1
-    ConstantValue: 0
+    ConstantValue: 20
     Variable: {fileID: 0}
   ground_Changes_Gravity:
     UseConstant: 1
@@ -6150,9 +6454,6 @@ MonoBehaviour:
   OnAnimationChange:
     m_PersistentCalls:
       m_Calls: []
-  OnMaxSlopeReached:
-    m_PersistentCalls:
-      m_Calls: []
   OnInputLocked:
     m_PersistentCalls:
       m_Calls: []
@@ -6184,6 +6485,9 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   OnStateChange:
+    m_PersistentCalls:
+      m_Calls: []
+  OnStateProfile:
     m_PersistentCalls:
       m_Calls: []
   OnModeStart:
@@ -6328,6 +6632,8 @@ MonoBehaviour:
       ConstantValue: 0
       Variable: {fileID: 0}
     resetTo: 1
+    isPercent: 1
+    debug: 0
     OnStatFull:
       m_PersistentCalls:
         m_Calls:
@@ -6398,7 +6704,34 @@ MonoBehaviour:
           m_CallState: 2
     OnValueChange:
       m_PersistentCalls:
-        m_Calls: []
+        m_Calls:
+        - m_Target: {fileID: 11400000, guid: 7cf722dd04e074d4eb5c291280cdd5aa, type: 2}
+          m_TargetAssemblyTypeName: 
+          m_MethodName: Invoke
+          m_Mode: 0
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 0
+    OnMaxValueChange:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 11400000, guid: 7cf722dd04e074d4eb5c291280cdd5aa, type: 2}
+          m_TargetAssemblyTypeName: MalbersAnimations.Events.MEvent, MalbersAnimations
+          m_MethodName: InvokeToInt
+          m_Mode: 0
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
     OnDegenerate:
       m_PersistentCalls:
         m_Calls: []
@@ -6408,7 +6741,7 @@ MonoBehaviour:
     OnActive:
       m_PersistentCalls:
         m_Calls: []
-    EditorTabs: 0
+    EditorTabs: 1
   - active: 1
     ID: {fileID: 11400000, guid: d6b3e636d59a6c547a2cad40b69f4432, type: 2}
     value:
@@ -6460,6 +6793,8 @@ MonoBehaviour:
       ConstantValue: 0.3
       Variable: {fileID: 0}
     resetTo: 1
+    isPercent: 1
+    debug: 0
     OnStatFull:
       m_PersistentCalls:
         m_Calls:
@@ -6479,12 +6814,13 @@ MonoBehaviour:
       m_PersistentCalls:
         m_Calls:
         - m_Target: {fileID: 114222225517902476}
-          m_TargetAssemblyTypeName: 
+          m_TargetAssemblyTypeName: MalbersAnimations.Controller.MAnimal, MalbersAnimations
           m_MethodName: State_Activate
           m_Mode: 2
           m_Arguments:
-            m_ObjectArgument: {fileID: 11400000, guid: adfa24f62d6db4d40a1d837f4ec1a6e9, type: 2}
-            m_ObjectArgumentAssemblyTypeName: MalbersAnimations.StateID, Assembly-CSharp
+            m_ObjectArgument: {fileID: 11400000, guid: adfa24f62d6db4d40a1d837f4ec1a6e9,
+              type: 2}
+            m_ObjectArgumentAssemblyTypeName: MalbersAnimations.StateID, MalbersAnimations
             m_IntArgument: 0
             m_FloatArgument: 0
             m_StringArgument: 
@@ -6518,7 +6854,34 @@ MonoBehaviour:
           m_CallState: 2
     OnValueChange:
       m_PersistentCalls:
-        m_Calls: []
+        m_Calls:
+        - m_Target: {fileID: 11400000, guid: bee0895a0f76ff840bfba0a11f37d898, type: 2}
+          m_TargetAssemblyTypeName: 
+          m_MethodName: Invoke
+          m_Mode: 0
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 0
+    OnMaxValueChange:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 11400000, guid: bee0895a0f76ff840bfba0a11f37d898, type: 2}
+          m_TargetAssemblyTypeName: MalbersAnimations.Events.MEvent, MalbersAnimations
+          m_MethodName: InvokeToInt
+          m_Mode: 0
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
     OnDegenerate:
       m_PersistentCalls:
         m_Calls: []
@@ -6528,7 +6891,7 @@ MonoBehaviour:
     OnActive:
       m_PersistentCalls:
         m_Calls: []
-    EditorTabs: 0
+    EditorTabs: 1
   PinnedStat:
     active: 1
     ID: {fileID: 0}
@@ -6581,6 +6944,8 @@ MonoBehaviour:
       ConstantValue: 0
       Variable: {fileID: 0}
     resetTo: 1
+    isPercent: 1
+    debug: 0
     OnStatFull:
       m_PersistentCalls:
         m_Calls: []
@@ -6602,6 +6967,9 @@ MonoBehaviour:
       m_PersistentCalls:
         m_Calls: []
     OnValueChange:
+      m_PersistentCalls:
+        m_Calls: []
+    OnMaxValueChange:
       m_PersistentCalls:
         m_Calls: []
     OnDegenerate:
@@ -6627,7 +6995,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   character: {fileID: 0}
-  reaction: {fileID: 11400000, guid: 7df8fcdc62330414baaef5c677115f0c, type: 2}
+  reaction:
+    rid: 1087322751697158146
+  damagerReaction:
+    rid: -2
+  ignoreDamagerReaction:
+    UseConstant: 1
+    ConstantValue: 0
+    Variable: {fileID: 0}
   stats: {fileID: 114786442630340898}
   multiplier:
     UseConstant: 1
@@ -6692,7 +7067,26 @@ MonoBehaviour:
       m_PersistentCalls:
         m_Calls: []
   elements: []
+  profiles: []
   Editor_Tabs1: 0
+  First_Change: 1
+  references:
+    version: 2
+    RefIds:
+    - rid: -2
+      type: {class: , ns: , asm: }
+    - rid: 1087322751697158146
+      type: {class: ModeReaction, ns: MalbersAnimations.Reactions, asm: MalbersAnimations}
+      data:
+        Active: 1
+        type: 0
+        ID: {fileID: 11400000, guid: b04409080ae7e3c4fa645d8c67b40424, type: 2}
+        Ability: -99
+        HasCoolDown: 1
+        coolDown: 0
+        abilityStatus: 0
+        AbilityTime: 3
+        ModePower: 0
 --- !u!114 &114515738253532648
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6821,7 +7215,8 @@ MonoBehaviour:
           m_MethodName: ActivateState
           m_Mode: 2
           m_Arguments:
-            m_ObjectArgument: {fileID: 11400000, guid: 9ae07cd2f8f4c054687fecf634f8e5b3, type: 2}
+            m_ObjectArgument: {fileID: 11400000, guid: 9ae07cd2f8f4c054687fecf634f8e5b3,
+              type: 2}
             m_ObjectArgumentAssemblyTypeName: MalbersAnimations.StateID, Assembly-CSharp
             m_IntArgument: 0
             m_FloatArgument: 0
@@ -6841,12 +7236,13 @@ MonoBehaviour:
       m_PersistentCalls:
         m_Calls:
         - m_Target: {fileID: 114222225517902476}
-          m_TargetAssemblyTypeName: 
-          m_MethodName: State_Pin
+          m_TargetAssemblyTypeName: MalbersAnimations.Controller.MAnimal, MalbersAnimations
+          m_MethodName: State_Activate
           m_Mode: 2
           m_Arguments:
-            m_ObjectArgument: {fileID: 11400000, guid: 9ae07cd2f8f4c054687fecf634f8e5b3, type: 2}
-            m_ObjectArgumentAssemblyTypeName: MalbersAnimations.StateID, Assembly-CSharp
+            m_ObjectArgument: {fileID: 11400000, guid: 9ae07cd2f8f4c054687fecf634f8e5b3,
+              type: 2}
+            m_ObjectArgumentAssemblyTypeName: MalbersAnimations.StateID, MalbersAnimations
             m_IntArgument: 0
             m_FloatArgument: 0
             m_StringArgument: 
@@ -6921,12 +7317,13 @@ MonoBehaviour:
       m_PersistentCalls:
         m_Calls:
         - m_Target: {fileID: 114222225517902476}
-          m_TargetAssemblyTypeName: 
+          m_TargetAssemblyTypeName: MalbersAnimations.Controller.MAnimal, MalbersAnimations
           m_MethodName: Mode_Pin
           m_Mode: 2
           m_Arguments:
-            m_ObjectArgument: {fileID: 11400000, guid: 1286867ad3c4cdd4baacac3373aff92c, type: 2}
-            m_ObjectArgumentAssemblyTypeName: MalbersAnimations.ModeID, Assembly-CSharp
+            m_ObjectArgument: {fileID: 11400000, guid: 1286867ad3c4cdd4baacac3373aff92c,
+              type: 2}
+            m_ObjectArgumentAssemblyTypeName: MalbersAnimations.ModeID, MalbersAnimations
             m_IntArgument: 0
             m_FloatArgument: 0
             m_StringArgument: 
@@ -7028,12 +7425,13 @@ MonoBehaviour:
       m_PersistentCalls:
         m_Calls:
         - m_Target: {fileID: 114222225517902476}
-          m_TargetAssemblyTypeName: MalbersAnimations.Controller.MAnimal, Assembly-CSharp
+          m_TargetAssemblyTypeName: MalbersAnimations.Controller.MAnimal, MalbersAnimations
           m_MethodName: Mode_Pin
           m_Mode: 2
           m_Arguments:
-            m_ObjectArgument: {fileID: 11400000, guid: 36ebf5306b7174949934aa62255781b1, type: 2}
-            m_ObjectArgumentAssemblyTypeName: MalbersAnimations.ModeID, Assembly-CSharp
+            m_ObjectArgument: {fileID: 11400000, guid: 36ebf5306b7174949934aa62255781b1,
+              type: 2}
+            m_ObjectArgumentAssemblyTypeName: MalbersAnimations.ModeID, MalbersAnimations
             m_IntArgument: 0
             m_FloatArgument: 0
             m_StringArgument: 
@@ -7055,24 +7453,25 @@ MonoBehaviour:
       m_PersistentCalls:
         m_Calls:
         - m_Target: {fileID: 114222225517902476}
-          m_TargetAssemblyTypeName: MalbersAnimations.Controller.MAnimal, Assembly-CSharp
+          m_TargetAssemblyTypeName: MalbersAnimations.Controller.MAnimal, MalbersAnimations
           m_MethodName: Mode_Pin
           m_Mode: 2
           m_Arguments:
-            m_ObjectArgument: {fileID: 11400000, guid: 36ebf5306b7174949934aa62255781b1, type: 2}
-            m_ObjectArgumentAssemblyTypeName: MalbersAnimations.ModeID, Assembly-CSharp
+            m_ObjectArgument: {fileID: 11400000, guid: 36ebf5306b7174949934aa62255781b1,
+              type: 2}
+            m_ObjectArgumentAssemblyTypeName: MalbersAnimations.ModeID, MalbersAnimations
             m_IntArgument: 0
             m_FloatArgument: 0
             m_StringArgument: 
             m_BoolArgument: 0
           m_CallState: 2
         - m_Target: {fileID: 114222225517902476}
-          m_TargetAssemblyTypeName: MalbersAnimations.Controller.MAnimal, Assembly-CSharp
+          m_TargetAssemblyTypeName: MalbersAnimations.Controller.MAnimal, MalbersAnimations
           m_MethodName: Mode_Pin_Input
           m_Mode: 0
           m_Arguments:
             m_ObjectArgument: {fileID: 0}
-            m_ObjectArgumentAssemblyTypeName: 
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
             m_IntArgument: 0
             m_FloatArgument: 0
             m_StringArgument: 
@@ -7138,12 +7537,13 @@ MonoBehaviour:
       m_PersistentCalls:
         m_Calls:
         - m_Target: {fileID: 114222225517902476}
-          m_TargetAssemblyTypeName: 
+          m_TargetAssemblyTypeName: MalbersAnimations.Controller.MAnimal, MalbersAnimations
           m_MethodName: Mode_Pin
           m_Mode: 2
           m_Arguments:
-            m_ObjectArgument: {fileID: 11400000, guid: 4dc5ca673dc60d346a62529c8a9bd8ff, type: 2}
-            m_ObjectArgumentAssemblyTypeName: MalbersAnimations.ModeID, Assembly-CSharp
+            m_ObjectArgument: {fileID: 11400000, guid: 4dc5ca673dc60d346a62529c8a9bd8ff,
+              type: 2}
+            m_ObjectArgumentAssemblyTypeName: MalbersAnimations.ModeID, MalbersAnimations
             m_IntArgument: 0
             m_FloatArgument: 0
             m_StringArgument: 
@@ -7292,8 +7692,8 @@ MonoBehaviour:
       m_PersistentCalls:
         m_Calls:
         - m_Target: {fileID: 114222225517902476}
-          m_TargetAssemblyTypeName: 
-          m_MethodName: set_Sleep
+          m_TargetAssemblyTypeName: MalbersAnimations.Controller.MAnimal, Assembly-CSharp
+          m_MethodName: SetTimeline
           m_Mode: 0
           m_Arguments:
             m_ObjectArgument: {fileID: 0}
@@ -7501,6 +7901,7 @@ MonoBehaviour:
   SmoothEquip: 0
   UseWeaponsOnlyWhileRiding: 1
   animal: {fileID: 114222225517902476}
+  DropPoint: {fileID: 0}
   DrawWeaponModeID: {fileID: 11400000, guid: 25a9ab75d9646144eaa77342296c549c, type: 2}
   StoreWeaponModeID: {fileID: 11400000, guid: 908d4f1fe671c064cbb3045eeb113742, type: 2}
   UnarmedModeID: {fileID: 11400000, guid: 1286867ad3c4cdd4baacac3373aff92c, type: 2}
@@ -7679,7 +8080,8 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1573013517723816}
-  m_LocalRotation: {x: -0.000000029802312, y: 0.00000092387165, z: -0.00000011920925, w: 1}
+  m_LocalRotation: {x: -0.000000029802312, y: 0.00000092387165, z: -0.00000011920925,
+    w: 1}
   m_LocalPosition: {x: -0.16078667, y: 0.03575021, z: 0.554085}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -7695,17 +8097,9 @@ SphereCollider:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1573013517723816}
   m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
   m_IsTrigger: 1
-  m_ProvidesContacts: 0
   m_Enabled: 1
-  serializedVersion: 3
+  serializedVersion: 2
   m_Radius: 0.04
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!114 &114698207302306618
@@ -7908,7 +8302,8 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1757715461058970}
-  m_LocalRotation: {x: -0.00000026822084, y: 0.0000008642671, z: -0.000000089406946, w: 1}
+  m_LocalRotation: {x: -0.00000026822084, y: 0.0000008642671, z: -0.000000089406946,
+    w: 1}
   m_LocalPosition: {x: 0.14798053, y: 0.034257352, z: -0.026984453}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -7924,17 +8319,9 @@ SphereCollider:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1757715461058970}
   m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
   m_IsTrigger: 1
-  m_ProvidesContacts: 0
   m_Enabled: 1
-  serializedVersion: 3
+  serializedVersion: 2
   m_Radius: 0.04
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!114 &114308226716026266
@@ -8131,17 +8518,9 @@ SphereCollider:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1873716155758138}
   m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
   m_IsTrigger: 1
-  m_ProvidesContacts: 0
   m_Enabled: 1
-  serializedVersion: 3
+  serializedVersion: 2
   m_Radius: 0.04
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!114 &114606877929445550
@@ -8764,7 +9143,7 @@ Transform:
   m_Children:
   - {fileID: 6006834825335490881}
   m_Father: {fileID: 7341256332303435102}
-  m_RootOrder: 12
+  m_RootOrder: 13
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1650708382344075366
 MonoBehaviour:
@@ -8843,6 +9222,7 @@ MonoBehaviour:
     UseConstant: 1
     ConstantValue: 1
     Variable: {fileID: 0}
+  ForceMode: 0
   JustExitAnimal: {fileID: 0}
   ModeFloat: 0
   RemoveAnimalOnActive: 0
@@ -8964,17 +9344,9 @@ BoxCollider:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1104431049552824099}
   m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
   m_IsTrigger: 1
-  m_ProvidesContacts: 0
   m_Enabled: 1
-  serializedVersion: 3
+  serializedVersion: 2
   m_Size: {x: 0.65, y: 0.947796, z: 0.6857282}
   m_Center: {x: 0, y: 0.473898, z: 0.18214768}
 --- !u!114 &8092992942237565879
@@ -9173,8 +9545,7 @@ Transform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children:
-  - {fileID: 3794586296272959663}
+  m_Children: []
   m_Father: {fileID: 7341256332303435102}
   m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -9214,7 +9585,7 @@ MonoBehaviour:
     UseConstant: 1
     ConstantValue: 1
     Variable: {fileID: 0}
-  aimer: {fileID: 0}
+  aimer: {fileID: 7762624870925479390}
   LimitAngle:
     UseConstant: 1
     ConstantValue: 60
@@ -9453,17 +9824,9 @@ BoxCollider:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1735110541734373478}
   m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
   m_IsTrigger: 1
-  m_ProvidesContacts: 0
   m_Enabled: 1
-  serializedVersion: 3
+  serializedVersion: 2
   m_Size: {x: 0.7, y: 0.7, z: 0.6}
   m_Center: {x: 0, y: 0.35, z: 0}
 --- !u!114 &1735110541734373473
@@ -9907,7 +10270,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 7341256332303435102}
-  m_RootOrder: 11
+  m_RootOrder: 12
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &8034436837155804440
 MonoBehaviour:
@@ -10169,7 +10532,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Projectile:
     UseConstant: 1
-    ConstantValue: {fileID: 7948251752973460564, guid: 33430cda2a22ffb4eafa3a09ae7c6f01, type: 3}
+    ConstantValue: {fileID: 7948251752973460564, guid: 33430cda2a22ffb4eafa3a09ae7c6f01,
+      type: 3}
     Variable: {fileID: 0}
   FireOnStart:
     UseConstant: 1
@@ -10236,7 +10600,6 @@ MonoBehaviour:
   MaxSteps: 50
 --- !u!120 &8661040759214707855
 LineRenderer:
-  serializedVersion: 2
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -10331,20 +10694,16 @@ LineRenderer:
       atime6: 0
       atime7: 0
       m_Mode: 0
-      m_ColorSpace: -1
       m_NumColorKeys: 2
       m_NumAlphaKeys: 2
     numCornerVertices: 0
     numCapVertices: 0
     alignment: 0
     textureMode: 0
-    textureScale: {x: 1, y: 1}
     shadowBias: 0.5
     generateLightingData: 0
-  m_MaskInteraction: 0
   m_UseWorldSpace: 1
   m_Loop: 0
-  m_ApplyActiveColorSpace: 0
 --- !u!114 &5755945788249604467
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -10469,7 +10828,8 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3467716978026456544}
-  m_LocalRotation: {x: -0.0000000026960116, y: 0.0000000018321286, z: -0.5620668, w: 0.8270919}
+  m_LocalRotation: {x: -0.0000000026960116, y: 0.0000000018321286, z: -0.5620668,
+    w: 0.8270919}
   m_LocalPosition: {x: -0.15474465, y: -0.000000038146972, z: -0.000000019073486}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -10582,6 +10942,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   agent: {fileID: 6418311578034716533}
   animal: {fileID: 114222225517902476}
+  disableInput: 1
   StopAgentOn:
   - {fileID: 11400000, guid: 8078fbdb01991b44b9c1351f444b5efe, type: 2}
   - {fileID: 11400000, guid: 9ae07cd2f8f4c054687fecf634f8e5b3, type: 2}
@@ -10591,7 +10952,6 @@ MonoBehaviour:
   stoppingDistance: 2
   PointStoppingDistance: 0.6
   slowingDistance: 4
-  OffMeshAlignment: 0.15
   LookAtOffset: 1
   slowingLimit: 0.3
   target: {fileID: 0}
@@ -10714,7 +11074,7 @@ NavMeshAgent:
   m_Acceleration: 8
   avoidancePriority: 50
   m_AngularSpeed: 120
-  m_StoppingDistance: 1.68
+  m_StoppingDistance: 1.62
   m_AutoTraverseOffMeshLink: 1
   m_AutoBraking: 1
   m_AutoRepath: 1
@@ -10762,18 +11122,9 @@ CapsuleCollider:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4185805451896443250}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
+  m_Material: {fileID: 13400000, guid: 54174b87a6301064ea8788686f85bda8, type: 2}
   m_IsTrigger: 0
-  m_ProvidesContacts: 0
   m_Enabled: 1
-  serializedVersion: 2
   m_Radius: 0.12
   m_Height: 0.46
   m_Direction: 0
@@ -10853,17 +11204,8 @@ CapsuleCollider:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4915859889064157079}
   m_Material: {fileID: 13400000, guid: 54174b87a6301064ea8788686f85bda8, type: 2}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
   m_IsTrigger: 0
-  m_ProvidesContacts: 0
   m_Enabled: 1
-  serializedVersion: 2
   m_Radius: 0.1718309
   m_Height: 0.57768786
   m_Direction: 0
@@ -11276,18 +11618,9 @@ CapsuleCollider:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6355870598116764814}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
+  m_Material: {fileID: 13400000, guid: 54174b87a6301064ea8788686f85bda8, type: 2}
   m_IsTrigger: 0
-  m_ProvidesContacts: 0
   m_Enabled: 1
-  serializedVersion: 2
   m_Radius: 0.12
   m_Height: 0.46
   m_Direction: 0
@@ -11460,17 +11793,8 @@ CapsuleCollider:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7366772962826948884}
   m_Material: {fileID: 13400000, guid: 54174b87a6301064ea8788686f85bda8, type: 2}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
   m_IsTrigger: 0
-  m_ProvidesContacts: 0
   m_Enabled: 1
-  serializedVersion: 2
   m_Radius: 0.21109647
   m_Height: 0.5234735
   m_Direction: 0
@@ -11547,18 +11871,9 @@ CapsuleCollider:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7560313443749730312}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
+  m_Material: {fileID: 13400000, guid: 54174b87a6301064ea8788686f85bda8, type: 2}
   m_IsTrigger: 0
-  m_ProvidesContacts: 0
   m_Enabled: 1
-  serializedVersion: 2
   m_Radius: 0.12
   m_Height: 0.46
   m_Direction: 0
@@ -11771,17 +12086,8 @@ CapsuleCollider:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8014677721028982248}
   m_Material: {fileID: 13400000, guid: 54174b87a6301064ea8788686f85bda8, type: 2}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
   m_IsTrigger: 0
-  m_ProvidesContacts: 0
   m_Enabled: 1
-  serializedVersion: 2
   m_Radius: 0.120729625
   m_Height: 0.2592693
   m_Direction: 1
@@ -11794,17 +12100,8 @@ CapsuleCollider:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8014677721028982248}
   m_Material: {fileID: 13400000, guid: 54174b87a6301064ea8788686f85bda8, type: 2}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
   m_IsTrigger: 0
-  m_ProvidesContacts: 0
   m_Enabled: 1
-  serializedVersion: 2
   m_Radius: 0.060892776
   m_Height: 0.241216
   m_Direction: 1
@@ -11881,18 +12178,9 @@ CapsuleCollider:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8507465553381465047}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
+  m_Material: {fileID: 13400000, guid: 54174b87a6301064ea8788686f85bda8, type: 2}
   m_IsTrigger: 0
-  m_ProvidesContacts: 0
   m_Enabled: 1
-  serializedVersion: 2
   m_Radius: 0.12
   m_Height: 0.46
   m_Direction: 0
@@ -12097,8 +12385,10 @@ Transform:
   - {fileID: 8925397244998842155}
   - {fileID: 5653743513341396727}
   - {fileID: 1514704916385020198}
+  - {fileID: 1680402408192586474}
   - {fileID: 5806680251440680261}
   - {fileID: 651182574759626242}
+  - {fileID: 3794586296272959663}
   m_Father: {fileID: 4417229628137580}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -12161,7 +12451,7 @@ MonoBehaviour:
     gameObjects:
     - {fileID: 1393744931466200}
     monoBehaviours: []
-  - name: Look At
+  - name: Look At - Aim
     tooltip: '[Aim] and [Look At] Components. This makes the Wolf Head Move to the
       Direction of the Camera'
     active: 1
@@ -12182,85 +12472,197 @@ MonoBehaviour:
     gameObjects:
     - {fileID: 831426989002301917}
     monoBehaviours: []
-  - name: Root Axis
-    tooltip: 'Shows the Exact position and Rotation of the Root
-
-      Used for Debug
-      purposes'
-    active: 0
+  - name: Lock On Target
+    tooltip: Lock on Target component, to find possible Lock On targets
+    active: 1
+    gameObjects:
+    - {fileID: 7776402098345217213}
+    monoBehaviours:
+    - {fileID: 0}
+  - name: Enemy Search Health
+    tooltip: 
+    active: 1
+    gameObjects:
+    - {fileID: 5193703386021988088}
+    monoBehaviours: []
+  - name: Axis
+    tooltip: Show/Hide an Axis Model (Debug(
+    active: 1
     gameObjects:
     - {fileID: 1517622598339786180}
     monoBehaviours: []
+  - name: Combos
+    tooltip: Combo Manager Component
+    active: 1
+    gameObjects:
+    - {fileID: 2802576240082429538}
+    monoBehaviours: []
   edit: 0
+--- !u!1001 &18698041
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 7341256332303435102}
+    m_Modifications:
+    - target: {fileID: 1680402408210628051, guid: 61070b97654586c4184715a31e74e479,
+        type: 3}
+      propertyPath: m_RootOrder
+      value: 11
+      objectReference: {fileID: 0}
+    - target: {fileID: 1680402408210628051, guid: 61070b97654586c4184715a31e74e479,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1680402408210628051, guid: 61070b97654586c4184715a31e74e479,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1680402408210628051, guid: 61070b97654586c4184715a31e74e479,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0.58
+      objectReference: {fileID: 0}
+    - target: {fileID: 1680402408210628051, guid: 61070b97654586c4184715a31e74e479,
+        type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1680402408210628051, guid: 61070b97654586c4184715a31e74e479,
+        type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1680402408210628051, guid: 61070b97654586c4184715a31e74e479,
+        type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1680402408210628051, guid: 61070b97654586c4184715a31e74e479,
+        type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1680402408210628051, guid: 61070b97654586c4184715a31e74e479,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1680402408210628051, guid: 61070b97654586c4184715a31e74e479,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1680402408210628051, guid: 61070b97654586c4184715a31e74e479,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5193703386037930433, guid: 61070b97654586c4184715a31e74e479,
+        type: 3}
+      propertyPath: m_Name
+      value: Enemy Search Health
+      objectReference: {fileID: 0}
+    - target: {fileID: 5193703386037930433, guid: 61070b97654586c4184715a31e74e479,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 61070b97654586c4184715a31e74e479, type: 3}
+--- !u!4 &1680402408192586474 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 1680402408210628051, guid: 61070b97654586c4184715a31e74e479,
+    type: 3}
+  m_PrefabInstance: {fileID: 18698041}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &5193703386021988088 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 5193703386037930433, guid: 61070b97654586c4184715a31e74e479,
+    type: 3}
+  m_PrefabInstance: {fileID: 18698041}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &1502807421
 PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Modification:
-    serializedVersion: 3
     m_TransformParent: {fileID: 1087265524608481677}
     m_Modifications:
-    - target: {fileID: 1399144636580479463, guid: 1bfc2984cde1bcf4a8d4885507d96cfb, type: 3}
+    - target: {fileID: 1399144636580479463, guid: 1bfc2984cde1bcf4a8d4885507d96cfb,
+        type: 3}
       propertyPath: m_Name
       value: Slash
       objectReference: {fileID: 0}
-    - target: {fileID: 1738690786078595933, guid: 1bfc2984cde1bcf4a8d4885507d96cfb, type: 3}
+    - target: {fileID: 1738690786078595933, guid: 1bfc2984cde1bcf4a8d4885507d96cfb,
+        type: 3}
       propertyPath: m_RootOrder
       value: 7
       objectReference: {fileID: 0}
-    - target: {fileID: 1738690786078595933, guid: 1bfc2984cde1bcf4a8d4885507d96cfb, type: 3}
+    - target: {fileID: 1738690786078595933, guid: 1bfc2984cde1bcf4a8d4885507d96cfb,
+        type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 1738690786078595933, guid: 1bfc2984cde1bcf4a8d4885507d96cfb, type: 3}
+    - target: {fileID: 1738690786078595933, guid: 1bfc2984cde1bcf4a8d4885507d96cfb,
+        type: 3}
       propertyPath: m_LocalPosition.y
       value: 1.247
       objectReference: {fileID: 0}
-    - target: {fileID: 1738690786078595933, guid: 1bfc2984cde1bcf4a8d4885507d96cfb, type: 3}
+    - target: {fileID: 1738690786078595933, guid: 1bfc2984cde1bcf4a8d4885507d96cfb,
+        type: 3}
       propertyPath: m_LocalPosition.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 1738690786078595933, guid: 1bfc2984cde1bcf4a8d4885507d96cfb, type: 3}
+    - target: {fileID: 1738690786078595933, guid: 1bfc2984cde1bcf4a8d4885507d96cfb,
+        type: 3}
       propertyPath: m_LocalRotation.w
       value: 1
       objectReference: {fileID: 0}
-    - target: {fileID: 1738690786078595933, guid: 1bfc2984cde1bcf4a8d4885507d96cfb, type: 3}
+    - target: {fileID: 1738690786078595933, guid: 1bfc2984cde1bcf4a8d4885507d96cfb,
+        type: 3}
       propertyPath: m_LocalRotation.x
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 1738690786078595933, guid: 1bfc2984cde1bcf4a8d4885507d96cfb, type: 3}
+    - target: {fileID: 1738690786078595933, guid: 1bfc2984cde1bcf4a8d4885507d96cfb,
+        type: 3}
       propertyPath: m_LocalRotation.y
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 1738690786078595933, guid: 1bfc2984cde1bcf4a8d4885507d96cfb, type: 3}
+    - target: {fileID: 1738690786078595933, guid: 1bfc2984cde1bcf4a8d4885507d96cfb,
+        type: 3}
       propertyPath: m_LocalRotation.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 1738690786078595933, guid: 1bfc2984cde1bcf4a8d4885507d96cfb, type: 3}
+    - target: {fileID: 1738690786078595933, guid: 1bfc2984cde1bcf4a8d4885507d96cfb,
+        type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 1738690786078595933, guid: 1bfc2984cde1bcf4a8d4885507d96cfb, type: 3}
+    - target: {fileID: 1738690786078595933, guid: 1bfc2984cde1bcf4a8d4885507d96cfb,
+        type: 3}
       propertyPath: m_LocalEulerAnglesHint.y
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 1738690786078595933, guid: 1bfc2984cde1bcf4a8d4885507d96cfb, type: 3}
+    - target: {fileID: 1738690786078595933, guid: 1bfc2984cde1bcf4a8d4885507d96cfb,
+        type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
-    m_RemovedGameObjects: []
-    m_AddedGameObjects: []
-    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 1bfc2984cde1bcf4a8d4885507d96cfb, type: 3}
 --- !u!1 &1399144635650458778 stripped
 GameObject:
-  m_CorrespondingSourceObject: {fileID: 1399144636580479463, guid: 1bfc2984cde1bcf4a8d4885507d96cfb, type: 3}
+  m_CorrespondingSourceObject: {fileID: 1399144636580479463, guid: 1bfc2984cde1bcf4a8d4885507d96cfb,
+    type: 3}
   m_PrefabInstance: {fileID: 1502807421}
   m_PrefabAsset: {fileID: 0}
 --- !u!4 &1738690784894819872 stripped
 Transform:
-  m_CorrespondingSourceObject: {fileID: 1738690786078595933, guid: 1bfc2984cde1bcf4a8d4885507d96cfb, type: 3}
+  m_CorrespondingSourceObject: {fileID: 1738690786078595933, guid: 1bfc2984cde1bcf4a8d4885507d96cfb,
+    type: 3}
   m_PrefabInstance: {fileID: 1502807421}
   m_PrefabAsset: {fileID: 0}
 --- !u!1001 &560972495577062203
@@ -12268,72 +12670,82 @@ PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Modification:
-    serializedVersion: 3
-    m_TransformParent: {fileID: 9168077419150649489}
+    m_TransformParent: {fileID: 7341256332303435102}
     m_Modifications:
-    - target: {fileID: 666434199206194545, guid: 394e764977f5f994199ec7c1ee5e4f95, type: 3}
+    - target: {fileID: 666434199206194545, guid: 394e764977f5f994199ec7c1ee5e4f95,
+        type: 3}
       propertyPath: aim
       value: 
       objectReference: {fileID: 7762624870925479390}
-    - target: {fileID: 3702501652830921620, guid: 394e764977f5f994199ec7c1ee5e4f95, type: 3}
+    - target: {fileID: 3702501652830921620, guid: 394e764977f5f994199ec7c1ee5e4f95,
+        type: 3}
       propertyPath: m_RootOrder
-      value: 0
+      value: 14
       objectReference: {fileID: 0}
-    - target: {fileID: 3702501652830921620, guid: 394e764977f5f994199ec7c1ee5e4f95, type: 3}
+    - target: {fileID: 3702501652830921620, guid: 394e764977f5f994199ec7c1ee5e4f95,
+        type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 3702501652830921620, guid: 394e764977f5f994199ec7c1ee5e4f95, type: 3}
+    - target: {fileID: 3702501652830921620, guid: 394e764977f5f994199ec7c1ee5e4f95,
+        type: 3}
       propertyPath: m_LocalPosition.y
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 3702501652830921620, guid: 394e764977f5f994199ec7c1ee5e4f95, type: 3}
+    - target: {fileID: 3702501652830921620, guid: 394e764977f5f994199ec7c1ee5e4f95,
+        type: 3}
       propertyPath: m_LocalPosition.z
-      value: 0.58
+      value: 0.58000183
       objectReference: {fileID: 0}
-    - target: {fileID: 3702501652830921620, guid: 394e764977f5f994199ec7c1ee5e4f95, type: 3}
+    - target: {fileID: 3702501652830921620, guid: 394e764977f5f994199ec7c1ee5e4f95,
+        type: 3}
       propertyPath: m_LocalRotation.w
       value: 1
       objectReference: {fileID: 0}
-    - target: {fileID: 3702501652830921620, guid: 394e764977f5f994199ec7c1ee5e4f95, type: 3}
+    - target: {fileID: 3702501652830921620, guid: 394e764977f5f994199ec7c1ee5e4f95,
+        type: 3}
       propertyPath: m_LocalRotation.x
       value: -0
       objectReference: {fileID: 0}
-    - target: {fileID: 3702501652830921620, guid: 394e764977f5f994199ec7c1ee5e4f95, type: 3}
+    - target: {fileID: 3702501652830921620, guid: 394e764977f5f994199ec7c1ee5e4f95,
+        type: 3}
       propertyPath: m_LocalRotation.y
       value: -0
       objectReference: {fileID: 0}
-    - target: {fileID: 3702501652830921620, guid: 394e764977f5f994199ec7c1ee5e4f95, type: 3}
+    - target: {fileID: 3702501652830921620, guid: 394e764977f5f994199ec7c1ee5e4f95,
+        type: 3}
       propertyPath: m_LocalRotation.z
       value: -0
       objectReference: {fileID: 0}
-    - target: {fileID: 3702501652830921620, guid: 394e764977f5f994199ec7c1ee5e4f95, type: 3}
+    - target: {fileID: 3702501652830921620, guid: 394e764977f5f994199ec7c1ee5e4f95,
+        type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 3702501652830921620, guid: 394e764977f5f994199ec7c1ee5e4f95, type: 3}
+    - target: {fileID: 3702501652830921620, guid: 394e764977f5f994199ec7c1ee5e4f95,
+        type: 3}
       propertyPath: m_LocalEulerAnglesHint.y
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 3702501652830921620, guid: 394e764977f5f994199ec7c1ee5e4f95, type: 3}
+    - target: {fileID: 3702501652830921620, guid: 394e764977f5f994199ec7c1ee5e4f95,
+        type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 7792262008306046854, guid: 394e764977f5f994199ec7c1ee5e4f95, type: 3}
+    - target: {fileID: 7792262008306046854, guid: 394e764977f5f994199ec7c1ee5e4f95,
+        type: 3}
       propertyPath: m_Name
       value: Lock on Target
       objectReference: {fileID: 0}
     m_RemovedComponents: []
-    m_RemovedGameObjects: []
-    m_AddedGameObjects: []
-    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 394e764977f5f994199ec7c1ee5e4f95, type: 3}
 --- !u!114 &1078436037404522058 stripped
 MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 666434199206194545, guid: 394e764977f5f994199ec7c1ee5e4f95, type: 3}
+  m_CorrespondingSourceObject: {fileID: 666434199206194545, guid: 394e764977f5f994199ec7c1ee5e4f95,
+    type: 3}
   m_PrefabInstance: {fileID: 560972495577062203}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
+  m_GameObject: {fileID: 7776402098345217213}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 245ebac0932779642866956d927ec17e, type: 3}
@@ -12341,7 +12753,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
 --- !u!4 &3794586296272959663 stripped
 Transform:
-  m_CorrespondingSourceObject: {fileID: 3702501652830921620, guid: 394e764977f5f994199ec7c1ee5e4f95, type: 3}
+  m_CorrespondingSourceObject: {fileID: 3702501652830921620, guid: 394e764977f5f994199ec7c1ee5e4f95,
+    type: 3}
+  m_PrefabInstance: {fileID: 560972495577062203}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &7776402098345217213 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 7792262008306046854, guid: 394e764977f5f994199ec7c1ee5e4f95,
+    type: 3}
   m_PrefabInstance: {fileID: 560972495577062203}
   m_PrefabAsset: {fileID: 0}
 --- !u!1001 &1516362519093323776
@@ -12349,7 +12768,6 @@ PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Modification:
-    serializedVersion: 3
     m_TransformParent: {fileID: 7341256332303435102}
     m_Modifications:
     - target: {fileID: 1299739519999428, guid: f09ceca33ea0e554f92eb2f15e8dce44, type: 3}
@@ -12405,21 +12823,17 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
-    m_RemovedGameObjects: []
-    m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 1299739519999428, guid: f09ceca33ea0e554f92eb2f15e8dce44, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 5551927995339739343}
   m_SourcePrefab: {fileID: 100100000, guid: f09ceca33ea0e554f92eb2f15e8dce44, type: 3}
 --- !u!4 &1514704916385020198 stripped
 Transform:
-  m_CorrespondingSourceObject: {fileID: 4050282840101158, guid: f09ceca33ea0e554f92eb2f15e8dce44, type: 3}
+  m_CorrespondingSourceObject: {fileID: 4050282840101158, guid: f09ceca33ea0e554f92eb2f15e8dce44,
+    type: 3}
   m_PrefabInstance: {fileID: 1516362519093323776}
   m_PrefabAsset: {fileID: 0}
 --- !u!1 &1517622598339786180 stripped
 GameObject:
-  m_CorrespondingSourceObject: {fileID: 1299739519999428, guid: f09ceca33ea0e554f92eb2f15e8dce44, type: 3}
+  m_CorrespondingSourceObject: {fileID: 1299739519999428, guid: f09ceca33ea0e554f92eb2f15e8dce44,
+    type: 3}
   m_PrefabInstance: {fileID: 1516362519093323776}
   m_PrefabAsset: {fileID: 0}
 --- !u!114 &5551927995339739343
@@ -12442,7 +12856,6 @@ PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Modification:
-    serializedVersion: 3
     m_TransformParent: {fileID: 1087265524608481677}
     m_Modifications:
     - target: {fileID: 1091566395842728, guid: 16364e7ab3d3ec94f9793edb2d2ccdb8, type: 3}
@@ -12497,33 +12910,32 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 198200190501009950, guid: 16364e7ab3d3ec94f9793edb2d2ccdb8, type: 3}
+    - target: {fileID: 198200190501009950, guid: 16364e7ab3d3ec94f9793edb2d2ccdb8,
+        type: 3}
       propertyPath: InitialModule.startSize.scalar
       value: 0.5
       objectReference: {fileID: 0}
-    - target: {fileID: 6994466916858529038, guid: 16364e7ab3d3ec94f9793edb2d2ccdb8, type: 3}
+    - target: {fileID: 6994466916858529038, guid: 16364e7ab3d3ec94f9793edb2d2ccdb8,
+        type: 3}
       propertyPath: m_LocalScale.x
       value: 0.5
       objectReference: {fileID: 0}
-    - target: {fileID: 6994466916858529038, guid: 16364e7ab3d3ec94f9793edb2d2ccdb8, type: 3}
+    - target: {fileID: 6994466916858529038, guid: 16364e7ab3d3ec94f9793edb2d2ccdb8,
+        type: 3}
       propertyPath: m_LocalScale.y
       value: 0.5
       objectReference: {fileID: 0}
-    - target: {fileID: 6994466916858529038, guid: 16364e7ab3d3ec94f9793edb2d2ccdb8, type: 3}
+    - target: {fileID: 6994466916858529038, guid: 16364e7ab3d3ec94f9793edb2d2ccdb8,
+        type: 3}
       propertyPath: m_LocalScale.z
       value: 0.5
       objectReference: {fileID: 0}
     m_RemovedComponents: []
-    m_RemovedGameObjects: []
-    m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 1091566395842728, guid: 16364e7ab3d3ec94f9793edb2d2ccdb8, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 8606866381932783374}
   m_SourcePrefab: {fileID: 100100000, guid: 16364e7ab3d3ec94f9793edb2d2ccdb8, type: 3}
 --- !u!1 &3703914396982549835 stripped
 GameObject:
-  m_CorrespondingSourceObject: {fileID: 1091566395842728, guid: 16364e7ab3d3ec94f9793edb2d2ccdb8, type: 3}
+  m_CorrespondingSourceObject: {fileID: 1091566395842728, guid: 16364e7ab3d3ec94f9793edb2d2ccdb8,
+    type: 3}
   m_PrefabInstance: {fileID: 3703386347786763747}
   m_PrefabAsset: {fileID: 0}
 --- !u!114 &8606866381932783374
@@ -12540,7 +12952,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
 --- !u!4 &3705011757735346847 stripped
 Transform:
-  m_CorrespondingSourceObject: {fileID: 4445133339262844, guid: 16364e7ab3d3ec94f9793edb2d2ccdb8, type: 3}
+  m_CorrespondingSourceObject: {fileID: 4445133339262844, guid: 16364e7ab3d3ec94f9793edb2d2ccdb8,
+    type: 3}
   m_PrefabInstance: {fileID: 3703386347786763747}
   m_PrefabAsset: {fileID: 0}
 --- !u!1001 &4652487428333281937
@@ -12548,7 +12961,6 @@ PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Modification:
-    serializedVersion: 3
     m_TransformParent: {fileID: 1087265524608481677}
     m_Modifications:
     - target: {fileID: 1091566395842728, guid: 400e06051701a8c4998087ae421728e3, type: 3}
@@ -12604,18 +13016,17 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
-    m_RemovedGameObjects: []
-    m_AddedGameObjects: []
-    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 400e06051701a8c4998087ae421728e3, type: 3}
 --- !u!1 &4653085296718725689 stripped
 GameObject:
-  m_CorrespondingSourceObject: {fileID: 1091566395842728, guid: 400e06051701a8c4998087ae421728e3, type: 3}
+  m_CorrespondingSourceObject: {fileID: 1091566395842728, guid: 400e06051701a8c4998087ae421728e3,
+    type: 3}
   m_PrefabInstance: {fileID: 4652487428333281937}
   m_PrefabAsset: {fileID: 0}
 --- !u!4 &4656509232465370605 stripped
 Transform:
-  m_CorrespondingSourceObject: {fileID: 4445133339262844, guid: 400e06051701a8c4998087ae421728e3, type: 3}
+  m_CorrespondingSourceObject: {fileID: 4445133339262844, guid: 400e06051701a8c4998087ae421728e3,
+    type: 3}
   m_PrefabInstance: {fileID: 4652487428333281937}
   m_PrefabAsset: {fileID: 0}
 --- !u!1001 &4831576922965894389
@@ -12623,74 +13034,85 @@ PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Modification:
-    serializedVersion: 3
     m_TransformParent: {fileID: 651182574759626242}
     m_Modifications:
-    - target: {fileID: 1175903420998626740, guid: 1c7a0f3efad6ffd4898f40074ea5bcc2, type: 3}
+    - target: {fileID: 1175903420998626740, guid: 1c7a0f3efad6ffd4898f40074ea5bcc2,
+        type: 3}
       propertyPath: m_RootOrder
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 1175903420998626740, guid: 1c7a0f3efad6ffd4898f40074ea5bcc2, type: 3}
+    - target: {fileID: 1175903420998626740, guid: 1c7a0f3efad6ffd4898f40074ea5bcc2,
+        type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 1175903420998626740, guid: 1c7a0f3efad6ffd4898f40074ea5bcc2, type: 3}
+    - target: {fileID: 1175903420998626740, guid: 1c7a0f3efad6ffd4898f40074ea5bcc2,
+        type: 3}
       propertyPath: m_LocalPosition.y
       value: 0.78
       objectReference: {fileID: 0}
-    - target: {fileID: 1175903420998626740, guid: 1c7a0f3efad6ffd4898f40074ea5bcc2, type: 3}
+    - target: {fileID: 1175903420998626740, guid: 1c7a0f3efad6ffd4898f40074ea5bcc2,
+        type: 3}
       propertyPath: m_LocalPosition.z
       value: -0.14
       objectReference: {fileID: 0}
-    - target: {fileID: 1175903420998626740, guid: 1c7a0f3efad6ffd4898f40074ea5bcc2, type: 3}
+    - target: {fileID: 1175903420998626740, guid: 1c7a0f3efad6ffd4898f40074ea5bcc2,
+        type: 3}
       propertyPath: m_LocalRotation.w
       value: 1
       objectReference: {fileID: 0}
-    - target: {fileID: 1175903420998626740, guid: 1c7a0f3efad6ffd4898f40074ea5bcc2, type: 3}
+    - target: {fileID: 1175903420998626740, guid: 1c7a0f3efad6ffd4898f40074ea5bcc2,
+        type: 3}
       propertyPath: m_LocalRotation.x
       value: -0
       objectReference: {fileID: 0}
-    - target: {fileID: 1175903420998626740, guid: 1c7a0f3efad6ffd4898f40074ea5bcc2, type: 3}
+    - target: {fileID: 1175903420998626740, guid: 1c7a0f3efad6ffd4898f40074ea5bcc2,
+        type: 3}
       propertyPath: m_LocalRotation.y
       value: -0
       objectReference: {fileID: 0}
-    - target: {fileID: 1175903420998626740, guid: 1c7a0f3efad6ffd4898f40074ea5bcc2, type: 3}
+    - target: {fileID: 1175903420998626740, guid: 1c7a0f3efad6ffd4898f40074ea5bcc2,
+        type: 3}
       propertyPath: m_LocalRotation.z
       value: -0
       objectReference: {fileID: 0}
-    - target: {fileID: 1175903420998626740, guid: 1c7a0f3efad6ffd4898f40074ea5bcc2, type: 3}
+    - target: {fileID: 1175903420998626740, guid: 1c7a0f3efad6ffd4898f40074ea5bcc2,
+        type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 1175903420998626740, guid: 1c7a0f3efad6ffd4898f40074ea5bcc2, type: 3}
+    - target: {fileID: 1175903420998626740, guid: 1c7a0f3efad6ffd4898f40074ea5bcc2,
+        type: 3}
       propertyPath: m_LocalEulerAnglesHint.y
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 1175903420998626740, guid: 1c7a0f3efad6ffd4898f40074ea5bcc2, type: 3}
+    - target: {fileID: 1175903420998626740, guid: 1c7a0f3efad6ffd4898f40074ea5bcc2,
+        type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 7808745598944374104, guid: 1c7a0f3efad6ffd4898f40074ea5bcc2, type: 3}
+    - target: {fileID: 7808745598944374104, guid: 1c7a0f3efad6ffd4898f40074ea5bcc2,
+        type: 3}
       propertyPath: m_Name
       value: OnFocused
       objectReference: {fileID: 0}
-    - target: {fileID: 9181817740155613070, guid: 1c7a0f3efad6ffd4898f40074ea5bcc2, type: 3}
+    - target: {fileID: 9181817740155613070, guid: 1c7a0f3efad6ffd4898f40074ea5bcc2,
+        type: 3}
       propertyPath: onEnable.m_PersistentCalls.m_Calls.Array.data[2].m_Arguments.m_StringArgument
       value: Pet
       objectReference: {fileID: 0}
     m_RemovedComponents: []
-    m_RemovedGameObjects: []
-    m_AddedGameObjects: []
-    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 1c7a0f3efad6ffd4898f40074ea5bcc2, type: 3}
 --- !u!1 &3410079389719857581 stripped
 GameObject:
-  m_CorrespondingSourceObject: {fileID: 7808745598944374104, guid: 1c7a0f3efad6ffd4898f40074ea5bcc2, type: 3}
+  m_CorrespondingSourceObject: {fileID: 7808745598944374104, guid: 1c7a0f3efad6ffd4898f40074ea5bcc2,
+    type: 3}
   m_PrefabInstance: {fileID: 4831576922965894389}
   m_PrefabAsset: {fileID: 0}
 --- !u!4 &6006834825335490881 stripped
 Transform:
-  m_CorrespondingSourceObject: {fileID: 1175903420998626740, guid: 1c7a0f3efad6ffd4898f40074ea5bcc2, type: 3}
+  m_CorrespondingSourceObject: {fileID: 1175903420998626740, guid: 1c7a0f3efad6ffd4898f40074ea5bcc2,
+    type: 3}
   m_PrefabInstance: {fileID: 4831576922965894389}
   m_PrefabAsset: {fileID: 0}
 --- !u!1001 &6379016545561256743
@@ -12698,90 +13120,137 @@ PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Modification:
-    serializedVersion: 3
     m_TransformParent: {fileID: 7341256332303435102}
     m_Modifications:
-    - target: {fileID: 612905852502852731, guid: fe2040953ec7f8b40b3d5ecd1b2ce663, type: 3}
+    - target: {fileID: 612905852502852731, guid: fe2040953ec7f8b40b3d5ecd1b2ce663,
+        type: 3}
       propertyPath: m_Name
       value: Stamina Data
       objectReference: {fileID: 0}
-    - target: {fileID: 2547823808600036364, guid: fe2040953ec7f8b40b3d5ecd1b2ce663, type: 3}
+    - target: {fileID: 2547823808600036364, guid: fe2040953ec7f8b40b3d5ecd1b2ce663,
+        type: 3}
       propertyPath: m_RootOrder
       value: 8
       objectReference: {fileID: 0}
-    - target: {fileID: 2547823808600036364, guid: fe2040953ec7f8b40b3d5ecd1b2ce663, type: 3}
+    - target: {fileID: 2547823808600036364, guid: fe2040953ec7f8b40b3d5ecd1b2ce663,
+        type: 3}
       propertyPath: m_LocalPosition.x
       value: -0.038
       objectReference: {fileID: 0}
-    - target: {fileID: 2547823808600036364, guid: fe2040953ec7f8b40b3d5ecd1b2ce663, type: 3}
+    - target: {fileID: 2547823808600036364, guid: fe2040953ec7f8b40b3d5ecd1b2ce663,
+        type: 3}
       propertyPath: m_LocalPosition.y
       value: 0.04
       objectReference: {fileID: 0}
-    - target: {fileID: 2547823808600036364, guid: fe2040953ec7f8b40b3d5ecd1b2ce663, type: 3}
+    - target: {fileID: 2547823808600036364, guid: fe2040953ec7f8b40b3d5ecd1b2ce663,
+        type: 3}
       propertyPath: m_LocalPosition.z
       value: -0.242
       objectReference: {fileID: 0}
-    - target: {fileID: 2547823808600036364, guid: fe2040953ec7f8b40b3d5ecd1b2ce663, type: 3}
+    - target: {fileID: 2547823808600036364, guid: fe2040953ec7f8b40b3d5ecd1b2ce663,
+        type: 3}
       propertyPath: m_LocalRotation.w
       value: 1
       objectReference: {fileID: 0}
-    - target: {fileID: 2547823808600036364, guid: fe2040953ec7f8b40b3d5ecd1b2ce663, type: 3}
+    - target: {fileID: 2547823808600036364, guid: fe2040953ec7f8b40b3d5ecd1b2ce663,
+        type: 3}
       propertyPath: m_LocalRotation.x
       value: -0
       objectReference: {fileID: 0}
-    - target: {fileID: 2547823808600036364, guid: fe2040953ec7f8b40b3d5ecd1b2ce663, type: 3}
+    - target: {fileID: 2547823808600036364, guid: fe2040953ec7f8b40b3d5ecd1b2ce663,
+        type: 3}
       propertyPath: m_LocalRotation.y
       value: -0
       objectReference: {fileID: 0}
-    - target: {fileID: 2547823808600036364, guid: fe2040953ec7f8b40b3d5ecd1b2ce663, type: 3}
+    - target: {fileID: 2547823808600036364, guid: fe2040953ec7f8b40b3d5ecd1b2ce663,
+        type: 3}
       propertyPath: m_LocalRotation.z
       value: -0
       objectReference: {fileID: 0}
-    - target: {fileID: 2547823808600036364, guid: fe2040953ec7f8b40b3d5ecd1b2ce663, type: 3}
+    - target: {fileID: 2547823808600036364, guid: fe2040953ec7f8b40b3d5ecd1b2ce663,
+        type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 2547823808600036364, guid: fe2040953ec7f8b40b3d5ecd1b2ce663, type: 3}
+    - target: {fileID: 2547823808600036364, guid: fe2040953ec7f8b40b3d5ecd1b2ce663,
+        type: 3}
       propertyPath: m_LocalEulerAnglesHint.y
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 2547823808600036364, guid: fe2040953ec7f8b40b3d5ecd1b2ce663, type: 3}
+    - target: {fileID: 2547823808600036364, guid: fe2040953ec7f8b40b3d5ecd1b2ce663,
+        type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 2853561667545558222, guid: fe2040953ec7f8b40b3d5ecd1b2ce663, type: 3}
+    - target: {fileID: 2853561667545558222, guid: fe2040953ec7f8b40b3d5ecd1b2ce663,
+        type: 3}
+      propertyPath: OnValueChanged.m_PersistentCalls.m_Calls.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2853561667545558222, guid: fe2040953ec7f8b40b3d5ecd1b2ce663,
+        type: 3}
+      propertyPath: OnValueChanged.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2853561667545558222, guid: fe2040953ec7f8b40b3d5ecd1b2ce663,
+        type: 3}
       propertyPath: OnValueChanged.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
-      objectReference: {fileID: 114786442630340898}
-    - target: {fileID: 2853561667545558222, guid: fe2040953ec7f8b40b3d5ecd1b2ce663, type: 3}
+      objectReference: {fileID: 11400000, guid: e5d916c64bda38744b0188f0294c69ae,
+        type: 2}
+    - target: {fileID: 2853561667545558222, guid: fe2040953ec7f8b40b3d5ecd1b2ce663,
+        type: 3}
       propertyPath: OnValueChanged.m_PersistentCalls.m_Calls.Array.data[1].m_Target
       value: 
-      objectReference: {fileID: 114786442630340898}
-    - target: {fileID: 2853561667545558222, guid: fe2040953ec7f8b40b3d5ecd1b2ce663, type: 3}
+      objectReference: {fileID: 11400000, guid: e5d916c64bda38744b0188f0294c69ae,
+        type: 2}
+    - target: {fileID: 2853561667545558222, guid: fe2040953ec7f8b40b3d5ecd1b2ce663,
+        type: 3}
       propertyPath: OnValueChanged.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
-      value: Stat_Pin
+      value: Invoke
       objectReference: {fileID: 0}
-    - target: {fileID: 2853561667545558222, guid: fe2040953ec7f8b40b3d5ecd1b2ce663, type: 3}
+    - target: {fileID: 2853561667545558222, guid: fe2040953ec7f8b40b3d5ecd1b2ce663,
+        type: 3}
       propertyPath: OnValueChanged.m_PersistentCalls.m_Calls.Array.data[1].m_MethodName
-      value: Stat_Pin_Degenerate
+      value: Invoke
       objectReference: {fileID: 0}
-    - target: {fileID: 2853561667545558222, guid: fe2040953ec7f8b40b3d5ecd1b2ce663, type: 3}
+    - target: {fileID: 2853561667545558222, guid: fe2040953ec7f8b40b3d5ecd1b2ce663,
+        type: 3}
+      propertyPath: OnTrue.m_PersistentCalls.m_Calls.Array.data[1].m_Arguments.m_ObjectArgument
+      value: 
+      objectReference: {fileID: 114786442630340898}
+    - target: {fileID: 2853561667545558222, guid: fe2040953ec7f8b40b3d5ecd1b2ce663,
+        type: 3}
+      propertyPath: OnFalse.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgument
+      value: 
+      objectReference: {fileID: 114786442630340898}
+    - target: {fileID: 2853561667545558222, guid: fe2040953ec7f8b40b3d5ecd1b2ce663,
+        type: 3}
+      propertyPath: OnValueChanged.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 2853561667545558222, guid: fe2040953ec7f8b40b3d5ecd1b2ce663,
+        type: 3}
+      propertyPath: OnValueChanged.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgument
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 2853561667545558222, guid: fe2040953ec7f8b40b3d5ecd1b2ce663,
+        type: 3}
       propertyPath: OnValueChanged.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
-      value: MalbersAnimations.StatID, Assembly-CSharp
+      value: UnityEngine.Object, UnityEngine
       objectReference: {fileID: 0}
     m_RemovedComponents: []
-    m_RemovedGameObjects: []
-    m_AddedGameObjects: []
-    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: fe2040953ec7f8b40b3d5ecd1b2ce663, type: 3}
 --- !u!4 &8925397244998842155 stripped
 Transform:
-  m_CorrespondingSourceObject: {fileID: 2547823808600036364, guid: fe2040953ec7f8b40b3d5ecd1b2ce663, type: 3}
+  m_CorrespondingSourceObject: {fileID: 2547823808600036364, guid: fe2040953ec7f8b40b3d5ecd1b2ce663,
+    type: 3}
   m_PrefabInstance: {fileID: 6379016545561256743}
   m_PrefabAsset: {fileID: 0}
 --- !u!114 &9160096207496663017 stripped
 MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 2853561667545558222, guid: fe2040953ec7f8b40b3d5ecd1b2ce663, type: 3}
+  m_CorrespondingSourceObject: {fileID: 2853561667545558222, guid: fe2040953ec7f8b40b3d5ecd1b2ce663,
+    type: 3}
   m_PrefabInstance: {fileID: 6379016545561256743}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 0}

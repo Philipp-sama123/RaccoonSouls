@@ -31,6 +31,7 @@ Transform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0.751, y: 0.177, z: -1.168}
   m_LocalScale: {x: 0.15, y: 0.15, z: 0.15}
+  m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 3402575032448288703}
   m_Father: {fileID: 0}
@@ -84,10 +85,12 @@ MeshRenderer:
   m_CastShadows: 1
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1
+  m_StaticShadowCaster: 0
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
   m_RayTracingMode: 2
+  m_RayTraceProcedural: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -112,6 +115,7 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+  m_AdditionalVertexStreams: {fileID: 0}
 --- !u!114 &8942318349578972159
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -154,7 +158,7 @@ MonoBehaviour:
     Variable: {fileID: 0}
   SceneRoot:
     UseConstant: 1
-    ConstantValue: 1
+    ConstantValue: 0
     Variable: {fileID: 0}
   m_Value:
     UseConstant: 1
@@ -172,6 +176,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 5996479851274618707}
+        m_TargetAssemblyTypeName: 
         m_MethodName: SetActive
         m_Mode: 0
         m_Arguments:
@@ -182,6 +187,9 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+  OnFocusedBy:
+    m_PersistentCalls:
+      m_Calls: []
   OnPicked:
     m_PersistentCalls:
       m_Calls: []
@@ -189,6 +197,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 11400000, guid: 797619f9b2a1451479af45a1161a24e8, type: 2}
+        m_TargetAssemblyTypeName: 
         m_MethodName: React
         m_Mode: 0
         m_Arguments:
@@ -206,6 +215,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 11400000, guid: c2c1c34c851e3d845a1cadefbdc409df, type: 2}
+        m_TargetAssemblyTypeName: 
         m_MethodName: React
         m_Mode: 0
         m_Arguments:
@@ -217,7 +227,7 @@ MonoBehaviour:
           m_BoolArgument: 0
         m_CallState: 2
   rb: {fileID: 8942318349578972144}
-  m_collider: {fileID: 4062292017549053718}
+  m_colliders: []
   EditorTabs: 0
 --- !u!1001 &4569458280085826059
 PrefabInstance:
@@ -298,15 +308,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 1c7a0f3efad6ffd4898f40074ea5bcc2, type: 3}
---- !u!1 &5996479851274618707 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 7808745598944374104, guid: 1c7a0f3efad6ffd4898f40074ea5bcc2,
-    type: 3}
-  m_PrefabInstance: {fileID: 4569458280085826059}
-  m_PrefabAsset: {fileID: 0}
 --- !u!4 &3402575032448288703 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 1175903420998626740, guid: 1c7a0f3efad6ffd4898f40074ea5bcc2,
+    type: 3}
+  m_PrefabInstance: {fileID: 4569458280085826059}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &5996479851274618707 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 7808745598944374104, guid: 1c7a0f3efad6ffd4898f40074ea5bcc2,
     type: 3}
   m_PrefabInstance: {fileID: 4569458280085826059}
   m_PrefabAsset: {fileID: 0}

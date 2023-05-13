@@ -29,6 +29,12 @@ namespace MalbersAnimations.Utilities
             }
         }
 
+        private void OnDisable()
+        {
+            Stop_Effects(Effects);  //Stop all effects if the Effect Manager is disabled
+        }
+
+
         /// <summary>Plays an Effect using its ID value</summary>
         public virtual void PlayEffect(int ID)
         {
@@ -147,7 +153,7 @@ namespace MalbersAnimations.Utilities
                         if (e.effect.IsPrefab())                        //If instantiate is active (meaning is a prefab)
                         {
                             e.Instance = Instantiate(e.effect);         //Instantiate!
-                            e.Instance.gameObject.SetActive(false);
+                            e.Instance.SetActive(false);
 
                             e.Instance.transform.localScale *= e.scale;
                         }
@@ -162,7 +168,6 @@ namespace MalbersAnimations.Utilities
 
                         if (e.Instance)
                         {
-                            e.Instance.gameObject.SetActive(true);
                          
 
                             //Apply Offsets
@@ -173,8 +178,7 @@ namespace MalbersAnimations.Utilities
                                 if (e.isChild)
                                 {
                                     e.Instance.transform.parent = e.root;
-                                    e.Instance.transform.localPosition = e.Offset.Position;
-                                    e.Instance.transform.localRotation = Quaternion.Euler(e.Offset.Rotation);
+                                    e.Instance.transform.SetLocalPositionAndRotation(e.Offset.Position, Quaternion.Euler(e.Offset.Rotation));
                                     e.Instance.transform.localScale = e.Offset.Scale; //Scale the Effect
                                 }
                                 else
@@ -187,6 +191,7 @@ namespace MalbersAnimations.Utilities
                                     e.Instance.transform.rotation = e.root.rotation* Quaternion.Euler(e.Offset.Rotation);     //Orient to the root rotation
                                 }
                             }
+                            e.Instance.gameObject.SetActive(true);
 
 
                             if (e.effect.IsPrefab()) //get the trailrenderer and particle system from the Instance instead of the prefab
@@ -205,7 +210,7 @@ namespace MalbersAnimations.Utilities
                     }
 
                     if (debug)
-                        Debug.Log($"{Owner}.Play Effect [{e.Name}]");
+                        Debug.Log($"<B>{Owner.name}.Play Effect [{e.Name}] </B>");
 
                     e.OnPlay.Invoke();                                      //Invoke the Play Event
                 }

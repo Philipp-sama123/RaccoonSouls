@@ -6,9 +6,8 @@ namespace MalbersAnimations.Controller
     [AddComponentMenu("Malbers/Attack Triggers")]
     public class AttackTriggers_Behaviour : StateMachineBehaviour
     {
-       public List<AttacksBehavior> triggers;
-        [Tooltip("Damage Multiplier to apply regarding the animation.. (A finisher can cause more Damage)")]
-        public float Multiplier = 1f;
+        public List<AttacksBehavior> triggers;
+        
 
        private IMDamagerSet[] damagers;
 
@@ -37,7 +36,7 @@ namespace MalbersAnimations.Controller
             {
                 if (!atk.isOn && (time >= atk.AttackActivation.minValue))
                 {
-                    foreach (var d in damagers) d.ActivateDamager(atk.AttackTrigger, Multiplier);
+                    foreach (var d in damagers) d.ActivateDamager(atk.AttackTrigger, atk.Profile);
                     atk.isOn = true;
                 }
 
@@ -45,7 +44,7 @@ namespace MalbersAnimations.Controller
                 {
                     //means is transitioning to it self so do not OFF it
                     if (anim.IsInTransition(layer) && anim.GetNextAnimatorStateInfo(layer).fullPathHash == state.fullPathHash) return; 
-                    foreach (var d in damagers) d.ActivateDamager(0,Multiplier);
+                    foreach (var d in damagers) d.ActivateDamager(0, atk.Profile);
                     atk.isOff = true;
                 }
             }
@@ -59,7 +58,7 @@ namespace MalbersAnimations.Controller
             {
 
                 if (!atk.isOff)
-                    foreach (var d in damagers) d.ActivateDamager(0, Multiplier);  //Double check that the Trigger is OFF
+                    foreach (var d in damagers) d.ActivateDamager(0, atk.Profile);  //Double check that the Trigger is OFF
 
                 atk.isOn = atk.isOff = false;                                               //Reset the ON/OFF variables
             }
@@ -90,6 +89,9 @@ namespace MalbersAnimations.Controller
         [HideInInspector] public string name;
         [Tooltip("0: Disable All Attack Triggers\n-1: Enable All Attack Triggers\nx: Enable the Attack Trigger by its index")]
         public int AttackTrigger = 1;                           //ID of the Attack Trigger to Enable/Disable during the Attack Animation
+
+        [Tooltip("Profile to activate on the Damager")]
+        [Min(0)] public int Profile = 0;
 
         [Tooltip("Range on the Animation that the Attack Trigger will be Active")]
         [MinMaxRange(0, 1)]

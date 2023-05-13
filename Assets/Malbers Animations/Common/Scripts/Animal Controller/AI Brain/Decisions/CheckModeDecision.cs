@@ -16,34 +16,28 @@ namespace MalbersAnimations.Controller.AI
 
         public ModeID ModeID;
         [Tooltip("Which ability is playing in the Mode. If is set to less or equal to zero; then it will return true if the Mode Playing")]
-        public IntReference Ability = new IntReference(0);
+        public IntReference Ability = new();
 
         public override bool Decide(MAnimalBrain brain,int Index)
         {
-            switch (checkOn)
+            return checkOn switch
             {
-                case Affected.Self:
-                    return AnimalMode(brain.Animal);
-                case Affected.Target:
-                    return AnimalMode(brain.TargetAnimal);
-                default:
-                    return false;
-            }
+                Affected.Self => AnimalMode(brain.Animal),
+                Affected.Target => AnimalMode(brain.TargetAnimal),
+                _ => false,
+            };
         }
 
         private bool AnimalMode(MAnimal animal)
         {
             if (animal == null) return false;
 
-            switch (ModeState)
+            return ModeState switch
             {
-                case EEnterExit.Enter:
-                    return OnEnterMode(animal);
-                case EEnterExit.Exit:
-                    return OnExitMode(animal);
-                default:
-                    return false;
-            }
+                EEnterExit.Enter => OnEnterMode(animal),
+                EEnterExit.Exit => OnExitMode(animal),
+                _ => false,
+            };
         }
 
         private bool OnEnterMode(MAnimal animal)

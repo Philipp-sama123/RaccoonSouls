@@ -25,8 +25,8 @@ namespace MalbersAnimations
         /// <summary>Prepares the Projectile to be fired</summary>
         void Prepare(GameObject Owner, Vector3 Gravity, Vector3 ProjectileVelocity, LayerMask HitLayer, QueryTriggerInteraction triggerInteraction);
 
-        /// <summary>Multiplies the Damage for a value</summary>
-        void DamageMultiplier(float multiplier);
+        /// <summary>Multiplies the Damage for a value, Same as the MDamager</summary>
+        void SetDamageMultiplier(float multiplier);
 
         /// <summary>Prepares the Bullet Damage</summary>
         void PrepareDamage(StatModifier modifier, float CriticalChance, float CriticalMultiplier, StatElement element);

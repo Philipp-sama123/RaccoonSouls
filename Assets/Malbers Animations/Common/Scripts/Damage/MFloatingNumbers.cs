@@ -1,5 +1,4 @@
 ﻿using MalbersAnimations.Scriptables;
-using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
@@ -33,11 +32,14 @@ namespace MalbersAnimations.UI
 
         [Tooltip("Find a bone inside the Hierarchy of the Stat Manager")]
         public string FollowTransform = "Head";
-        
+
+        [Tooltip("if the damage was zero do not show the floating number")]
+        public bool ignoreZero = true;
+
         private List<MDamageableUI> TrackedStats;
 
         public Vector3 CriticalScale = Vector3.one;
-        
+
         private Camera MainCamera;
 
         private void Awake()
@@ -73,8 +75,8 @@ namespace MalbersAnimations.UI
 
         private void OnAddedMDamageable(MDamageable dam)
         {
-            var item = new MDamageableUI();
-            item.damageable = dam;
+            var item = new MDamageableUI
+            { damageable = dam };
 
             var child = dam.transform.FindGrandChild(FollowTransform);
             item.followTransform = child != null ? child : dam.transform;
@@ -82,6 +84,8 @@ namespace MalbersAnimations.UI
             //Track when the Stat changes value
             item.OnValueChange = (floatValue) =>
             {
+                if (ignoreZero && floatValue < 0.1f) return; //do nothing if the damage is close to zero
+
                 UIFollowTransform FU = null;
 
                 var WasCritical = item.damageable.LastDamage.WasCritical; //Store if the Damage was Critical
@@ -98,7 +102,7 @@ namespace MalbersAnimations.UI
 
                     FU.name += ": " + floatValue.ToString("F0");
 
-                   // Debug.Log("floatValue = " + floatValue);
+                    // Debug.Log("floatValue = " + floatValue);
 
                     var text = FU.GetComponentInChildren<Text>();
                     if (text)

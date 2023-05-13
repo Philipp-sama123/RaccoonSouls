@@ -37,29 +37,46 @@ namespace MalbersAnimations.Events
 
         public virtual void Invoke(float value)
         {
-            DebugEvent(value);
+            DebugEvent(value, "float");
 
             for (int i = eventListeners.Count - 1; i >= 0; i--)
                 eventListeners[i].OnEventInvoked(value);
 
         }
+
+        public virtual void InvokeToInt(float value)
+        {
+            DebugEvent(value, "float to int");
+
+            for (int i = eventListeners.Count - 1; i >= 0; i--)
+                eventListeners[i].OnEventInvoked((int)value);
+        }
+
+        public virtual void InvokeToFloat(int value)
+        {
+            DebugEvent(value, "int to float");
+
+            for (int i = eventListeners.Count - 1; i >= 0; i--)
+                eventListeners[i].OnEventInvoked((float)value);
+        }
+
         public virtual void Invoke(FloatVar value)
         {
-            DebugEvent(value);
+            DebugEvent(value, "Float Var");
 
             for (int i = eventListeners.Count - 1; i >= 0; i--)
                 eventListeners[i].OnEventInvoked(value.Value);
         }
         public virtual void Invoke(bool value)
         {
-            DebugEvent(value);
+            DebugEvent(value, "bool");
 
             for (int i = eventListeners.Count - 1; i >= 0; i--)
                 eventListeners[i].OnEventInvoked(value);
         }
         public virtual void Invoke(BoolVar value)
         {
-            DebugEvent(value.Value);
+            DebugEvent(value.Value, "Bool Var");
 
             for (int i = eventListeners.Count - 1; i >= 0; i--)
                 eventListeners[i].OnEventInvoked(value.Value);
@@ -67,7 +84,7 @@ namespace MalbersAnimations.Events
 
         public virtual void Invoke(string value)
         {
-            DebugEvent(value);
+            DebugEvent(value, "string");
 
             for (int i = eventListeners.Count - 1; i >= 0; i--)
                 eventListeners[i].OnEventInvoked(value);
@@ -75,7 +92,7 @@ namespace MalbersAnimations.Events
 
         public virtual void Invoke(StringVar value)
         {
-            DebugEvent(value.Value);
+            DebugEvent(value.Value, "StringVar");
 
             for (int i = eventListeners.Count - 1; i >= 0; i--)
                 eventListeners[i].OnEventInvoked(value.Value);
@@ -83,7 +100,7 @@ namespace MalbersAnimations.Events
 
         public virtual void Invoke(int value)
         {
-            DebugEvent(value);
+            DebugEvent(value, "int");
          
             for (int i = eventListeners.Count - 1; i >= 0; i--)
                 eventListeners[i].OnEventInvoked(value);
@@ -91,7 +108,7 @@ namespace MalbersAnimations.Events
 
         public virtual void Invoke(IntVar value)
         {
-            DebugEvent(value.Value);
+            DebugEvent(value.Value,"Int Var");
 
             for (int i = eventListeners.Count - 1; i >= 0; i--)
                 eventListeners[i].OnEventInvoked(value.Value);
@@ -109,42 +126,42 @@ namespace MalbersAnimations.Events
 
         public virtual void Invoke(GameObject value)
         {
-            DebugEvent(value);
+            DebugEvent(value, "GameObject");
             for (int i = eventListeners.Count - 1; i >= 0; i--)
                 eventListeners[i].OnEventInvoked(value);
         }
 
         public virtual void Invoke(Transform value)
         {
-            DebugEvent(value);
+            DebugEvent(value, "Transform");
             for (int i = eventListeners.Count - 1; i >= 0; i--)
                 eventListeners[i].OnEventInvoked(value);
         }
 
         public virtual void Invoke(Vector3 value)
         {
-            DebugEvent(value);
+            DebugEvent(value, "Vector3");
             for (int i = eventListeners.Count - 1; i >= 0; i--)
                 eventListeners[i].OnEventInvoked(value);
         }
 
         public virtual void Invoke(Vector2 value)
         {
-            DebugEvent(value);
+            DebugEvent(value,"Vector2");
             for (int i = eventListeners.Count - 1; i >= 0; i--)
                 eventListeners[i].OnEventInvoked(value);
         }
 
         public virtual void Invoke(Component value)
         {
-            DebugEvent(value);
+            DebugEvent(value,"Component");
             for (int i = eventListeners.Count - 1; i >= 0; i--)
                 eventListeners[i].OnEventInvoked(value);
         } 
 
         public virtual void Invoke(Sprite value)
         {
-            DebugEvent(value);
+            DebugEvent(value,"Sprite");
             for (int i = eventListeners.Count - 1; i >= 0; i--)
                 eventListeners[i].OnEventInvoked(value);
         }
@@ -169,10 +186,10 @@ namespace MalbersAnimations.Events
         public virtual void InvokeAsInt(Object value) => Invoke(value != null ? value.GetInstanceID() : -1);
 
 
-        private void DebugEvent(object value)
+        private void DebugEvent(object value, string type)
         {
 #if UNITY_EDITOR
-            if (debug) Debug.Log($"<B>{name}</B> - Invoke({value})",this);
+            if (debug) Debug.Log($"<B>{name}</B> - Invoke({value}) Type({type})",this);
 #endif
         }
 
@@ -189,14 +206,17 @@ namespace MalbersAnimations.Events
 
         ////This is for Debugin porpuses
         #region Debuging Methods
-        public virtual void LogDeb(string text) => Debug.Log(text);
         public virtual void Pause() => Debug.Break();
-        public virtual void LogDeb(bool value) => Debug.Log(name + ": " + value);
-        public virtual void LogDeb(Vector3 value) => Debug.Log(name + ": " + value);
-        public virtual void LogDeb(int value) => Debug.Log(name + ": " + value);
-        public virtual void LogDeb(float value) => Debug.Log(name + ": " + value);
-        public virtual void LogDeb(object value) => Debug.Log(name + ": " + value);
-        public virtual void LogDeb(Component value) => Debug.Log(name + ": " + value);
+        public virtual void LogDeb(string value) => Debug.Log($"<color=white><B>{name} : [{value}] </B></color>");
+        public virtual void LogDeb(bool value) => Debug.Log($"<color=white><B>{name} : [{value}] </B></color>");
+        public virtual void LogDeb(Vector3 value) => Debug.Log($"<color=white><B>{name} : [{value}] </B></color>");
+        public virtual void LogDeb(int value) => Debug.Log($"<color=white><B>{name} : [{value}] </B></color>");
+        public virtual void LogDeb(float value) => Debug.Log($"<color=white><B>{name} : [{value}] </B></color>");
+        public virtual void LogDeb(object value) => Debug.Log($"<color=white><B>{name} : [{value}] </B></color>");
+        public virtual void LogDeb(Object value) => Debug.Log($"<color=white><B>{name} : [{value}] </B></color>");
+
+
+
         #endregion
 
 #if UNITY_EDITOR

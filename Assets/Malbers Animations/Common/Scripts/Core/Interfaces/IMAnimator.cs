@@ -39,6 +39,8 @@ namespace MalbersAnimations
         /// <param name="value">the parameter</param>
         bool OnAnimatorBehaviourMessage(string message, object value);
         //public virtual bool OnAnimatorBehaviourMessage(string message, object value) => this.InvokeWithParams(message, value);
+
+        Transform transform { get; }
     }
 
     /// <summary> Interface used for Syncing Locomotion Animations .. (E.g. Rider Horse or Horse and Wings) </summary>

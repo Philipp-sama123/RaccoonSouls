@@ -151,6 +151,8 @@ namespace MalbersAnimations.Weapons
         {
             Initialize();
 
+            if (AimOrigin == null) AimOrigin = transform;
+
             if (ChamberSize < 0) ChamberSize = 1; //Bug Fix
         }
 
@@ -322,8 +324,18 @@ namespace MalbersAnimations.Weapons
             {
                 var Pos = ProjectileParent ? ProjectileParent.position : AimOriginPos;
                 var Rot = ProjectileParent ? ProjectileParent.rotation : AimOrigin.rotation;
-                ProjectileInstance = Instantiate(Projectile, Pos, Rot, ProjectileParent);                  //Instantiate the Arrow in the Knot of the Bow
-                
+
+                //If the Projectile is a prefab
+                if (Projectile.IsPrefab())
+                {
+                    //Instantiate the Arrow in the Parent Object of the Shooteable Weapon
+                    ProjectileInstance = Instantiate(Projectile, Pos, Rot, ProjectileParent);                
+                    Debugging($"◘ [Projectile Instantiated] [{ProjectileInstance.name}] ", ProjectileInstance);
+                }
+                else
+                {
+                    ProjectileInstance = Projectile; 
+                }
                 
                 if (ProjectileInstance.TryGetComponent<IProjectile>(out var projectile))
                 {
@@ -346,7 +358,6 @@ namespace MalbersAnimations.Weapons
                     projectile_Col.enabled = false;
                 }
 
-
                 OnLoadProjectile.Invoke(ProjectileInstance);
 
                 Debugging($"◘ [Projectile Equiped] [{ProjectileInstance.name}] ", ProjectileInstance);
@@ -355,8 +366,6 @@ namespace MalbersAnimations.Weapons
 
         public virtual void ReleaseProjectile()
         {
-           // Debug.Log("ReleaseProjectile = ");
-
             if (!gameObject.activeInHierarchy) return; //Crazy bug ??
 
             Predict?.Invoke(false); 
@@ -433,7 +442,8 @@ namespace MalbersAnimations.Weapons
         /// <summary> Destroy the Active Arrow , used when is Stored the Weapon again and it had an arrow ready</summary>
         public virtual void DestroyProjectileInstance()
         {
-            if (ProjectileInstance != null)
+            //Destroy the Projectile instance if the Projectile is not the weapon itself
+            if (ProjectileInstance != null && ProjectileInstance != gameObject)
             {
                 Destroy(ProjectileInstance);
                 Debugging("[Destroy Projectile Instance]",this);

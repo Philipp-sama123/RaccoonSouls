@@ -50,6 +50,8 @@ namespace MalbersAnimations.Controller
         {
             ID = MTools.GetInstance<StateID>("Idle");
 
+            ResetLastState = true; //Important por Idle
+
             General = new AnimalModifier()
             {
                 RootMotion = true,

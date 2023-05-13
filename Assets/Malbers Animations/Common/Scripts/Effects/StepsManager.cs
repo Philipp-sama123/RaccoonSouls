@@ -61,7 +61,7 @@ namespace MalbersAnimations
                 Dust.transform.localScale = Scale;
             }
 
-            if (foot.StepAudio && !sounds.NullOrEmpty())    //If the track has an AudioSource Component and whe have some audio to play
+            if (foot.StepAudio && foot.StepAudio.enabled && !sounds.NullOrEmpty())    //If the track has an AudioSource Component and whe have some audio to play
             {
                 foot.StepAudio.clip = sounds.GetValue();    //Set the any of the Audio Clips from the list to the Feet's AudioSource Component
                 foot.StepAudio.Play();                      //Play the Audio
@@ -99,13 +99,24 @@ namespace MalbersAnimations
                         }
                         else
                         {
-                            //var newtrack = Instantiate(Tracks);
-                            //newtrack.transform.SetParentScaleFixer(hit.transform, TrackPosition);
-                            //var main = newtrack.main;
-                            ////main.stopAction = ParticleSystemStopAction.Destroy;
-                            //main.simulationSpace = ParticleSystemSimulationSpace.Local;
-                            //newtrack.Emit(ptrack, 1);
-                            //this.Delay_Action(() => newtrack.isPlaying, ()=> Destroy(newtrack));
+                            var newtrack = Instantiate(Instance); //Instantiate in case the Track is a refab
+
+                            var ParentFixer = newtrack.transform.SetParentScaleFixer(hit.transform, TrackPosition);
+
+
+                            ParticleSystem.EmitParams tr = new ParticleSystem.EmitParams
+                            {
+                                rotation3D = TrackRotation.eulerAngles, //Set The Rotation
+                                position = Vector3.zero, //Set The Position
+                            };
+
+                            var main = newtrack.main;
+                            main.simulationSpace = ParticleSystemSimulationSpace.Local;
+                            newtrack.Emit(tr, 1);
+                            this.Delay_Action(() => newtrack.isPlaying,  () =>
+                            {
+                              if (ParentFixer != null)  Destroy(ParentFixer.gameObject);
+                            });
                         }
                     }
                     else

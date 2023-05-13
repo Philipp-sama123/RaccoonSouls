@@ -202,7 +202,7 @@ namespace MalbersAnimations
                 if (AllInputs[i].name == name)
                 {
                     AllInputs[i].InputValue = value;
-                    AllInputs[i].ToggleValue = value;
+                   // AllInputs[i].ToggleValue = value;
                 }
             }
 
@@ -213,21 +213,21 @@ namespace MalbersAnimations
             //}
         }
 
-        public virtual void ResetToggle(string name)
-        {
-            for (int i = 0; i < AllInputs.Count; i++)
-            {
-                if (AllInputs[i].name == name)
-                {
-                    AllInputs[i].ToggleValue = false;
-                }
-            }
+        //public virtual void ResetToggle(string name)
+        //{
+        //    for (int i = 0; i < AllInputs.Count; i++)
+        //    {
+        //        if (AllInputs[i].name == name)
+        //        {
+        //            AllInputs[i].ToggleValue = false;
+        //        }
+        //    }
 
-            //if (DInputs.TryGetValue(name, out InputRow input))
-            //{
-            //    input.ToggleValue = false;
-            //}
-        }
+        //    //if (DInputs.TryGetValue(name, out InputRow input))
+        //    //{
+        //    //    input.ToggleValue = false;
+        //    //}
+        //}
 
         /// <summary>  Resets the value and toggle of an Input to False </summary>
         public virtual void ResetInput(string name)
@@ -236,7 +236,6 @@ namespace MalbersAnimations
             {
                 if (AllInputs[i].name == name)
                 {
-                    AllInputs[i].ToggleValue = false;
                     AllInputs[i].InputValue = false;
                 }
             }
@@ -508,12 +507,27 @@ namespace MalbersAnimations
         public string input = "Value";
         [SearcheableEnum]
         public KeyCode key = KeyCode.A;
-
+        public bool debug;
         /// <summary>Type of Button of the Row System</summary>
         public InputButton GetPressed = InputButton.Press;
         /// <summary>Current Input Value</summary>
-        public bool InputValue = false;
-        public bool ToggleValue = false;
+
+        // public bool InputValue = false;
+        public bool InputValue
+        {
+            get => m_Input;
+            set
+            {
+                if (m_Input != value)
+                {
+                    m_Input = value;
+                    if (debug) Debug.Log($"<color=cyan><B>[Input {name} : {m_Input}]</B></color>");
+                }
+            }
+        }
+        private bool m_Input = false;
+
+        //  public bool ToggleValue = false;
         [Tooltip("When the Input is Disabled the Button will a false value to all their connections")]
         public bool ResetOnDisable = true;
 
@@ -521,6 +535,7 @@ namespace MalbersAnimations
         public UnityEvent OnInputDown = new UnityEvent();
         public UnityEvent OnInputUp = new UnityEvent();
         public UnityEvent OnLongPress = new UnityEvent();
+        public UnityEvent OnLongPressReleased = new UnityEvent();
         public UnityEvent OnDoubleTap = new UnityEvent();
         public BoolEvent OnInputChanged = new BoolEvent();
         public BoolEvent OnInputToggle => OnInputChanged;
@@ -549,7 +564,7 @@ namespace MalbersAnimations
         private bool InputCompleted = false;
         private float InputStartTime;
         public UnityEvent OnInputPressed = new UnityEvent();
-        public FloatEvent OnPressedNormalized = new FloatEvent();
+        public FloatEvent OnInputFloat = new FloatEvent();
 
         #endregion
 
@@ -621,7 +636,7 @@ namespace MalbersAnimations
                             {
                                 FirstInputPress = true;
                                 InputStartTime = 0;
-                                OnPressedNormalized.Invoke(0);
+                                OnInputFloat.Invoke(0);
                                 OnInputDown.Invoke();
                             }
                             else
@@ -630,8 +645,8 @@ namespace MalbersAnimations
                                 {
                                     if (InputStartTime >= LongPressTime)
                                     {
-                                        OnPressedNormalized.Invoke(1);
-                                        OnLongPress.Invoke();
+                                        OnInputFloat.Invoke(1);
+                                        OnLongPress.Invoke(); //Complete the long press
                                         FirstInputPress = false;
                                         InputCompleted = true;
                                         //  return (InputValue = true);
@@ -639,13 +654,16 @@ namespace MalbersAnimations
                                     else
                                     {
                                         InputStartTime += Time.deltaTime;
-                                        OnPressedNormalized.Invoke(Mathf.Clamp01(InputStartTime / LongPressTime));
+                                        OnInputFloat.Invoke(Mathf.Clamp01(InputStartTime / LongPressTime));
                                     }
                                 }
                             }
                         }
                         else
                         {
+                            if (InputCompleted) OnLongPressReleased.Invoke(); //Invoke when the Input Long press is completed and released
+                            
+
                             //If the Input was released before the LongPress was completed  
                             if (FirstInputPress)
                             {
@@ -655,7 +673,7 @@ namespace MalbersAnimations
 
                                     if (InputStartTime > 0)
                                     {
-                                        OnPressedNormalized.Invoke(Mathf.Clamp01(InputStartTime / LongPressTime));
+                                        OnInputFloat.Invoke(Mathf.Clamp01(InputStartTime / LongPressTime));
                                     }
                                     else
                                     {
@@ -714,36 +732,34 @@ namespace MalbersAnimations
                         }
                     case InputButton.Toggle:
                         {
+                            var toggle = (type == InputType.Input) ? InputSystem.GetButtonDown(input) : Input.GetKeyDown(key);
 
-
-                            InputValue = (type == InputType.Input) ? InputSystem.GetButtonDown(input) : Input.GetKeyDown(key);
-
-                            if (oldValue != InputValue)
+                            if (toggle)
                             {
-                                if (InputValue)
-                                {
-                                    ToggleValue ^= true;
-                                    OnInputToggle.Invoke(ToggleValue);
+                                InputValue ^= true;
+                                OnInputToggle.Invoke(InputValue);
 
-                                    if (ToggleValue) OnInputDown.Invoke();
-                                    else OnInputUp.Invoke();
-                                }
+                                if (InputValue) OnInputDown.Invoke();
+                                else OnInputUp.Invoke();
                             }
                             break;
                         }
                     case InputButton.Axis:
                         {
-
-
                             var axisValue = InputSystem.GetAxis(input);
                             InputValue = Mathf.Abs(axisValue) > 0;
 
                             if (oldValue != InputValue)
                             {
                                 if (InputValue)
+                                { 
                                     OnInputDown.Invoke();
+                                }
                                 else
+                                { 
                                     OnInputUp.Invoke();
+                                    OnInputFloat.Invoke(0);
+                                }
 
                                 OnInputChanged.Invoke(InputValue);
                             }
@@ -751,7 +767,7 @@ namespace MalbersAnimations
                             if (InputValue)
                             {
                                 OnInputPressed.Invoke();
-                                OnPressedNormalized.Invoke(axisValue);
+                                OnInputFloat.Invoke(axisValue);
                             }
                             break;
                         }

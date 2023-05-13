@@ -1,5 +1,4 @@
-﻿using MalbersAnimations.Controller;
-using MalbersAnimations.Scriptables;
+﻿using MalbersAnimations.Scriptables;
 using UnityEngine;
 
 #if UNITY_EDITOR
@@ -9,7 +8,7 @@ using UnityEditor;
 
 namespace MalbersAnimations.Conditions
 {
-    public enum TransformCondition { Null, Equal, ChildOf, ParentOf, Name }
+    public enum TransformCondition { Null, Equal, ChildOf, ParentOf, IsGrandChildOf, IsGrandParentOf,  Name }
 
     [System.Serializable]
     public class C_Transform : MCondition
@@ -23,7 +22,7 @@ namespace MalbersAnimations.Conditions
         public TransformCondition Condition;
         [Tooltip("Transform Value to compare with")]
         public TransformReference Value;
-        [Tooltip("Name to compare"),SerializeField]
+        [Tooltip("Name to compare"), SerializeField]
         private string checkName;
 
 
@@ -39,6 +38,8 @@ namespace MalbersAnimations.Conditions
                     case TransformCondition.ChildOf: return Target.Value.IsChildOf(Value.Value);
                     case TransformCondition.Equal: return Target.Value == Value.Value;
                     case TransformCondition.ParentOf: return Value.Value.IsChildOf(Target.Value);
+                    case TransformCondition.IsGrandChildOf: return Target.Value.SameHierarchy(Value.Value);
+                    case TransformCondition.IsGrandParentOf: return Value.Value.SameHierarchy(Target.Value);
                     default: return false;
                 }
             }
@@ -48,7 +49,34 @@ namespace MalbersAnimations.Conditions
 
         public override void SetTarget(Object target)
         {
-            if (target is Transform) this.Target.Value = target as Transform;
+            if (target == null)
+            {
+                Target.Value = null; //Check Null First
+            }
+            else if (target is Component)
+            {
+                Target.Value = (target as Component).transform;
+            }
+            else if (target is GameObject)
+            {
+                Target.Value = (target as GameObject).transform;
+            }
+        }
+
+        public void SetValue(Object target)
+        {
+            if (target == null)
+            {
+                Value.Value = null; //Check Null First
+            }
+            else if (target is Component)
+            {
+                Value.Value = (target as Component).transform;
+            }
+            else if (target is GameObject)
+            {
+                Value.Value = (target as GameObject).transform;
+            }
         }
 
         private void Reset() => Name = "New Transform Condition";

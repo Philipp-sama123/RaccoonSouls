@@ -39,7 +39,7 @@ namespace MalbersAnimations
     {
         public string name = "Description Here";
         [TextArea] public string tooltip;
-        public bool active  = true;
+        public bool active = true;
         public GameObject[] gameObjects;
         public MonoBehaviour[] monoBehaviours;
     }
@@ -48,6 +48,22 @@ namespace MalbersAnimations
     [CustomEditor(typeof(ComponentSelector))]
     public class SelectComponentsEditor : Editor
     {
+        private static GUIContent _icon_Add;
+        public static GUIContent Icon_Add
+        {
+            get
+            {
+                if (_icon_Add == null)
+                {
+                    _icon_Add = EditorGUIUtility.IconContent("d_ViewToolOrbit", "Enable/Disable");
+                    _icon_Add.tooltip = "Enable/Disable";
+                }
+
+                return _icon_Add;
+            }
+        }
+
+
         SerializedProperty internalComponents, edit;
         ComponentSelector M;
         ReorderableList ReoInternalComponents;
@@ -57,6 +73,8 @@ namespace MalbersAnimations
             M = (ComponentSelector)target;
             internalComponents = serializedObject.FindProperty("internalComponents");
             edit = serializedObject.FindProperty("edit");
+
+
 
             ReoInternalComponents = new ReorderableList(serializedObject, internalComponents)
             {
@@ -105,7 +123,7 @@ namespace MalbersAnimations
                     var gos = elem.FindPropertyRelative("gameObjects");
                     var monoBehaviours = elem.FindPropertyRelative("monoBehaviours");
                     var tooltip = elem.FindPropertyRelative("tooltip");
-                    EditorGUILayout.PropertyField(gos,true);
+                    EditorGUILayout.PropertyField(gos, true);
                     EditorGUILayout.PropertyField(monoBehaviours, true);
                     EditorGUILayout.Space();
 
@@ -116,50 +134,93 @@ namespace MalbersAnimations
             {
                 if (internalComponents.arraySize > 0)
 
-                    for (int i = 0; i < internalComponents.arraySize; i++)
+                {
+                    using (new GUILayout.HorizontalScope())
                     {
-                        var element = internalComponents.GetArrayElementAtIndex(i);
-                        var name = element.FindPropertyRelative("name");
-                        var tooltip = element.FindPropertyRelative("tooltip");
-                        var active = element.FindPropertyRelative("active");
+                        var Row1 = (internalComponents.arraySize+1) / 2;
 
-                        EditorGUILayout.BeginHorizontal(/*EditorStyles.helpBox*/);
-
-                        if (GUILayout.Button(new GUIContent(name.stringValue, tooltip.stringValue), EditorStyles.miniButton))
+                        //Row1
+                        using (new GUILayout.VerticalScope())
                         {
-                            if (M[i].gameObjects.Length > 0)
-                                Selection.objects = M[i].gameObjects;
-                            else if (M[i].monoBehaviours.Length > 0)
+                            for (int i = 0; i < Row1; i ++)
                             {
-                                Selection.objects = new Object[1] { M[i].monoBehaviours[0].gameObject };
+                                var element = internalComponents.GetArrayElementAtIndex(i);
+
+                                using (new GUILayout.HorizontalScope())
+                                {
+                                    DrawRow(i, element);
+                                }
                             }
                         }
 
-                        EditorGUI.BeginChangeCheck();
-                        var currentGUIColor = GUI.color;
-                        GUI.color = active.boolValue ? (GUI.color + Color.green)/2 : (GUI.color + Color.black) / 2;
-                        active.boolValue = GUILayout.Toggle(active.boolValue, new GUIContent( active.boolValue ? "ON" : "OFF","Enable/Disable the "+ name.stringValue),
-                            EditorStyles.miniButton, GUILayout.Width(55));
-                        GUI.color = currentGUIColor;
-                        if (EditorGUI.EndChangeCheck())
+                        //Row2
+                        using (new GUILayout.VerticalScope())
                         {
-                            foreach (var item in M[i].gameObjects)
+                            for (int i = Row1; i < internalComponents.arraySize; i ++)
+                            {
+                                var element = internalComponents.GetArrayElementAtIndex(i);
+
+                                using (new GUILayout.HorizontalScope())
+                                {
+                                    DrawRow(i, element);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            serializedObject.ApplyModifiedProperties();
+        }
+
+        private void DrawRow(int i, SerializedProperty element)
+        {
+            var name = element.FindPropertyRelative("name");
+            var tooltip = element.FindPropertyRelative("tooltip");
+            var active = element.FindPropertyRelative("active");
+
+            using (new GUILayout.HorizontalScope())
+            {
+                if (GUILayout.Button(new GUIContent(name.stringValue, tooltip.stringValue), EditorStyles.miniButton))
+                {
+                    if (M[i].gameObjects.Length > 0)
+                        Selection.objects = M[i].gameObjects;
+                    else if (M[i].monoBehaviours.Length > 0)
+                    {
+                        Selection.objects = new Object[1] { M[i].monoBehaviours[0].gameObject };
+                    }
+                }
+
+                using (var cc = new EditorGUI.ChangeCheckScope())
+                {
+                    var currentGUIColor = GUI.color;
+                    GUI.color = active.boolValue ? (GUI.color + Color.green) / 2 : (GUI.color + Color.black) / 2;
+                    active.boolValue = GUILayout.Toggle(active.boolValue, Icon_Add,
+                        EditorStyles.miniButton, GUILayout.Width(30));
+                    GUI.color = currentGUIColor;
+
+                    if (cc.changed)
+                    {
+                        foreach (var item in M[i].gameObjects)
+                        {
+                            if (item)
                             {
                                 item.SetActive(active.boolValue);
                                 EditorUtility.SetDirty(item);
                             }
+                        }
 
-                            foreach (var item in M[i].monoBehaviours)
+                        foreach (var item in M[i].monoBehaviours)
+                        {
+                            if (item)
                             {
                                 item.enabled = (active.boolValue);
                                 EditorUtility.SetDirty(item);
                             }
-
-                        }   
-                        EditorGUILayout.EndHorizontal();
+                        }
+                        Undo.RecordObject(target, "Component Selector");
                     }
+                }
             }
-            serializedObject.ApplyModifiedProperties();
         }
     }
 #endif

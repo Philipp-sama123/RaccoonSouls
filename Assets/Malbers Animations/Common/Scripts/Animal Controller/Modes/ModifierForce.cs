@@ -68,6 +68,8 @@ namespace MalbersAnimations.Controller
             {
                 mode.Animal.Force_Remove(ExitAceleration);
             }
+
+            if (ResetGravity) { mode.Animal.GravityOffset = Vector3.zero; }
         }
 
         public override void OnModeExit(Mode mode) => mode.Animal.Force_Remove(ExitAceleration);

@@ -1,5 +1,4 @@
-﻿using MalbersAnimations.Utilities;
-using UnityEngine;
+﻿using UnityEngine;
 using MalbersAnimations.Weapons;
 
 

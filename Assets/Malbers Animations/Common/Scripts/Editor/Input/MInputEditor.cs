@@ -1,8 +1,11 @@
-﻿using UnityEngine;
+﻿
+
+#if UNITY_EDITOR
+using UnityEngine;
 using UnityEditor;
 using UnityEditorInternal;
 using System.Collections.Generic;
-using System;
+ 
 
 namespace MalbersAnimations
 {
@@ -317,6 +320,7 @@ namespace MalbersAnimations
                 {
 
                     var active = Element.FindPropertyRelative("active");
+                    var debug = Element.FindPropertyRelative("debug");
                     var OnInputChanged = Element.FindPropertyRelative("OnInputChanged");
                     var OnInputPressed = Element.FindPropertyRelative("OnInputPressed");
                     var OnInputDown = Element.FindPropertyRelative("OnInputDown");
@@ -325,7 +329,11 @@ namespace MalbersAnimations
                     var OnInputDisable = Element.FindPropertyRelative("OnInputDisable");
                     var ResetOnDisable = Element.FindPropertyRelative("ResetOnDisable");
 
-                    EditorGUILayout.PropertyField(active);
+                    using (new GUILayout.HorizontalScope())
+                    {
+                        EditorGUILayout.PropertyField(active);
+                        MalbersEditor.DrawDebugIcon(debug);
+                    }
                     EditorGUILayout.PropertyField(ResetOnDisable);
                     EditorGUILayout.Space();
                    // EditorGUILayout.LabelField("Events", EditorStyles.boldLabel);
@@ -354,7 +362,8 @@ namespace MalbersAnimations
                             EditorGUILayout.PropertyField(Element.FindPropertyRelative("SmoothDecrease"));
                             EditorGUILayout.Space();
                             EditorGUILayout.PropertyField(Element.FindPropertyRelative("OnLongPress"), new GUIContent("On Long Press Completed"));
-                            EditorGUILayout.PropertyField(Element.FindPropertyRelative("OnPressedNormalized"), new GUIContent("On Pressed Time Normalized"));
+                            EditorGUILayout.PropertyField(Element.FindPropertyRelative("OnInputFloat"), new GUIContent("On Pressed Time Normalized"));
+                            EditorGUILayout.PropertyField(Element.FindPropertyRelative("OnLongPressReleased"), new GUIContent("On Pressed Completed & Released"));
                             EditorGUILayout.PropertyField(OnInputDown, new GUIContent("On Input Down"));
                             EditorGUILayout.PropertyField(OnInputUp, new GUIContent("On Pressed Interrupted"));
                             EditorGUILayout.PropertyField(OnInputChanged);
@@ -372,11 +381,11 @@ namespace MalbersAnimations
                             EditorGUILayout.PropertyField(OnInputUp,  new GUIContent("On Toggle Off"));
                             break;  
                         case InputButton.Axis:
+                            EditorGUILayout.PropertyField(Element.FindPropertyRelative("OnInputFloat"), new GUIContent("On Axis Value Changed"));
                             EditorGUILayout.PropertyField(OnInputChanged);
                             EditorGUILayout.PropertyField(OnInputPressed);
                             EditorGUILayout.PropertyField(OnInputDown);
                             EditorGUILayout.PropertyField(OnInputUp);
-                            EditorGUILayout.PropertyField(Element.FindPropertyRelative("OnPressedNormalized"), new GUIContent("On Axis Value Changed"));
                             break;
                         default:
                             break;
@@ -479,3 +488,4 @@ namespace MalbersAnimations
         }
     }
 }
+#endif

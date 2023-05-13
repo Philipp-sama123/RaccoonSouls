@@ -33,9 +33,11 @@ namespace MalbersAnimations.Controller.AI
             brain.TaskDone(index);
         }
 
-        //public override void UpdateTask(MAnimalBrain brain, int index)
-        //{
-            
-        //}
+
+        void Reset()
+        { 
+            Description = 
+                "Plays an Audioclip in the Audio Source. If there's no Audio Source with the name assigned []. I will add a new Audio Source Component "; 
+        }
     }
 }

@@ -17,9 +17,9 @@ namespace MalbersAnimations
         [Tooltip("Reference to the Mouse Point Transform")]
         public TransformReference MousePoint;
         [Tooltip("Reference to the Mouse Point Transform")]
-        public LayerReference layer = new LayerReference(-1);
+        public LayerReference layer = new(-1);
         public QueryTriggerInteraction interaction = QueryTriggerInteraction.UseGlobal;
-        public FloatReference MaxDistance = new FloatReference( 100f);
+        public FloatReference MaxDistance = new( 100f);
 
         //[Space]
         //public bool Snap = true;
@@ -47,8 +47,7 @@ namespace MalbersAnimations
             }
             else
             {
-                m_camera = MainCamera.Value.GetComponent<Camera>();
-                if (m_camera == null)
+                if (!MainCamera.Value.TryGetComponent<Camera>(out m_camera))
                 {
                     Debug.LogWarning("There's no Main Camera on the Scene");
                     enabled = false;

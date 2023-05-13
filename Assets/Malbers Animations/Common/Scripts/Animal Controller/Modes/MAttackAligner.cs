@@ -23,7 +23,7 @@ namespace MalbersAnimations.Controller
 
             foreach (var col in AllColliders)
             {
-                if (col.transform.root == animal.transform.root) continue; //Don't Find yourself
+                if (col.transform.SameHierarchy(animal.transform)) continue; //Don't Find yourself
 
                 var DistCol = Vector3.Distance(animal.Center, col.transform.position);
 

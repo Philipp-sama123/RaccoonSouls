@@ -1,8 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text.RegularExpressions;
-using UnityEngine.Serialization;
+
 #if UNITY_EDITOR
 using UnityEditor;
 #endif
@@ -201,7 +200,7 @@ namespace MalbersAnimations
         public static string GetPropertyType(SerializedProperty property)
         {
             var type = property.type;
-            var match = Regex.Match(type, @"PPtr<\$(.*?)>");
+            var match = System.Text.RegularExpressions.Regex.Match(type, @"PPtr<\$(.*?)>");
             if (match.Success)
                 type = match.Groups[1].Value;
             return type;

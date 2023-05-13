@@ -82,7 +82,7 @@ namespace MalbersAnimations.Conditions
                 else Else.Invoke();
 
 
-                if (debug) Debug.Log($"[{name}] → Conditions Result → <B><color={(result ? "green" : "red")}>[{result}] </color></B>");
+                if (debug) Debug.Log($"[{name}] → Conditions Result → <B><color={(result ? "green" : "red")}>[{result}] </color></B>",this);
 
                 return result;
             }

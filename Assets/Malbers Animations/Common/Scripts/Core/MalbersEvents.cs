@@ -34,8 +34,7 @@ namespace MalbersAnimations.Events
     [Serializable] public class CollisionEvent : UnityEvent<UnityEngine.Collision> { }
 
     [Serializable] public class ComponentEvent : UnityEvent<Component> { }
-
-    public delegate void PredictTrajectory(bool show);
+    [Serializable] public class AnimatorEvent : UnityEvent<Animator> { }
 
     //public delegate void BoolDelegate(bool value);
     //public delegate void IntDelegate(int value);

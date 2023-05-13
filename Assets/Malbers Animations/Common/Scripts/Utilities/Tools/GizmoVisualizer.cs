@@ -26,6 +26,8 @@ namespace MalbersAnimations
 
         private Collider _collider;
 
+
+        
        //public StatModifier modifier;
 
         Collider _Collider
@@ -52,8 +54,13 @@ namespace MalbersAnimations
             DebugColor = new Color(Random.Range(0f, 1f), Random.Range(0f, 1f), Random.Range(0f, 1f), Random.Range(0f, 1f));
         }
 
+
+        private void OnEnable() {}  
+       
         void OnDrawGizmos()
         {
+            if (!enabled) return;
+
             var DebugColorWire = new Color(DebugColor.r, DebugColor.g, DebugColor.b, 1);
 
             if (DrawAxis)
@@ -91,6 +98,7 @@ namespace MalbersAnimations
 
         void OnDrawGizmosSelected()
         {
+            if (!enabled) return;
             Gizmos.color = new Color(1, 1, 0, 1);
             Gizmos.matrix = transform.localToWorldMatrix;
 

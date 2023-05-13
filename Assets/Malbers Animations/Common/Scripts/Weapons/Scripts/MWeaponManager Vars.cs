@@ -43,7 +43,8 @@ namespace MalbersAnimations
         /// <summary>Is the Current weapon Action Reload?</summary>
         public bool IsAttacking => WeaponAction == Weapon_Action.Attack;
 
-
+        [Tooltip("If the weapon is dropped from a holster it will be dropped from this point, relative to the WeaponManager")]
+        public Transform DropPoint;
 
         [Tooltip("Mode ID used for Draw Unsheathe Weapons")]
         public ModeID DrawWeaponModeID;
@@ -138,9 +139,29 @@ namespace MalbersAnimations
         #endregion
 
         [Tooltip("Tranform Reference for the Left Hand. The weapon will be parented to this transform when is equipped")]
+        [ContextMenuItem("Find Left Hand", nameof(FindLHand))]
         public Transform LeftHandEquipPoint;
         [Tooltip("Tranform Reference for the Right Hand. The weapon will be parented to this transform when is equipped")]
+        [ContextMenuItem("Find Right Hand", nameof(FindRHand))]
         public Transform RightHandEquipPoint;
+
+
+        private void FindRHand()
+        {
+            if (anim != null && anim.avatar.isHuman)
+            {
+                RightHandEquipPoint = anim.GetBoneTransform(HumanBodyBones.RightHand);
+                MTools.SetDirty(this);
+            }
+        }
+        private void FindLHand()
+        {
+            if (anim != null && anim.avatar.isHuman)
+            {
+                LeftHandEquipPoint = anim.GetBoneTransform(HumanBodyBones.LeftHand);
+                MTools.SetDirty(this);
+            }
+        }
 
 
         /// <summary>Path of the Combat Layer on the Resource Folder </summary>

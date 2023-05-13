@@ -1,9 +1,6 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using MalbersAnimations.Scriptables;
 using MalbersAnimations.Events;
-using System;
 
 namespace MalbersAnimations.Utilities
 {
@@ -11,7 +8,7 @@ namespace MalbersAnimations.Utilities
     public class LockOnTarget : MonoBehaviour
     {
         [Tooltip("The Lock On Target will activate automatically if any target is stored on the list")]
-        public BoolReference Auto =  new BoolReference(false);
+        public BoolReference Auto =  new(false);
 
 
         [Tooltip("The Lock On Target requires an Aim Component")]
@@ -97,7 +94,6 @@ namespace MalbersAnimations.Utilities
         public void LockTargetToggle()
         {
             LockingOn ^= true;
-            if (debug) Debug.Log("Locked Target = " + LockingOn, this); 
             LookingTarget();
         }
 
@@ -106,7 +102,6 @@ namespace MalbersAnimations.Utilities
         public void LockTarget(bool value)
         {
             LockingOn = value;
-            if (debug) Debug.Log("Locked Target = " + LockingOn, this);
             LookingTarget();
         }
 
@@ -126,19 +121,16 @@ namespace MalbersAnimations.Utilities
             }
         }
 
-       //Reset the values when the Lock Target is off
+        //Reset the values when the Lock Target is off
         private void ResetLockOn()
         {
+            if (LockedTarget != null)
+            {
                 CurrentTargetIndex = -1;
                 LockedTarget = null;
-                OnLockingTarget.Invoke( LockingOn = false);
-
-
-                //if (IsAimTarget != null)
-                //{ 
-                //    IsAimTarget.IsBeenAimed(false, Owner);
-                //    IsAimTarget = null;
-                //}
+                OnLockingTarget.Invoke(LockingOn = false);
+                Debugging($"Reset Locked Target: [Empty]");
+            }
         }
 
         private void FindNearestTarget()
@@ -149,16 +141,7 @@ namespace MalbersAnimations.Utilities
             {
                 LockedTarget = closest.transform;
                 CurrentTargetIndex = Targets.items.IndexOf(closest);    //Save the Index so we can cycle to all the targets.
-
-                //if (UseAimTargets)
-                //{
-                //    if (IsAimTarget) IsAimTarget.IsBeenAimed(false, Owner); //Check if there's an Active Aim Target
-
-                //    IsAimTarget = AimTarget.AimTargets.Find(x => x.transform == LockedTarget);
-
-                //    if (IsAimTarget) IsAimTarget.IsBeenAimed(true, Owner);
-
-                //}
+                Debugging($"Locked Target: {LockedTarget.name}");
             }
             else
             {
@@ -173,6 +156,7 @@ namespace MalbersAnimations.Utilities
                 CurrentTargetIndex++;
                 CurrentTargetIndex %= Targets.Count; //Cycle to the first in case we are on the last item on the list
                 LockedTarget = Targets.Item_Get(CurrentTargetIndex).transform;     //Store the Next Target
+                Debugging($"Locked Next Target: {LockedTarget.name}");
             }
         }
 
@@ -183,6 +167,8 @@ namespace MalbersAnimations.Utilities
                 CurrentTargetIndex--;
                 if (CurrentTargetIndex == -1) CurrentTargetIndex = Targets.Count - 1;
                 LockedTarget = Targets.Item_Get(CurrentTargetIndex).transform;     //Store the Next Target
+
+                Debugging($"Locked Previous Target: {LockedTarget.name}");
             }
         }
 
@@ -190,6 +176,15 @@ namespace MalbersAnimations.Utilities
         {
             if (LockingOn) //If we are still on Lock Mode then find the next Target
                 this.Delay_Action(() => FindNearestTarget()); //Find the nearest target the next frame
+        }
+
+
+        public void Debugging(string value)
+        {
+#if UNITY_EDITOR
+            if (debug)
+                Debug.Log($"<B>[{aim.name}]</B> → <color=white>{value}</color>", this);
+#endif
         }
 
 

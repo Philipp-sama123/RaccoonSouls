@@ -1,7 +1,6 @@
 ﻿using UnityEngine;
 using MalbersAnimations.Scriptables;
 using MalbersAnimations.Events;
-using System;
 
 #if UNITY_EDITOR
 using UnityEditor;
@@ -11,37 +10,44 @@ namespace MalbersAnimations.Controller
 {
     [AddComponentMenu("Malbers/Interaction/Pickable")]
     [SelectionBase]
+    [HelpURL("https://malbersanimations.gitbook.io/animal-controller/secondary-components/pickable")]
     public class Pickable : MonoBehaviour, ICollectable
     {
         //  public enum CollectType { Collectable, Hold, OneUse } //For different types of collectable items? FOR ANOTHER UPDATE
 
         public bool Align = true;
         public bool AlignPos = true;
-        public float AlignTime = 0.15f;
-        public float AlignDistance = 1f;
+        [Min(0)] public float AlignTime = 0.15f;
+        [Min(0)] public float AlignDistance = 1f;
 
-        [Tooltip("Delay time after Calling the Pick Action")]
+        [Tooltip("Delay time after calling the Pick() method. the item will be parented to the PickUp component after this time has passed")]
         public FloatReference PickDelay = new FloatReference(0);
-        [Tooltip("Delay time after Calling the Drop Action")]
+        [Tooltip("Delay time after calling the Drop() method. the item will be unparented from the PickUp component after this time has passed")]
         public FloatReference DropDelay = new FloatReference(0);
         [Tooltip("Cooldown needed to pick or drop again the collectable")]
         public FloatReference coolDown = new FloatReference(0f);
-        [Tooltip("When an Object is Collectable it means that the Picker can still pick objects, the item was collected by other compoent (E.g. Weapons or Inventory)")]
+        [Tooltip("When an Object is Collectable it means that the Picker can still pick objects, the item was collected by another component (E.g. Weapons or Inventory)")]
+
         public BoolReference m_Collectable = new BoolReference(false);
+        [Tooltip("The Pick Up Drop Logic will be called via animator events/messages. Use These methods on the Animator: TryPick(), TryDrop(), TryPickUpDrop()")]
         public BoolReference m_ByAnimation = new BoolReference(false);
+        [Tooltip("The Pick Up Drop Logic will be called via animator events/messages")]
         public BoolReference m_DestroyOnPick = new BoolReference(false);
         [Tooltip("Unparent the Pickable, so it does not have any Transform parents.")]
         public BoolReference SceneRoot = new BoolReference(true);
 
         public FloatReference m_Value = new FloatReference(1f); //Not done yet
+        [Tooltip("The Pick Up Drop Logic will be called via animator events/messages")]
+
         public BoolReference m_AutoPick = new BoolReference(false); //Not done yet
         public IntReference m_ID = new IntReference();         //Not done yet
 
         /// <summary>Who Did the Picking </summary>
-        public GameObject Picker { get; set; }
+        public MPickUp Picker { get; set; }
 
 
         public BoolEvent OnFocused = new BoolEvent();
+        public GameObjectEvent OnFocusedBy = new GameObjectEvent();
         public GameObjectEvent OnPicked = new GameObjectEvent();
         public GameObjectEvent OnPrePicked = new GameObjectEvent();
         public GameObjectEvent OnDropped = new GameObjectEvent();
@@ -73,11 +79,31 @@ namespace MalbersAnimations.Controller
 
 
         private bool focused;
-        public bool Focused 
+        public bool Focused
         {
             get => focused;
-            set => OnFocused.Invoke(focused = value);
+            private set
+            {
+                focused = value;
+                OnFocused.Invoke(focused);
+            }
         }
+
+        public void SetFocused(GameObject FocusBy)
+        {
+            if (FocusBy)
+            {
+                Focused = true;
+                OnFocusedBy.Invoke(FocusBy);
+            }
+            else
+            {
+                Focused = false;
+                OnFocusedBy.Invoke(null);
+            }
+        }
+
+
 
         /// <summary>Game Time the Pickable was Picked</summary>
         public float CurrentPickTime { get => currentPickTime; set => currentPickTime = value; }
@@ -98,8 +124,8 @@ namespace MalbersAnimations.Controller
 
             if (m_colliders == null || m_colliders.Length == 0) m_colliders = GetComponents<Collider>();
 
-            CurrentPickTime = -coolDown; 
-          
+            CurrentPickTime = -coolDown;
+
             DefaultScale = transform.localScale;
         }
 
@@ -108,11 +134,14 @@ namespace MalbersAnimations.Controller
             DisablePhysics();                       //Disable all physics when the item is picked
             IsPicked = Collectable ? false : true;  //Check if the Item is collectable 
             Focused = false;                        //Unfocus the Item
-            OnPicked.Invoke(Picker);                //Call the Event
+            OnFocusedBy.Invoke(null);
+
+            //Weapons can be picked witout having a picker
+            OnPicked.Invoke(Picker ? Picker.Root.gameObject : null);     //Call the Event
             CurrentPickTime = Time.time;            //Store the time it was picked
 
             if (Collectable) enabled = false;
-        }   
+        }
 
         public virtual void Drop()
         {
@@ -120,11 +149,17 @@ namespace MalbersAnimations.Controller
             IsPicked = false;
             enabled = true;
 
-            transform.parent = null;                //UnParent
-            transform.localScale = DefaultScale;    //Restore the Scale
-            OnDropped.Invoke(Picker);
-            Picker = null;                          //Reset who did the picking
+            transform.parent = null;                                //UnParent
+            transform.localScale = DefaultScale;                    //Restore the Scale
+            OnDropped.Invoke(Picker ? Picker.Root.gameObject : null);
+            Picker = null;                                          //Reset who did the picking
             CurrentPickTime = Time.time;
+        }
+
+        /// <summary> Call this in case a picker has still the item </summary>
+        public virtual void ForceDrop()
+        {
+            Picker?.DropItem();
         }
 
         public void DisablePhysics()
@@ -137,7 +172,7 @@ namespace MalbersAnimations.Controller
                 RigidBody.isKinematic = true;
             }
 
-            foreach (var c in m_colliders)  c.enabled = false; //Disable all colliders
+            foreach (var c in m_colliders) c.enabled = false; //Disable all colliders
 
         }
 
@@ -148,7 +183,7 @@ namespace MalbersAnimations.Controller
                 RigidBody.useGravity = true;
                 RigidBody.isKinematic = false;
                 RigidBody.collisionDetectionMode = CollisionDetectionMode.ContinuousDynamic;
-             
+
                 //THIS CAUSES ISSUES WITH THROWNING OBJECTS ... (CHECK THE WEAPON PROBLEM)
                 //this.Delay_Action(() =>
                 //{
@@ -158,7 +193,7 @@ namespace MalbersAnimations.Controller
                 //);
             }
 
-            foreach (var c in m_colliders)   c.enabled = true; //Enable all colliders
+            foreach (var c in m_colliders) c.enabled = true; //Enable all colliders
         }
 
         [HideInInspector] public int EditorTabs = 0;
@@ -189,7 +224,8 @@ namespace MalbersAnimations.Controller
         private SerializedProperty //   PickAnimations, PickUpMode, PickUpAbility, DropMode, DropAbility,DropAnimations, 
             Align, AlignTime, AlignDistance, AlignPos, EditorTabs,
             m_AutoPick, DropDelay, PickDelay, rb, CoolDown, SceneRoot,
-            OnFocused, OnPrePicked, OnPicked, OnDropped, OnPreDropped, /*ShowEvents, */FloatID, IntID, m_collider, m_Collectable, m_ByAnimation, m_DestroyOnPick;
+            OnFocused, OnFocusedBy,
+            OnPrePicked, OnPicked, OnDropped, OnPreDropped, /*ShowEvents, */FloatID, IntID, m_collider, m_Collectable, m_ByAnimation, m_DestroyOnPick;
 
         private Pickable m;
 
@@ -213,6 +249,7 @@ namespace MalbersAnimations.Controller
             AlignTime = serializedObject.FindProperty("AlignTime");
             AlignDistance = serializedObject.FindProperty("AlignDistance");
             OnFocused = serializedObject.FindProperty("OnFocused");
+            OnFocusedBy = serializedObject.FindProperty("OnFocusedBy");
             OnPicked = serializedObject.FindProperty("OnPicked");
             OnPrePicked = serializedObject.FindProperty("OnPrePicked");
             OnDropped = serializedObject.FindProperty("OnDropped");
@@ -239,7 +276,7 @@ namespace MalbersAnimations.Controller
                     using (new EditorGUI.DisabledGroupScope(true))
                     {
                         EditorGUILayout.ToggleLeft("Is Picked", m.IsPicked);
-                    EditorGUILayout.ToggleLeft("Is Focused", m.Focused);
+                        EditorGUILayout.ToggleLeft("Is Focused", m.Focused);
                     }
                 }
 
@@ -252,6 +289,7 @@ namespace MalbersAnimations.Controller
         private void DrawEvents()
         {
             EditorGUILayout.PropertyField(OnFocused);
+            EditorGUILayout.PropertyField(OnFocusedBy);
             if (m.PickDelay > 0 || m.m_ByAnimation.Value)
                 EditorGUILayout.PropertyField(OnPrePicked, new GUIContent("On Pre-Picked By"));
             EditorGUILayout.PropertyField(OnPicked, new GUIContent("On Picked By"));
@@ -315,11 +353,11 @@ namespace MalbersAnimations.Controller
                 if (Align.boolValue)
                 {
 
-                    using (new GUILayout.HorizontalScope(EditorStyles.helpBox))
+                    using (new GUILayout.HorizontalScope())
                     {
 
                         EditorGUILayout.PropertyField(AlignPos, new GUIContent("Align Pos", "align the Position"));
-                        
+
                         EditorGUIUtility.labelWidth = 60;
                         EditorGUILayout.PropertyField
                             (AlignDistance, new GUIContent("Distance", "Distance to move the Animal towards the Item"), GUILayout.MinWidth(50));

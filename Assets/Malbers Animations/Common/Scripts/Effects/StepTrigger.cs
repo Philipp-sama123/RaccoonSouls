@@ -1,6 +1,4 @@
 ﻿using UnityEngine;
-using System.Collections;
-using MalbersAnimations.Utilities;
 
 namespace MalbersAnimations
 {
@@ -8,9 +6,9 @@ namespace MalbersAnimations
     [AddComponentMenu("Malbers/Utilities/Effects - Audio/Step Trigger")]
     public class StepTrigger : MonoBehaviour
     {
-        [RequiredField] 
+        [RequiredField]
         public StepsManager m_StepsManager;
-       
+
         public float WaitNextStep = 0.2f;
         public AudioSource StepAudio;
 
@@ -25,9 +23,9 @@ namespace MalbersAnimations
 
         void Awake()
         {
-            if (m_StepsManager == null) m_StepsManager = transform.root.FindComponent<StepsManager>();
+            if (m_StepsManager == null) m_StepsManager = transform.FindObjectCore().FindComponent<StepsManager>();
 
-          if (m_Trigger == null)  m_Trigger = GetComponent<SphereCollider>();
+            if (m_Trigger == null) m_Trigger = GetComponent<SphereCollider>();
 
             if (m_StepsManager == null) //If there's no  StepManager Remove the Stepss
             {
@@ -98,9 +96,9 @@ namespace MalbersAnimations
                 var DebugColorWire = new Color(DebugColor.r, DebugColor.g, DebugColor.b, 1);
                 Gizmos.matrix = transform.localToWorldMatrix;
 
-                    Gizmos.color = DebugColor;
+                Gizmos.color = DebugColor;
                 Gizmos.DrawSphere(Vector3.zero + m_Trigger.center, m_Trigger.radius);
-                Gizmos.color = sel? Color.yellow : DebugColorWire;
+                Gizmos.color = sel ? Color.yellow : DebugColorWire;
                 Gizmos.DrawWireSphere(Vector3.zero + m_Trigger.center, m_Trigger.radius);
             }
         }

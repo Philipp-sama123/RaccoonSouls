@@ -19,6 +19,7 @@ namespace MalbersAnimations.Weapons
         public BoolReference FireOnStart;
 
         [Header("Multipliers")]
+
         [Tooltip("Multiplier value to Apply to the Projectile Stat Modifier"),FormerlySerializedAs("Multiplier") ]
         public FloatReference DamageMultiplier = new FloatReference(1);
         [Tooltip("Multiplier value to apply to the Projectile Scale")]
@@ -53,9 +54,6 @@ namespace MalbersAnimations.Weapons
         private float m_angle = 45f;
         [SerializeField, Tooltip("Gravity to apply to the Projectile. By default is set to Physics.gravity")]
         private Vector3Reference gravity = new Vector3Reference(Physics.gravity);
-
-        
-        
         public Vector3 Gravity { get => gravity.Value; set => gravity.Value = value; }
         public LayerMask Layer { get => hitLayer.Value; set => hitLayer.Value = value; }
         public QueryTriggerInteraction TriggerInteraction { get => triggerInteraction; set => triggerInteraction = value; }
@@ -90,7 +88,7 @@ namespace MalbersAnimations.Weapons
 
         private void OnEnable()
         {
-            if (Owner == null) Owner = transform.root.gameObject;
+            if (Owner == null) Owner = transform.FindObjectCore().gameObject;
             if (m_AimOrigin == null) m_AimOrigin = transform;
             if (Aimer) m_AimOrigin = Aimer.AimOrigin; //Set the Aim origin from the Aimer
 
@@ -138,7 +136,7 @@ namespace MalbersAnimations.Weapons
             if (projectile != null) //Means its a Malbers Projectile ^^
             {
                 projectile.Prepare(Owner, Gravity, Velocity,  Layer, TriggerInteraction);
-                projectile.DamageMultiplier(DamageMultiplier); //Apply Multiplier
+                projectile.SetDamageMultiplier(DamageMultiplier); //Apply Multiplier
                 projectile.Fire();
             }
             else //Fire without the Projectile Component
@@ -181,7 +179,7 @@ namespace MalbersAnimations.Weapons
 
         void Reset()
         {
-            m_Owner.Value = transform.root.gameObject;
+            m_Owner = new GameObjectReference(transform.FindObjectCore().gameObject);
             m_AimOrigin = transform;
         }
 

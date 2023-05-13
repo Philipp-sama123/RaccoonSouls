@@ -23,11 +23,11 @@ namespace MalbersAnimations
 
         void Awake()
         {
+            transform.parent = null;
             DontDestroyOnLoad(this);
 
             if (HideCursor)
             {
-                //UnityUtils.ShowCursor(!HideCursor);
                 Cursor.lockState = CursorLockMode.Locked;
             }
 

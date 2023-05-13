@@ -19,7 +19,7 @@ namespace MalbersAnimations
 
     [AddComponentMenu("Malbers/Weapons/Weapon Manager [AC]")]
 
-    public partial class MWeaponManager : MonoBehaviour, IAnimatorListener, IMAnimator, IMWeaponOwner, IMDamagerSet, IWeaponManager//, IRestart
+    public partial class MWeaponManager : MonoBehaviour, IAnimatorListener, IMAnimator, IMWeaponOwner, IMDamagerSet, IWeaponManager
     {
         [HideInInspector] public int Editor_Tabs1;
         [HideInInspector] public int Editor_Tabs2;
@@ -254,7 +254,7 @@ namespace MalbersAnimations
 
           Editor_Tabs1, Editor_Tabs2, m_WeaponType, m_LeftHand, m_IKFreeHand, m_IKAim,  //m_WeaponPower, ExitCombatOnDismount;
 
-            m_ModeOn, m_Mode, m_WeaponPower
+            m_ModeOn, m_Mode, m_WeaponPower, DropPoint
         ;
 
         private ReorderableList holsterReordable;
@@ -276,10 +276,10 @@ namespace MalbersAnimations
         }
         private void FindProperties()
         {
-            animal = serializedObject.FindProperty("animal");
-
+            animal = serializedObject.FindProperty("animal"); 
 
             m_AimInput = serializedObject.FindProperty("m_AimInput");
+            DropPoint = serializedObject.FindProperty("DropPoint");
             m_ReloadInput = serializedObject.FindProperty("m_ReloadInput");
             m_MainAttack = serializedObject.FindProperty("m_MainAttack");
             m_SecondAttack = serializedObject.FindProperty("m_SecondAttack");
@@ -588,13 +588,11 @@ namespace MalbersAnimations
             }
 
 
-            EditorGUILayout.LabelField("Weapon Action Values:" +
+            EditorGUILayout.LabelField("Weapon Ability Values:" +
               "\nNone = 0" +
               "\nIdle = 100" +
               "\nAim = 97" +
-              "\nAttack = 101" +
               "\nReload = 96" +
-              //"\nCharge_Hold = 95" +
               "\nDraw = 99" +
               "\nStore = 98", helpboxStyle);
         }
@@ -707,6 +705,8 @@ namespace MalbersAnimations
 
                 // EditorGUILayout.PropertyField(DefaultHolster, new GUIContent("Default Holster", "Default  Holster used when no Holster is selected"));
                 EditorGUILayout.PropertyField(HolsterTime, new GUIContent("Holster Time", "Time to smooth parent the weapon to the Hand and Holster"));
+
+                EditorGUILayout.PropertyField(DropPoint);
 
                 holsterReordable.DoLayoutList();
 

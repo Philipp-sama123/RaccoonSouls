@@ -1,7 +1,6 @@
-﻿using UnityEngine;
-using MalbersAnimations.Events;
-using UnityEngine.UI;
+﻿using MalbersAnimations.Events;
 using MalbersAnimations.Scriptables;
+using UnityEngine;
 
 namespace MalbersAnimations.UI
 {
@@ -29,7 +28,7 @@ namespace MalbersAnimations.UI
         public bool HideOnNull = false;
 
         [Tooltip("Offset position for the tracked gameobject")]
-        public Vector3Reference Offset = new  Vector3Reference(  Vector3.zero);
+        public Vector3Reference Offset = new Vector3Reference(Vector3.zero);
         [Tooltip("Scale of the Instantiated prefab")]
         public Vector3Reference Scale = new Vector3Reference(Vector3.one);
 
@@ -37,7 +36,7 @@ namespace MalbersAnimations.UI
         public Vector3 DefaultScreenCenter { get; set; }
         public Transform FollowT
         {
-            get => followT; 
+            get => followT;
             set
             {
                 //Debug.Log("value = " + value);
@@ -71,7 +70,7 @@ namespace MalbersAnimations.UI
 
 
             if (HideOffScreen) HideOffScreen.transform.localScale = Scale;
-         
+
 
             if (WorldTransform.Value) Align();
 
@@ -84,7 +83,7 @@ namespace MalbersAnimations.UI
         private void OnDisable()
         {
             if (ResetOnDisable) Clear();
-           
+
         }
 
         public virtual void Clear()
@@ -97,8 +96,7 @@ namespace MalbersAnimations.UI
         public void ListenTransform(Transform newTarget)
         {
             enabled = newTarget != null;
-            FindFollow(newTarget);
-
+            SetTransform(newTarget);
             Align();
         }
 
@@ -110,7 +108,7 @@ namespace MalbersAnimations.UI
 
             if (FollowT == null)
             {
-                //Clear();
+                if (HideOffScreen) HideOffScreen.enabled = false;
             }
             else
             {
@@ -139,7 +137,7 @@ namespace MalbersAnimations.UI
             enabled = true;
         }
 
-       private void LateUpdate()
+        private void LateUpdate()
         {
             Align();
         }
@@ -149,7 +147,7 @@ namespace MalbersAnimations.UI
             //Debug.Log($"{name} :followT" + FollowT, this);
 
             if (MainCamera == null || FollowT == null) { /*enabled = false; */return; }
- 
+
             var pos = MainCamera.WorldToScreenPoint(FollowT.position + Offset);
             transform.position = pos;
             if (HideOffScreen)
@@ -161,8 +159,8 @@ namespace MalbersAnimations.UI
                 if (pos.z < 0)
                 {
                     pos.y = pos.y > Screen.height / 2 ? 0 : Screen.height;
-                } 
-                 
+                }
+
                 transform.position = new Vector3(
                             Mathf.Clamp(pos.x, 0, Screen.width),
                             Mathf.Clamp(pos.y, 0, Screen.height),

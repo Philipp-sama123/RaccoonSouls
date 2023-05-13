@@ -114,11 +114,11 @@ namespace MalbersAnimations
             }
             else
             {
-                MTools.DrawCircle(base.transform.position, Quaternion.FromToRotation( transform.forward,transform.up), stoppingDistance, DebugColor);
+                MDebug.GizmoCircle(base.transform.position, Quaternion.FromToRotation( transform.forward,transform.up), stoppingDistance, DebugColor);
                
                 if (stoppingDistance < slowingDistance)
                 {
-                    MTools.DrawCircle(base.transform.position, Quaternion.FromToRotation(transform.forward, transform.up), slowingDistance, Color.cyan);
+                    MDebug.GizmoCircle(base.transform.position, Quaternion.FromToRotation(transform.forward, transform.up), slowingDistance, Color.cyan);
                 }
             }
 
@@ -142,7 +142,7 @@ namespace MalbersAnimations
             {
                 foreach (var nw in nextWayPoints)
                 {
-                    if (nw)  MTools.DrawLine(transform.position, nw.position, 1);
+                    if (nw) MDebug.DrawLine(transform.position, nw.position, 1);
                 }
             }
         }
@@ -161,7 +161,7 @@ namespace MalbersAnimations
             }
             else
             {
-                MTools.DrawCircle(base.transform.position, Quaternion.FromToRotation(transform.forward, transform.up), stoppingDistance, Color.yellow);
+                MDebug.GizmoCircle(base.transform.position, Quaternion.FromToRotation(transform.forward, transform.up), stoppingDistance, Color.yellow);
             }
 
 
@@ -173,7 +173,7 @@ namespace MalbersAnimations
                 foreach (var nw in nextWayPoints)
                 {
                     if (nw)
-                        MTools.DrawLine(transform.position, nw.position, 3);
+                        MDebug.DrawLine(transform.position, nw.position, 3);
                 }
             }
         }

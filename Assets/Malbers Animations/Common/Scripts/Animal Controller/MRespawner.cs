@@ -1,10 +1,8 @@
-﻿using UnityEngine;
-using System.Collections;
-using UnityEngine.Events;
+﻿using MalbersAnimations.Events;
 using MalbersAnimations.Scriptables;
+using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.Serialization;
-using MalbersAnimations.Events;
 
 namespace MalbersAnimations.Controller
 {
@@ -40,13 +38,13 @@ namespace MalbersAnimations.Controller
         private bool Respawned;
 
         void OnLevelFinishedLoading(Scene scene, LoadSceneMode mode)
-        { 
+        {
             FindMainAnimal();
         }
 
         public virtual void SetPlayer(GameObject go) => player = go;
 
-        public virtual void DontDestroyOnLoad_GameObject(GameObject gameObject) => DontDestroyOnLoad(gameObject);
+
 
         void OnEnable()
         {
@@ -73,7 +71,7 @@ namespace MalbersAnimations.Controller
             if (instance == this)
             {
                 SceneManager.sceneLoaded -= OnLevelFinishedLoading;
-                
+
                 if (activeAnimal != null)
                     activeAnimal.OnStateChange.RemoveListener(OnCharacterDead);  //Listen to the Animal changes of states
             }
@@ -90,12 +88,12 @@ namespace MalbersAnimations.Controller
         void FindMainAnimal()
         {
             if (Respawned) return; //meaning the animal was already respawned.
-             
+
             if (player == null)
             {
                 activeAnimal = MAnimal.MainAnimal;
                 if (activeAnimal) player = activeAnimal.gameObject;
-            } 
+            }
 
             if (player != null)
             {
@@ -152,7 +150,7 @@ namespace MalbersAnimations.Controller
                 }
                 else
                 {
-                   this.Delay_Action(RespawnTime, () => ResetScene());
+                    this.Delay_Action(RespawnTime, () => ResetScene());
                 }
             }
         }
@@ -170,7 +168,7 @@ namespace MalbersAnimations.Controller
 
         void InstantiateNewPlayer()
         {
-           // Debug.Log("InstantiateNewPlayer");
+            // Debug.Log("InstantiateNewPlayer");
             InstantiatedPlayer = Instantiate(player, transform.position, transform.rotation);
             activeAnimal = InstantiatedPlayer.GetComponent<MAnimal>();
             activeAnimal.OverrideStartState = RespawnState;

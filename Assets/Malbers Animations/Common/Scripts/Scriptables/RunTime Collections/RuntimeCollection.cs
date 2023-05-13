@@ -24,6 +24,8 @@ namespace MalbersAnimations.Scriptables
         public List<T> Items { get => items; set => items = value; }
 
 
+        public bool IsEmpty => items == null || items.Count == 0;
+
         public T this[int index]
         {
             get => Items[index];

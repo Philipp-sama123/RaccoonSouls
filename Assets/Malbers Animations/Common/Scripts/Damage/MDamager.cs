@@ -1,16 +1,18 @@
 ﻿using MalbersAnimations.Events;
 using MalbersAnimations.Scriptables;
-using UnityEngine;
 using MalbersAnimations.Utilities;
+using MalbersAnimations.Reactions;
+using UnityEngine;
 using System.Collections;
-using MalbersAnimations.Controller.Reactions;
+using System.Collections.Generic;
 
 #if UNITY_EDITOR
+using UnityEditorInternal;
 using UnityEditor;
 #endif
 
 namespace MalbersAnimations.Controller
-{
+{ 
     /// <summary> Core Class to cause damage to the stats</summary>
    // [AddComponentMenu("Malbers/Damage/Damager")]
 
@@ -45,37 +47,31 @@ namespace MalbersAnimations.Controller
         [Tooltip("The HitEffect will be destroyed after this time has elapsed, if it is a prefab. if = to zero, will be ignored")]
         [Min(0)] public float DestroyHitEffect;
 
-        // protected IInteractor interactor;
-        public IntReference interactorID = new IntReference(0);
-
-        protected float damage_Multiplier = 1f;
-        
         [Tooltip("Dont Hit any objects on the Owner's hierarchy")]
         public BoolReference dontHitOwner = new BoolReference( true);
 
         [Tooltip("Don't use the Default Reaction of the Damageable Component")]
-        [ExposeScriptableAsset] public MReaction CustomReaction;
+        [SerializeReference,SubclassSelector] 
+        public Reaction CustomReaction;
 
         [Tooltip("Type of element damage the Damager can do")]
         public StatElement element;
 
+        [Tooltip("Interactor ID to enable with who interactable the Interactor can react")]
+        public IntReference interactorID = new IntReference(0);
 
         /// <summary> Extra Transform to Ignore Damage. E.g. The Mount Animal</summary>
         public virtual Transform IgnoreTransform { get; set; }
 
-        /// <summary>Damager can activate interactables</summary>
         [Tooltip("Damager can activate interactables")]
         public BoolReference interact = new BoolReference(true);
 
-        /// <summary>Damager allows the Damagee to apply a reaction</summary>
         [Tooltip("Damager allows the Damagee to apply an animal reaction")]
         public BoolReference react = new BoolReference(true);
 
-        /// <summary>Ignores Damagee Multiplier</summary>
         [Tooltip("If true the Damage Receiver will not apply its Default Multiplier")]
         public BoolReference pureDamage = new BoolReference(false);
 
-        /// <summary>Stat to modify on the Damagee</summary>
         [Tooltip("Stat to modify on the Damagee")]
         [ContextMenuItem("Set Default Damage", "Set_DefaultDamage")]
         public StatModifier statModifier = new StatModifier();
@@ -88,17 +84,23 @@ namespace MalbersAnimations.Controller
         [SerializeField, Tooltip("If the Damage is critical, the Stat modifier value will be multiplied by the Critical Multiplier")]
         protected FloatReference cMultiplier = new FloatReference(2);
 
-        [SerializeField, Tooltip("Force to Apply to RigidBodies when the Damager hit them")]
+        [SerializeField, Tooltip("MAX Force to Apply to RigidBodies when the Damager hit them")]
         protected FloatReference m_Force = new FloatReference(50f);
 
+        [SerializeField, Tooltip("MIN Force to Apply to RigidBodies when the Damager hit them")]
+        protected FloatReference minForce = new FloatReference(20f);        //Weapon min Force to push rigid bodies;
+
         [Tooltip("Force mode to apply to the Object that the Damager Hits")]
-        public ForceMode forceMode = ForceMode.Force;
-        [Tooltip("Direction of the Attack. Used to apply the Force and to know the Direction of the Hit from the Damager")]
+        public ForceMode forceMode = ForceMode.VelocityChange;
+
+
+        [Tooltip("Stores the Direction of the Attack. Used to apply the Force and to know the Direction of the Hit from the Damager")]
         protected Vector3 Direction = Vector3.forward;
 
         public TransformEvent OnHit = new TransformEvent();
         public Vector3Event OnHitPosition = new Vector3Event();
         public IntEvent OnHitInteractable = new IntEvent();
+        public IntEvent OnProfileChanged = new IntEvent();
 
 
         //[Tooltip("When the Attack Trigger Touches a valid collider, it will stop the animator to give an extra effect")]
@@ -112,6 +114,19 @@ namespace MalbersAnimations.Controller
         [Tooltip("Time the Animator will be stopped. If its zero, stopping the animator is ignored")]
         public FloatReference AnimatorStopTime = new FloatReference(0.1f);
 
+        [Tooltip("Profiles to change the values of a Damager")]
+        public List<DamagerProfile> Profiles;
+
+
+        /// <summary>Multiplier Damage applied to the Damager stat Modifier </summary>
+        private float DamageMultiplier = 1;
+        public virtual void SetDamageMultiplier(float multiplier) => DamageMultiplier = multiplier;
+
+        /// <summary>  Current Profile Index for the Damager </summary>
+        protected int CurrentProfileIndex = 0;
+
+        public DamagerProfile DefaultProfile;
+
         #endregion
 
         #region Properties
@@ -119,9 +134,14 @@ namespace MalbersAnimations.Controller
         public virtual GameObject Owner { get => owner; set => owner = value; }
 
         /// <summary>Force of the Damager</summary>
-        public float Force { get => m_Force; set => m_Force = value; }
+        public virtual float Force => Mathf.Lerp(MinForce, MaxForce, UnityEngine.Random.Range(0f, 1f));
 
-      
+        /// <summary>Minimun Force the Weapon can do to a Rigid Body</summary>
+        public virtual float MinForce { get => minForce.Value; set => minForce.Value = value; }
+
+        /// <summary>Maximun Force the Weapon can do to a Rigid Body</summary>
+        public virtual float MaxForce { get => m_Force.Value; set => m_Force.Value = value; }
+
         public LayerMask Layer { get => m_hitLayer.Value; set => m_hitLayer.Value = value; }
         public QueryTriggerInteraction TriggerInteraction  { get => triggerInteraction; set => triggerInteraction = value; }
 
@@ -176,7 +196,6 @@ namespace MalbersAnimations.Controller
             {
                 var criticalStat = CheckCriticalCheckMultiplier(stat);
                 damagee.ReceiveDamage(Direction, Owner, criticalStat, IsCritical, react.Value, CustomReaction, pureDamage.Value,element);
-
                 Debugging($"Do Damage to [{damagee.Damagee.name}]", damagee.Damagee);
                 return true;
             }
@@ -192,7 +211,7 @@ namespace MalbersAnimations.Controller
             HitRotation = Quaternion.FromToRotation(Vector3.up, col.bounds.center - DamageCenter);
             OnHitPosition.Invoke(HitPosition);
 
-            MTools.DrawWireSphere(HitPosition, Color.red, 0.2f, 1);
+            MDebug.DrawWireSphere(HitPosition, Color.red, 0.2f, 1);
 
             if (HitEffect != null)
             {
@@ -238,10 +257,32 @@ namespace MalbersAnimations.Controller
 
         protected virtual bool TryDamage(GameObject other, StatModifier stat) => TryDamage(other.FindInterface<IMDamage>(), stat);
 
+        /// <summary>  Activates the Damager in case the Damager uses a Trigger</summary>
+        /// <param name="value"> Value used on a Child class to enable or disable the Damager</param>
+        /// <param name="profileIndex">The profile needed for the Damage</param>
+        /// <param name="multiplier"></param>
+        public virtual void DoDamage(bool value, int profileIndex) 
+        {
+            if (Profiles == null) return; //Do nothing if the profiles are null
 
-        /// <summary>Activates the Damager in case the Damager uses a Trigger</summary>
-        public virtual void DoDamage(bool value, float multiplier)  { damage_Multiplier = multiplier; }
-
+            if (profileIndex != CurrentProfileIndex)
+            {
+                if (profileIndex == 0)
+                {
+                    DefaultProfile.Modify(this);
+                    CurrentProfileIndex = profileIndex; //Update the Profile Index
+                    OnProfileChanged.Invoke(CurrentProfileIndex);
+                    Debugging($"Setting Default Profile", this);
+                }
+                else if (profileIndex <= Profiles.Count)
+                {
+                    Profiles[profileIndex - 1].Modify(this);
+                    CurrentProfileIndex = profileIndex; //Update the Profile Index
+                    OnProfileChanged.Invoke(CurrentProfileIndex);
+                    Debugging($"Setting Profile {CurrentProfileIndex}", this);
+                }
+            }
+        }
 
         protected void TryStopAnimator()
         {
@@ -324,7 +365,7 @@ namespace MalbersAnimations.Controller
         {
             if (rb && force > 0)
             {
-                MTools.Draw_Arrow(Origin, Direction, Color.red, 1);
+                MDebug.Draw_Arrow(Origin, Direction, Color.red, 1);
 
 
                 if (col) //When using collider
@@ -332,8 +373,8 @@ namespace MalbersAnimations.Controller
                     var HitPoint = col.ClosestPoint(Origin);
                     rb.AddForceAtPosition(Direction * force, HitPoint, forceMode); 
 
-                    MTools.DrawWireSphere(HitPoint, Color.red, 0.1f, 2f);
-                    MTools.Draw_Arrow(HitPoint, Direction * force, Color.red, 2f);
+                    MDebug.DrawWireSphere(HitPoint, Color.red, 0.1f, 2f);
+                    MDebug.Draw_Arrow(HitPoint, Direction * force, Color.red, 2f);
 
                 }
                 else
@@ -361,27 +402,20 @@ namespace MalbersAnimations.Controller
                 modifier.Value = mod.Value * CriticalMultiplier;        //apply the Critical Damage and Animation Multiplier
             }
             
-            modifier.Value.Value *= damage_Multiplier;
+            modifier.MinValue.Value *= DamageMultiplier;
+            modifier.MaxValue.Value *= DamageMultiplier;
+
+            DamageMultiplier = 1; //Reset the Damage Multiplier always!!!
 
             return modifier;
         }
 
-
-        //protected void GetLayerFromRoot()
-        //{
-        //    var HitMaskOwner = m_Owner.GetComponentInParent<IMLayer>();
-
-        //    if (HitMaskOwner != null)
-        //    {
-        //        Layer = HitMaskOwner.Layer;
-        //        Debugging($"{name} Layer set by its Root: {transform.root}",null);
-              
-        //    }
-        //}
-
+ 
         protected void Find_Owner()
         {
-            if (Owner == null) Owner = transform.root.gameObject;
+            if (Owner == null) 
+                Owner = transform.root.gameObject;
+           
             MTools.SetDirty(this);
         }
 
@@ -397,6 +431,42 @@ namespace MalbersAnimations.Controller
             MTools.SetDirty(this);
         }
 
+        //
+
+        /// <summary> Cache all the default values of a Damager  </summary>
+        protected virtual void SetDefaultProfile()
+        {
+            DefaultProfile = GetProfile();
+            DefaultProfile.modify = (DamagerProfile.DamageProfileModif) (-1); //Set to modify everything
+        }
+
+        internal virtual DamagerProfile GetProfile()
+        {
+            var newProfile = new DamagerProfile()
+            {
+                Name = "Default",
+                cMultiplier = this.cMultiplier,
+                CustomReaction = this.CustomReaction,
+                element = this.element,
+                forceMode = this.forceMode,
+                interact = this.interact,
+                react = this.react,
+                interactorID = this.interactorID,
+                maxForce = this.m_Force,
+                minForce = this.minForce,
+                m_cChance = this.m_cChance,
+                m_HitEffect = this.m_HitEffect,
+                pureDamage = this.pureDamage,
+                statModifier = this.statModifier, 
+                modify = DamagerProfile.DamageProfileModif.Damage
+            };
+
+            return newProfile;
+        }
+
+        /// <summary> Set the values of a Damager from a profile </summary>
+        protected virtual void SetProfile(DamagerProfile newProfile) => newProfile.Modify(this);
+
 
 #if UNITY_EDITOR
         protected virtual void Reset()
@@ -405,13 +475,14 @@ namespace MalbersAnimations.Controller
             {
                 ID = MTools.GetInstance<StatID>("Health"),
                 modify = StatOption.SubstractValue,
-                Value = new FloatReference(10)
+                MaxValue = new FloatReference(10),
+                MinValue = new FloatReference(10)
             };
 
             m_hitLayer.Variable = MTools.GetInstance<LayerVar>("Hit Layer");
             m_hitLayer.UseConstant = false;
 
-            var core = transform.GetComponentInParent<IObjectCore>();
+            var core = transform.FindInterface<IObjectCore>();
             if (core != null) owner = core.transform.gameObject;
             owner = transform.root.gameObject;
         }
@@ -474,6 +545,108 @@ namespace MalbersAnimations.Controller
         }
     }
 
+    [System.Serializable]
+    public struct DamagerProfile
+    {
+        public enum DamageProfileModif
+        {
+            Damage = 1,
+            Interact = 2,
+            Reaction = 4,
+            CriticalChance = 8,
+            Force = 16,
+            ElementalDamage = 32
+        }
+
+        [Tooltip("Name of the Profile")]
+        public string Name;
+
+        [Flag]
+        public DamageProfileModif modify;
+
+        [Tooltip("Damager can activate interactables")]
+        public BoolReference interact;
+        [Tooltip("Interactor ID to enable with who interactable the Interactor can react")]
+        public IntReference interactorID;
+
+        [Tooltip("Damager allows the Damagee to apply an animal reaction")]
+        public BoolReference react;
+
+        [Tooltip("If true the Damage Receiver will not apply its Default Multiplier")]
+        public BoolReference pureDamage;
+
+        [Tooltip("Stat to modify on the Damagee")]
+        [ContextMenuItem("Set Default Damage", "Set_DefaultDamage")]
+        public StatModifier statModifier;
+
+        [Tooltip("Critical Change (0 - 1)\n1 means it will be always critical")]
+        public FloatReference m_cChance;
+
+        [Tooltip("If the Damage is critical, the Stat modifier value will be multiplied by the Critical Multiplier")]
+        public FloatReference cMultiplier;
+
+        [SerializeField, Tooltip("MAX Force to Apply to RigidBodies when the Damager hit them")]
+        public FloatReference maxForce;
+
+        [SerializeField, Tooltip("MIN Force to Apply to RigidBodies when the Damager hit them")]
+        public FloatReference minForce;
+
+        [Tooltip("Force mode to apply to the Object that the Damager Hits")]
+        public ForceMode forceMode;
+
+        [Tooltip("This Gameobject will be enabled on Impact, if its a Prefab it will be instantiated")]
+        public GameObjectReference m_HitEffect;
+
+        [Tooltip("Don't use the Default Reaction of the Damageable Component")]
+        [SerializeReference, SubclassSelector]
+        public Reaction CustomReaction;
+
+        [Tooltip("Type of element damage the Damager can do")]
+        public StatElement element;
+
+
+        public void Modify(MDamager damager)
+        {
+            if ((int)modify == 0) return; //Means that the animal have no modification
+
+            if (Modify(DamageProfileModif.Damage))
+            {
+                damager.statModifier = new StatModifier(statModifier);
+                damager.pureDamage = pureDamage;
+            }
+
+            if (Modify(DamageProfileModif.Interact))
+            {
+                damager.interact = interact;
+                damager.interactorID = interactorID;
+            }
+            if (Modify(DamageProfileModif.Reaction))
+            {
+                damager.react = react;
+                damager.CustomReaction = CustomReaction;
+            }
+
+            if (Modify(DamageProfileModif.CriticalChance))
+            {
+                damager.CriticalChance = m_cChance;
+                damager.CriticalMultiplier = cMultiplier;
+            }
+            if (Modify(DamageProfileModif.Force))
+            {
+                damager.MaxForce = maxForce;
+                damager.MinForce = minForce;
+            }
+
+            if (Modify(DamageProfileModif.ElementalDamage))
+            {
+                damager.element = element;
+            }
+        }
+
+        bool Modify(DamageProfileModif modifier) => ((modify & modifier) == modifier);
+
+    }
+
 
     ///--------------------------------INSPECTOR-------------------
     ///
@@ -482,10 +655,12 @@ namespace MalbersAnimations.Controller
     public class MDamagerEd : Editor
     {
         protected MDamager MD;
-        protected SerializedProperty Force, forceMode, index, statModifier, onhit, OnHitPosition, OnHitInteractable, dontHitOwner, owner, m_Active, debug,
-            hitLayer, triggerInteraction, m_cChance, cMultiplier, element,  pureDamage, react, CustomReaction, interact , m_HitEffect,  interactorID, DestroyHitEffect,
+        protected SerializedProperty Force, minForce, forceMode, index, statModifier, onhit, OnHitPosition, OnHitInteractable, OnProfileChanged, dontHitOwner, owner, m_Active, debug,
+            hitLayer, triggerInteraction, m_cChance, cMultiplier, element,  pureDamage, react, CustomReaction, interact , m_HitEffect,  interactorID, DestroyHitEffect, Profiles,
             StopAnimator, AnimatorSpeed, AnimatorStopTime, animator;
 
+
+       private ReorderableList Reo_Profiles; 
 
         private void OnEnable() => FindBaseProperties();
 
@@ -504,6 +679,7 @@ namespace MalbersAnimations.Controller
             DestroyHitEffect = serializedObject.FindProperty("DestroyHitEffect");
             element = serializedObject.FindProperty("element");
 
+            Profiles = serializedObject.FindProperty("Profiles");
 
             react = serializedObject.FindProperty("react");
             CustomReaction = serializedObject.FindProperty("CustomReaction");
@@ -514,6 +690,7 @@ namespace MalbersAnimations.Controller
             m_cChance = serializedObject.FindProperty("m_cChance");
             cMultiplier = serializedObject.FindProperty("cMultiplier");
 
+            minForce = serializedObject.FindProperty("minForce");
             Force = serializedObject.FindProperty("m_Force");
             forceMode = serializedObject.FindProperty("forceMode");
 
@@ -521,6 +698,7 @@ namespace MalbersAnimations.Controller
 
             onhit = serializedObject.FindProperty("OnHit");
             OnHitInteractable = serializedObject.FindProperty("OnHitInteractable");
+            OnProfileChanged = serializedObject.FindProperty("OnProfileChanged");
             debug = serializedObject.FindProperty("debug");
 
 
@@ -528,6 +706,145 @@ namespace MalbersAnimations.Controller
             animator = serializedObject.FindProperty("animator");
             AnimatorSpeed = serializedObject.FindProperty("AnimatorSpeed");
             AnimatorStopTime = serializedObject.FindProperty("AnimatorStopTime");
+
+
+            Reo_Profiles = new ReorderableList(serializedObject, Profiles, true, true, true, true)
+            {
+                onAddCallback = (list) =>
+                {
+                    var count = Profiles.arraySize;
+                    Profiles.InsertArrayElementAtIndex(count);
+                    var element = Profiles.GetArrayElementAtIndex(count);
+                    serializedObject.ApplyModifiedProperties();
+
+                    var newPro = MD.GetProfile();
+                    newPro.Name = $"New Profile [{count+1}]";
+                    MD.Profiles[count] = newPro;
+                    MTools.SetDirty(target);
+                },
+                drawHeaderCallback = (rect) =>
+                {
+                    EditorGUI.LabelField(rect, "[Index]      [Damager Profiles]");
+                },
+                drawElementCallback = (rect, index, isActive, isFocused) =>
+                {
+                    var elementRect = new Rect(rect);
+                    elementRect.height = EditorGUIUtility.singleLineHeight;
+
+                    var IndexRect = new Rect(elementRect);
+                    var ModifyRect = new Rect(elementRect);
+                    IndexRect.width = 25;
+                    elementRect.x += 30;
+                    elementRect.width = rect.width*0.6f - 30;
+                    ModifyRect.width = rect.width * 0.4f - 10;
+                    ModifyRect.x += elementRect.width + 40;
+
+                    var element = Profiles.GetArrayElementAtIndex(index);
+                    var name = element.FindPropertyRelative("Name");
+                    var modify = element.FindPropertyRelative("modify");
+
+                    //draw the modify ss
+
+
+                    elementRect.y += 2;
+                    ModifyRect.y += 2;
+
+                    EditorGUI.LabelField(IndexRect, $"[{index + 1}]");
+                    EditorGUI.PropertyField(elementRect, name, GUIContent.none);
+
+                    EditorGUIUtility.labelWidth = 40;
+                    EditorGUI.PropertyField(ModifyRect, modify);
+                    EditorGUIUtility.labelWidth = 0;
+                }
+            };
+        }
+
+
+
+        protected void DrawProfiles()
+        {
+            Reo_Profiles.DoLayoutList();
+
+            if (Reo_Profiles.index != -1)
+            {
+                var e = Profiles.GetArrayElementAtIndex(Reo_Profiles.index);
+
+
+                using (new GUILayout.VerticalScope(EditorStyles.helpBox))
+                {
+                    EditorGUI.indentLevel++;
+                    EditorGUILayout.PropertyField(e, false);
+                    EditorGUI.indentLevel--;
+
+                    if (e.isExpanded)
+                    {
+                        var modify = e.FindPropertyRelative("modify");
+
+                        var m = (DamagerProfile.DamageProfileModif)modify.intValue;
+
+                        if (((m & DamagerProfile.DamageProfileModif.Damage) == DamagerProfile.DamageProfileModif.Damage))
+                        {
+                            using (new GUILayout.VerticalScope(EditorStyles.helpBox))
+                            {
+                                EditorGUILayout.PropertyField(e.FindPropertyRelative("statModifier"));
+                                EditorGUILayout.PropertyField(e.FindPropertyRelative("pureDamage"));
+                            }
+                        }
+
+                        if (((m & DamagerProfile.DamageProfileModif.Interact) == DamagerProfile.DamageProfileModif.Interact))
+                        {
+                            using (new GUILayout.VerticalScope(EditorStyles.helpBox))
+                            {
+                                EditorGUILayout.PropertyField(e.FindPropertyRelative("interact"));
+                                EditorGUILayout.PropertyField(e.FindPropertyRelative("interactorID"));
+                            }
+                        }
+
+                        if (((m & DamagerProfile.DamageProfileModif.Reaction) == DamagerProfile.DamageProfileModif.Reaction))
+                        {
+                            using (new GUILayout.VerticalScope(EditorStyles.helpBox))
+                            {
+                                EditorGUILayout.PropertyField(e.FindPropertyRelative("react"));
+                                EditorGUILayout.PropertyField(e.FindPropertyRelative("CustomReaction"));
+                            }
+                        }
+
+                        if (((m & DamagerProfile.DamageProfileModif.CriticalChance) == DamagerProfile.DamageProfileModif.CriticalChance))
+                        {
+                            using (new GUILayout.VerticalScope(EditorStyles.helpBox))
+                            {
+                                var m_cChance = e.FindPropertyRelative("statModifier");
+                                var cMultiplier = e.FindPropertyRelative("cMultiplier");
+                                using (new GUILayout.HorizontalScope())
+                                {
+                                    EditorGUILayout.PropertyField(m_cChance, new GUIContent("Chance [0-1]"), GUILayout.MinWidth(50));
+                                    EditorGUIUtility.labelWidth = 47;
+                                    EditorGUILayout.PropertyField(cMultiplier, new GUIContent("Mult"), GUILayout.MinWidth(50));
+                                    EditorGUIUtility.labelWidth = 0;
+                                }
+                            }
+                        }
+
+                        if (((m & DamagerProfile.DamageProfileModif.Force) == DamagerProfile.DamageProfileModif.Force))
+                        {
+                            using (new GUILayout.VerticalScope(EditorStyles.helpBox))
+                            {
+                                EditorGUILayout.PropertyField(e.FindPropertyRelative("minForce"));
+                                EditorGUILayout.PropertyField(e.FindPropertyRelative("maxForce"));
+                            }
+                        }
+                        
+                        if (((m & DamagerProfile.DamageProfileModif.ElementalDamage) == DamagerProfile.DamageProfileModif.ElementalDamage))
+                        {
+                            using (new GUILayout.VerticalScope(EditorStyles.helpBox))
+                            {
+                                EditorGUILayout.LabelField("Elemental Damage", EditorStyles.boldLabel);
+                                EditorGUILayout.PropertyField(e.FindPropertyRelative("element"));
+                            }
+                        }
+                    }
+                }
+            }
         }
 
         public override void OnInspectorGUI()
@@ -551,6 +868,7 @@ namespace MalbersAnimations.Controller
                 EditorGUILayout.PropertyField(onhit);
                 EditorGUILayout.PropertyField(OnHitPosition);
                 EditorGUILayout.PropertyField(OnHitInteractable);
+                EditorGUILayout.PropertyField(OnProfileChanged);
                 DrawCustomEvents();
             }
         }
@@ -565,7 +883,16 @@ namespace MalbersAnimations.Controller
             react.isExpanded = MalbersEditor.Foldout(react.isExpanded, "Interactions");
 
             if (react.isExpanded)
-            {
+            {   EditorGUILayout.PropertyField(react);
+               
+                if (MD.react.Value)
+                    EditorGUILayout.PropertyField(CustomReaction);
+
+                EditorGUILayout.PropertyField(interact);
+
+                if (MD.interact.Value)
+                    EditorGUILayout.PropertyField(interactorID);
+
 
                 var p = " [Prefab]";
                 if (MD.HitEffect == null
@@ -584,14 +911,6 @@ namespace MalbersAnimations.Controller
                         "The Hit Effect its a NOT a Prefab. The Effect will be positioned and oriented using the hit position. It will be enabled and disabled",
                         MessageType.Info);
                 }
-
-
-                EditorGUILayout.PropertyField(react);
-                EditorGUILayout.PropertyField(CustomReaction);
-                EditorGUILayout.PropertyField(interact);
-
-                if (MD.interact.Value)
-                    EditorGUILayout.PropertyField(interactorID);
             }
             //  EditorGUILayout.Space();
 
@@ -635,24 +954,24 @@ namespace MalbersAnimations.Controller
             }
 
             if (drawbox) EditorGUILayout.EndVertical();
+
+
+            DrawProfiles();
+
         }
 
         protected virtual void DrawPhysics(bool drawbox = true)
         {
             if (drawbox) EditorGUILayout.BeginVertical(EditorStyles.helpBox);
-
-            Force.isExpanded = MalbersEditor.Foldout(Force.isExpanded, "Physics");
-
-            if (Force.isExpanded)
             {
-                //EditorGUILayout.LabelField("Physics", EditorStyles.boldLabel);
+                Force.isExpanded = MalbersEditor.Foldout(Force.isExpanded, "Physics Force");
 
-                using (new GUILayout.HorizontalScope())
+                if (Force.isExpanded)
                 {
-                    EditorGUILayout.PropertyField(Force);
-                    EditorGUILayout.PropertyField(forceMode, GUIContent.none, GUILayout.MaxWidth(90), GUILayout.MinWidth(20));
+                    EditorGUILayout.PropertyField(minForce, new GUIContent("Min Force", "Minimun Force to apply to a hitted rigid body"));
+                    EditorGUILayout.PropertyField(Force, new GUIContent("Max Force", "Maximun Force to apply to a hitted rigid body"));
+                    EditorGUILayout.PropertyField(forceMode);
                 }
-               
             }
             if (drawbox) EditorGUILayout.EndVertical();
         }
