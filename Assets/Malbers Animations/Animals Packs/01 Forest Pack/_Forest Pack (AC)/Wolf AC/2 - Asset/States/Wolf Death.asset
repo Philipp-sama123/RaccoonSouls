@@ -18,11 +18,7 @@ MonoBehaviour:
     UseConstant: 1
     ConstantValue: 
     Variable: {fileID: 0}
-  m_StateProfile:
-    UseConstant: 1
-    ConstantValue: 0
-    Variable: {fileID: 0}
-  Priority: 6
+  Priority: 7
   ResetInputOnFailed: 1
   General:
     modify: -1
@@ -85,6 +81,7 @@ MonoBehaviour:
     UseConstant: 1
     ConstantValue: 
     Variable: {fileID: 0}
+  ExitFrame: 0
   ExitOnMain: 1
   EnterCooldown:
     UseConstant: 1
@@ -102,10 +99,8 @@ MonoBehaviour:
   Editor_Tabs1: 3
   ID: {fileID: 11400000, guid: adfa24f62d6db4d40a1d837f4ec1a6e9, type: 2}
   DisableAllComponents: 1
-  RemoveAllColliders: 1
+  RemoveAllColliders: 0
   RemoveAllTriggers: 1
-  IsKinematic: 1
-  DisableModes: 1
   DelayFrames: 2
   RigidbodyDrag: 5
   RigidbodyAngularDrag: 15

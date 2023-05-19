@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: Raccoon Climb
   m_EditorClassIdentifier: 
   Active: 1
+  animal: {fileID: 0}
   Input: Action
   ExitInput:
     UseConstant: 1
@@ -22,8 +23,13 @@ MonoBehaviour:
     UseConstant: 1
     ConstantValue: 0
     Variable: {fileID: 0}
+  AlwaysForward:
+    UseConstant: 1
+    ConstantValue: 0
+    Variable: {fileID: 0}
   Priority: 5
-  ResetInputOnFailed: 1
+  resetInputOnFailed: 0
+  ResetLastState: 0
   General:
     modify: 4095
     RootMotion: 1
@@ -66,10 +72,10 @@ MonoBehaviour:
       Gravity: 0
       Grounded: 0
       OrientToGround: 0
-      CustomRotation: 1
+      CustomRotation: 0
       FreeMovement: 0
       AdditivePosition: 1
-      AdditiveRotation: 1
+      AdditiveRotation: 0
       Persistent: 1
       IgnoreLowerStates: 1
       LockMovement: 0
@@ -77,16 +83,16 @@ MonoBehaviour:
     tagMessages: []
   - AnimationTag: ClimbExit
     modifier:
-      modify: 192
+      modify: -1
       RootMotion: 1
       Sprint: 1
       Gravity: 0
       Grounded: 0
       OrientToGround: 0
-      CustomRotation: 1
+      CustomRotation: 0
       FreeMovement: 0
       AdditivePosition: 1
-      AdditiveRotation: 0
+      AdditiveRotation: 1
       Persistent: 0
       IgnoreLowerStates: 1
       LockMovement: 0
@@ -95,6 +101,7 @@ MonoBehaviour:
   UseSendMessage: 0
   IncludeChildren: 1
   AllowExitFromAnim: 0
+  CanTransitionToItself: 0
   IncludeSleepState: 1
   SleepFromState: []
   SleepFromMode: []
@@ -132,8 +139,9 @@ MonoBehaviour:
   StrafeAnimations: 1
   MovementStrafe: 1
   IdleStrafe: 1
-  debug: 1
-  Editor_Tabs1: 3
+  m_debug: 1
+  Editor_Tabs1: 1
+  SpeedSets: []
   ID: {fileID: 11400000, guid: 975403cc10f8cec46a3caa6ed4e3d6c5, type: 2}
   ClimbLayer:
     UseConstant: 1

@@ -7164,16 +7164,17 @@ MonoBehaviour:
     ConstantValue: {fileID: 7791586435838382825}
     Variable: {fileID: 0}
   DestroyHitEffect: 1
-  interactorID:
-    UseConstant: 1
-    ConstantValue: 0
-    Variable: {fileID: 0}
   dontHitOwner:
     UseConstant: 1
     ConstantValue: 1
     Variable: {fileID: 0}
-  CustomReaction: {fileID: 11400000, guid: 7df8fcdc62330414baaef5c677115f0c, type: 2}
+  CustomReaction:
+    rid: -2
   element: {fileID: 0}
+  interactorID:
+    UseConstant: 1
+    ConstantValue: 0
+    Variable: {fileID: 0}
   interact:
     UseConstant: 1
     ConstantValue: 1
@@ -7189,10 +7190,18 @@ MonoBehaviour:
   statModifier:
     ID: {fileID: 11400000, guid: d6b3e636d59a6c547a2cad40b69f4432, type: 2}
     modify: 3
-    Value:
-      UseConstant: 0
-      ConstantValue: 15
-      Variable: {fileID: 11400000, guid: 4f013a57712433443b3c02590444c962, type: 2}
+    MinValue:
+      UseConstant: 1
+      ConstantValue: 1
+      Variable: {fileID: 0}
+    MaxValue:
+      UseConstant: 1
+      ConstantValue: 10
+      Variable: {fileID: 0}
+    enable:
+      UseConstant: 1
+      ConstantValue: 1
+      Variable: {fileID: 0}
   m_cChance:
     UseConstant: 0
     ConstantValue: 0
@@ -7205,6 +7214,10 @@ MonoBehaviour:
     UseConstant: 1
     ConstantValue: 50
     Variable: {fileID: 0}
+  minForce:
+    UseConstant: 1
+    ConstantValue: 20
+    Variable: {fileID: 0}
   forceMode: 0
   OnHit:
     m_PersistentCalls:
@@ -7213,6 +7226,9 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   OnHitInteractable:
+    m_PersistentCalls:
+      m_Calls: []
+  OnProfileChanged:
     m_PersistentCalls:
       m_Calls: []
   animator: {fileID: 6511161485130658576}
@@ -7224,28 +7240,111 @@ MonoBehaviour:
     UseConstant: 1
     ConstantValue: 0.1
     Variable: {fileID: 0}
+  Profiles: []
+  DefaultProfile:
+    Name: 
+    modify: 0
+    interact:
+      UseConstant: 1
+      ConstantValue: 0
+      Variable: {fileID: 0}
+    interactorID:
+      UseConstant: 1
+      ConstantValue: 0
+      Variable: {fileID: 0}
+    react:
+      UseConstant: 1
+      ConstantValue: 0
+      Variable: {fileID: 0}
+    pureDamage:
+      UseConstant: 1
+      ConstantValue: 0
+      Variable: {fileID: 0}
+    statModifier:
+      ID: {fileID: 0}
+      modify: 0
+      MinValue:
+        UseConstant: 1
+        ConstantValue: 1
+        Variable: {fileID: 0}
+      MaxValue:
+        UseConstant: 1
+        ConstantValue: 10
+        Variable: {fileID: 0}
+      enable:
+        UseConstant: 1
+        ConstantValue: 1
+        Variable: {fileID: 0}
+    m_cChance:
+      UseConstant: 1
+      ConstantValue: 0
+      Variable: {fileID: 0}
+    cMultiplier:
+      UseConstant: 1
+      ConstantValue: 0
+      Variable: {fileID: 0}
+    maxForce:
+      UseConstant: 1
+      ConstantValue: 0
+      Variable: {fileID: 0}
+    minForce:
+      UseConstant: 1
+      ConstantValue: 0
+      Variable: {fileID: 0}
+    forceMode: 0
+    m_HitEffect:
+      UseConstant: 1
+      ConstantValue: {fileID: 0}
+      Variable: {fileID: 0}
+    CustomReaction:
+      rid: -2
+    element: {fileID: 0}
   debug: 0
   Trigger: {fileID: 6622797927531672384}
   SelfStatEnter:
     ID: {fileID: 0}
     modify: 0
-    Value:
+    MinValue:
       UseConstant: 1
-      ConstantValue: 0
+      ConstantValue: 1
+      Variable: {fileID: 0}
+    MaxValue:
+      UseConstant: 1
+      ConstantValue: 10
+      Variable: {fileID: 0}
+    enable:
+      UseConstant: 1
+      ConstantValue: 1
       Variable: {fileID: 0}
   SelfStatExit:
     ID: {fileID: 0}
     modify: 0
-    Value:
+    MinValue:
       UseConstant: 1
-      ConstantValue: 0
+      ConstantValue: 1
+      Variable: {fileID: 0}
+    MaxValue:
+      UseConstant: 1
+      ConstantValue: 10
+      Variable: {fileID: 0}
+    enable:
+      UseConstant: 1
+      ConstantValue: 1
       Variable: {fileID: 0}
   EnemyStatExit:
     ID: {fileID: 0}
     modify: 0
-    Value:
+    MinValue:
       UseConstant: 1
-      ConstantValue: 0
+      ConstantValue: 1
+      Variable: {fileID: 0}
+    MaxValue:
+      UseConstant: 1
+      ConstantValue: 10
+      Variable: {fileID: 0}
+    enable:
+      UseConstant: 1
+      ConstantValue: 1
       Variable: {fileID: 0}
   OnAttackBegin:
     m_PersistentCalls:
@@ -7255,6 +7354,11 @@ MonoBehaviour:
       m_Calls: []
   DebugColor: {r: 1, g: 0.25, b: 0, a: 0.15}
   Editor_Tabs1: 0
+  references:
+    version: 2
+    RefIds:
+    - rid: -2
+      type: {class: , ns: , asm: }
 --- !u!1 &6560736614964766210
 GameObject:
   m_ObjectHideFlags: 0
@@ -7367,9 +7471,9 @@ MonoBehaviour:
   SelectedState: 1
   SelectedStance: 0
   ShowStateInInspector: 1
-  Editor_Tabs1: 3
-  Mode_Tabs1: 1
+  Editor_Tabs1: 0
   Editor_Tabs2: 4
+  Mode_Tabs1: 1
   Ability_Tabs: 0
   Editor_EventTabs: 0
   showPivots: 0
@@ -7377,6 +7481,10 @@ MonoBehaviour:
   debugStances: 0
   debugModes: 0
   debugGizmos: 0
+  Runtime_Tabs1: 0
+  Runtime_Tabs2: 0
+  t: {fileID: 6565804421536076318}
+  InGroundChanger: 0
   states:
   - {fileID: 11400000, guid: 8bae4e7e863e38a49bffe28a013383d2, type: 2}
   - {fileID: 11400000, guid: 89ce17beb01cf364b83c71cc429eaacc, type: 2}
@@ -7464,6 +7572,9 @@ MonoBehaviour:
         Variable: {fileID: 0}
       Release: 0
       AdditivePosition: 1
+      IgnoreGrounded: 0
+      IgnoreGravity: 0
+      Persistent: 0
       OnEnter:
         m_PersistentCalls:
           m_Calls: []
@@ -7540,6 +7651,9 @@ MonoBehaviour:
         Variable: {fileID: 0}
       Release: 0
       AdditivePosition: 1
+      IgnoreGrounded: 0
+      IgnoreGravity: 0
+      Persistent: 0
       OnEnter:
         m_PersistentCalls:
           m_Calls: []
@@ -7616,6 +7730,9 @@ MonoBehaviour:
         Variable: {fileID: 0}
       Release: 0
       AdditivePosition: 1
+      IgnoreGrounded: 0
+      IgnoreGravity: 0
+      Persistent: 0
       OnEnter:
         m_PersistentCalls:
           m_Calls: []
@@ -7692,6 +7809,9 @@ MonoBehaviour:
         Variable: {fileID: 0}
       Release: 0
       AdditivePosition: 1
+      IgnoreGrounded: 0
+      IgnoreGravity: 0
+      Persistent: 0
       OnEnter:
         m_PersistentCalls:
           m_Calls: []
@@ -7799,6 +7919,9 @@ MonoBehaviour:
         Variable: {fileID: 0}
       Release: 0
       AdditivePosition: 1
+      IgnoreGrounded: 0
+      IgnoreGravity: 0
+      Persistent: 0
       OnEnter:
         m_PersistentCalls:
           m_Calls: []
@@ -7873,6 +7996,9 @@ MonoBehaviour:
         Variable: {fileID: 0}
       Release: 0
       AdditivePosition: 1
+      IgnoreGrounded: 0
+      IgnoreGravity: 0
+      Persistent: 0
       OnEnter:
         m_PersistentCalls:
           m_Calls: []
@@ -7947,6 +8073,9 @@ MonoBehaviour:
         Variable: {fileID: 0}
       Release: 0
       AdditivePosition: 1
+      IgnoreGrounded: 0
+      IgnoreGravity: 0
+      Persistent: 0
       OnEnter:
         m_PersistentCalls:
           m_Calls: []
@@ -8021,6 +8150,9 @@ MonoBehaviour:
         Variable: {fileID: 0}
       Release: 0
       AdditivePosition: 1
+      IgnoreGrounded: 0
+      IgnoreGravity: 0
+      Persistent: 0
       OnEnter:
         m_PersistentCalls:
           m_Calls: []
@@ -8128,6 +8260,9 @@ MonoBehaviour:
         Variable: {fileID: 0}
       Release: 0
       AdditivePosition: 1
+      IgnoreGrounded: 0
+      IgnoreGravity: 0
+      Persistent: 0
       OnEnter:
         m_PersistentCalls:
           m_Calls: []
@@ -8202,6 +8337,9 @@ MonoBehaviour:
         Variable: {fileID: 0}
       Release: 0
       AdditivePosition: 1
+      IgnoreGrounded: 0
+      IgnoreGravity: 0
+      Persistent: 0
       OnEnter:
         m_PersistentCalls:
           m_Calls: []
@@ -8276,6 +8414,9 @@ MonoBehaviour:
         Variable: {fileID: 0}
       Release: 0
       AdditivePosition: 1
+      IgnoreGrounded: 0
+      IgnoreGravity: 0
+      Persistent: 0
       OnEnter:
         m_PersistentCalls:
           m_Calls: []
@@ -8350,6 +8491,9 @@ MonoBehaviour:
         Variable: {fileID: 0}
       Release: 0
       AdditivePosition: 1
+      IgnoreGrounded: 0
+      IgnoreGravity: 0
+      Persistent: 0
       OnEnter:
         m_PersistentCalls:
           m_Calls: []
@@ -8424,6 +8568,9 @@ MonoBehaviour:
         Variable: {fileID: 0}
       Release: 0
       AdditivePosition: 1
+      IgnoreGrounded: 0
+      IgnoreGravity: 0
+      Persistent: 0
       OnEnter:
         m_PersistentCalls:
           m_Calls: []
@@ -8498,6 +8645,9 @@ MonoBehaviour:
         Variable: {fileID: 0}
       Release: 0
       AdditivePosition: 1
+      IgnoreGrounded: 0
+      IgnoreGravity: 0
+      Persistent: 0
       OnEnter:
         m_PersistentCalls:
           m_Calls: []
@@ -8607,6 +8757,9 @@ MonoBehaviour:
         Variable: {fileID: 0}
       Release: 0
       AdditivePosition: 1
+      IgnoreGrounded: 0
+      IgnoreGravity: 0
+      Persistent: 0
       OnEnter:
         m_PersistentCalls:
           m_Calls: []
@@ -8683,6 +8836,9 @@ MonoBehaviour:
         Variable: {fileID: 0}
       Release: 0
       AdditivePosition: 1
+      IgnoreGrounded: 0
+      IgnoreGravity: 0
+      Persistent: 0
       OnEnter:
         m_PersistentCalls:
           m_Calls:
@@ -8783,6 +8939,9 @@ MonoBehaviour:
         Variable: {fileID: 0}
       Release: 0
       AdditivePosition: 1
+      IgnoreGrounded: 0
+      IgnoreGravity: 0
+      Persistent: 0
       OnEnter:
         m_PersistentCalls:
           m_Calls:
@@ -8883,6 +9042,9 @@ MonoBehaviour:
         Variable: {fileID: 0}
       Release: 0
       AdditivePosition: 1
+      IgnoreGrounded: 0
+      IgnoreGravity: 0
+      Persistent: 0
       OnEnter:
         m_PersistentCalls:
           m_Calls: []
@@ -8959,6 +9121,9 @@ MonoBehaviour:
         Variable: {fileID: 0}
       Release: 0
       AdditivePosition: 1
+      IgnoreGrounded: 0
+      IgnoreGravity: 0
+      Persistent: 0
       OnEnter:
         m_PersistentCalls:
           m_Calls: []
@@ -9035,6 +9200,9 @@ MonoBehaviour:
         Variable: {fileID: 0}
       Release: 0
       AdditivePosition: 1
+      IgnoreGrounded: 0
+      IgnoreGravity: 0
+      Persistent: 0
       OnEnter:
         m_PersistentCalls:
           m_Calls: []
@@ -9111,6 +9279,9 @@ MonoBehaviour:
         Variable: {fileID: 0}
       Release: 0
       AdditivePosition: 1
+      IgnoreGrounded: 0
+      IgnoreGravity: 0
+      Persistent: 0
       OnEnter:
         m_PersistentCalls:
           m_Calls: []
@@ -9187,6 +9358,9 @@ MonoBehaviour:
         Variable: {fileID: 0}
       Release: 0
       AdditivePosition: 1
+      IgnoreGrounded: 0
+      IgnoreGravity: 0
+      Persistent: 0
       OnEnter:
         m_PersistentCalls:
           m_Calls: []
@@ -9263,6 +9437,9 @@ MonoBehaviour:
         Variable: {fileID: 0}
       Release: 0
       AdditivePosition: 1
+      IgnoreGrounded: 0
+      IgnoreGravity: 0
+      Persistent: 0
       OnEnter:
         m_PersistentCalls:
           m_Calls: []
@@ -9339,6 +9516,9 @@ MonoBehaviour:
         Variable: {fileID: 0}
       Release: 0
       AdditivePosition: 1
+      IgnoreGrounded: 0
+      IgnoreGravity: 0
+      Persistent: 0
       OnEnter:
         m_PersistentCalls:
           m_Calls: []
@@ -9383,14 +9563,13 @@ MonoBehaviour:
     m_Source: {fileID: 0}
     ActivationTime: 0
   CloneStates: 1
-  NoParent: 1
   OverrideStartState: {fileID: 0}
   groundLayer:
-    UseConstant: 1
+    UseConstant: 0
     ConstantValue:
       serializedVersion: 2
       m_Bits: 1
-    Variable: {fileID: 0}
+    Variable: {fileID: 11400000, guid: f5cbf9f07429736478d353b1cb49d847, type: 2}
   height: 1
   center: {x: 0, y: 0, z: 0}
   currentStance: {fileID: 0}
@@ -9436,12 +9615,11 @@ MonoBehaviour:
     UseConstant: 1
     ConstantValue: {fileID: 0}
     Variable: {fileID: 0}
-  additivePosLog: 0
-  additiveRotLog: 0
   isPlayer:
     UseConstant: 1
     ConstantValue: 1
     Variable: {fileID: 0}
+  AdditiveRotation: {x: 0, y: 0, z: 0, w: 0}
   SmoothVertical:
     UseConstant: 1
     ConstantValue: 1
@@ -9478,8 +9656,13 @@ MonoBehaviour:
     UseConstant: 1
     ConstantValue: Stair
     Variable: {fileID: 0}
-  maxAngleSlope: 65
-  m_deepSlope: 5
+  TerrainSlopeLimit:
+    minValue: -50
+    maxValue: 45
+  SlopeLimit: 50
+  slideThreshold: 10
+  slideAmount: 0.5
+  slideDamp: 15
   Rotator: {fileID: 0}
   RootBone: {fileID: 0}
   grounded:
@@ -9563,10 +9746,6 @@ MonoBehaviour:
   Has_Pivot_Chest: 0
   speedSets:
   - name: Ground
-    states:
-    - {fileID: 11400000, guid: 7370df9c769c2764381ad7c76eb3d949, type: 2}
-    - {fileID: 11400000, guid: 3787b6d94d5454740bf36d57436185b0, type: 2}
-    stances: []
     StartVerticalIndex:
       UseConstant: 1
       ConstantValue: 3
@@ -9587,6 +9766,14 @@ MonoBehaviour:
       UseConstant: 1
       ConstantValue: 0
       Variable: {fileID: 0}
+    m_RootMotionPos:
+      UseConstant: 1
+      ConstantValue: 1
+      Variable: {fileID: 0}
+    m_RootMotionRot:
+      UseConstant: 1
+      ConstantValue: 1
+      Variable: {fileID: 0}
     BackSpeedMult:
       UseConstant: 1
       ConstantValue: 0.5
@@ -9603,6 +9790,10 @@ MonoBehaviour:
       UseConstant: 1
       ConstantValue: 10
       Variable: {fileID: 0}
+    states:
+    - {fileID: 11400000, guid: 7370df9c769c2764381ad7c76eb3d949, type: 2}
+    - {fileID: 11400000, guid: 3787b6d94d5454740bf36d57436185b0, type: 2}
+    stances: []
     Speeds:
     - name: Walk
       Vertical:
@@ -9785,9 +9976,6 @@ MonoBehaviour:
         ConstantValue: 0
         Variable: {fileID: 0}
   - name: Swim
-    states:
-    - {fileID: 11400000, guid: 7e364e53b77644c47aa3abdaa2e2c08c, type: 2}
-    stances: []
     StartVerticalIndex:
       UseConstant: 1
       ConstantValue: 1
@@ -9808,6 +9996,14 @@ MonoBehaviour:
       UseConstant: 1
       ConstantValue: 0
       Variable: {fileID: 0}
+    m_RootMotionPos:
+      UseConstant: 1
+      ConstantValue: 1
+      Variable: {fileID: 0}
+    m_RootMotionRot:
+      UseConstant: 1
+      ConstantValue: 1
+      Variable: {fileID: 0}
     BackSpeedMult:
       UseConstant: 1
       ConstantValue: 0.5
@@ -9824,6 +10020,9 @@ MonoBehaviour:
       UseConstant: 1
       ConstantValue: 10
       Variable: {fileID: 0}
+    states:
+    - {fileID: 11400000, guid: 7e364e53b77644c47aa3abdaa2e2c08c, type: 2}
+    stances: []
     Speeds:
     - name: Swim
       Vertical:
@@ -9974,9 +10173,9 @@ MonoBehaviour:
     UseConstant: 1
     ConstantValue: 10
     Variable: {fileID: 0}
-  m_gravityTimeLimit:
+  m_clampGravitySpeed:
     UseConstant: 1
-    ConstantValue: 0
+    ConstantValue: 20
     Variable: {fileID: 0}
   ground_Changes_Gravity:
     UseConstant: 1
@@ -10015,9 +10214,6 @@ MonoBehaviour:
   platform: {fileID: 0}
   colliders: []
   OnAnimationChange:
-    m_PersistentCalls:
-      m_Calls: []
-  OnMaxSlopeReached:
     m_PersistentCalls:
       m_Calls: []
   OnInputLocked:
@@ -10063,6 +10259,9 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   OnStateChange:
+    m_PersistentCalls:
+      m_Calls: []
+  OnStateProfile:
     m_PersistentCalls:
       m_Calls: []
   OnModeStart:
@@ -10174,6 +10373,8 @@ MonoBehaviour:
       ConstantValue: 0
       Variable: {fileID: 0}
     resetTo: 1
+    isPercent: 1
+    debug: 0
     OnStatFull:
       m_PersistentCalls:
         m_Calls: []
@@ -10231,6 +10432,9 @@ MonoBehaviour:
             m_BoolArgument: 0
           m_CallState: 2
     OnValueChange:
+      m_PersistentCalls:
+        m_Calls: []
+    OnMaxValueChange:
       m_PersistentCalls:
         m_Calls: []
     OnDegenerate:
@@ -10294,6 +10498,8 @@ MonoBehaviour:
       ConstantValue: 1.5
       Variable: {fileID: 0}
     resetTo: 1
+    isPercent: 1
+    debug: 0
     OnStatFull:
       m_PersistentCalls:
         m_Calls:
@@ -10389,6 +10595,9 @@ MonoBehaviour:
     OnValueChange:
       m_PersistentCalls:
         m_Calls: []
+    OnMaxValueChange:
+      m_PersistentCalls:
+        m_Calls: []
     OnDegenerate:
       m_PersistentCalls:
         m_Calls: []
@@ -10463,6 +10672,8 @@ MonoBehaviour:
       ConstantValue: 0
       Variable: {fileID: 0}
     resetTo: 1
+    isPercent: 1
+    debug: 0
     OnStatFull:
       m_PersistentCalls:
         m_Calls: []
@@ -10484,6 +10695,9 @@ MonoBehaviour:
       m_PersistentCalls:
         m_Calls: []
     OnValueChange:
+      m_PersistentCalls:
+        m_Calls: []
+    OnMaxValueChange:
       m_PersistentCalls:
         m_Calls: []
     OnDegenerate:
@@ -10509,7 +10723,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   character: {fileID: 0}
-  reaction: {fileID: 11400000, guid: 7df8fcdc62330414baaef5c677115f0c, type: 2}
+  reaction:
+    rid: 1000
+  damagerReaction:
+    rid: -2
+  ignoreDamagerReaction:
+    UseConstant: 1
+    ConstantValue: 0
+    Variable: {fileID: 0}
   stats: {fileID: 6528064244559998660}
   multiplier:
     UseConstant: 1
@@ -10586,7 +10807,26 @@ MonoBehaviour:
       m_PersistentCalls:
         m_Calls: []
   elements: []
+  profiles: []
   Editor_Tabs1: 0
+  First_Change: 1
+  references:
+    version: 2
+    RefIds:
+    - rid: -2
+      type: {class: , ns: , asm: }
+    - rid: 1000
+      type: {class: ModeReaction, ns: MalbersAnimations.Reactions, asm: MalbersAnimations}
+      data:
+        Active: 1
+        type: 0
+        ID: {fileID: 11400000, guid: b04409080ae7e3c4fa645d8c67b40424, type: 2}
+        Ability: -99
+        HasCoolDown: 1
+        coolDown: 0
+        abilityStatus: 0
+        AbilityTime: 3
+        ModePower: 0
 --- !u!114 &6528235749033059804
 MonoBehaviour:
   m_ObjectHideFlags: 0

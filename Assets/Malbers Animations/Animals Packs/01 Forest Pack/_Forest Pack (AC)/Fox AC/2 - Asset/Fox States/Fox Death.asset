@@ -14,7 +14,17 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Active: 1
   Input: 
-  Priority: 6
+  ExitInput:
+    UseConstant: 1
+    ConstantValue: 
+    Variable: {fileID: 0}
+  m_StateProfile:
+    UseConstant: 1
+    ConstantValue: 0
+    Variable: {fileID: 0}
+  Priority: 7
+  ResetInputOnFailed: 1
+  ResetLastState: 0
   General:
     modify: -1
     RootMotion: 1
@@ -30,14 +40,26 @@ MonoBehaviour:
     IgnoreLowerStates: 0
     LockMovement: 1
     LockInput: 1
+  GeneralMessage: []
+  TagModifiers: []
+  UseSendMessage: 0
+  IncludeChildren: 1
+  AllowExitFromAnim: 0
+  IncludeSleepState: 1
   SleepFromState: []
   SleepFromMode: []
   QueueFrom:
   - {fileID: 11400000, guid: 8078fbdb01991b44b9c1351f444b5efe, type: 2}
-  TagModifiers: []
+  ResetFrom: []
+  SleepFromStance: []
+  stances: []
   TryLoop:
     UseConstant: 1
     ConstantValue: 1
+    Variable: {fileID: 0}
+  Duration:
+    UseConstant: 1
+    ConstantValue: 0
     Variable: {fileID: 0}
   EnterTag:
     UseConstant: 1
@@ -47,13 +69,17 @@ MonoBehaviour:
     UseConstant: 1
     ConstantValue: 
     Variable: {fileID: 0}
-  ExitFrame: 0
   ExitOnMain: 1
+  EnterCooldown:
+    UseConstant: 1
+    ConstantValue: 0
+    Variable: {fileID: 0}
   ExitCooldown:
     UseConstant: 1
     ConstantValue: 0
     Variable: {fileID: 0}
   CanStrafe: 0
+  StrafeAnimations: 1
   MovementStrafe: 1
   IdleStrafe: 1
   debug: 1
@@ -62,6 +88,9 @@ MonoBehaviour:
   DisableAllComponents: 1
   RemoveAllColliders: 0
   RemoveAllTriggers: 1
+  IsKinematic: 1
+  DisableModes: 1
+  DelayFrames: 2
   RigidbodyDrag: 5
   RigidbodyAngularDrag: 5
   disableAnimal: 1

@@ -487,7 +487,6 @@ MonoBehaviour:
   ModeID: {fileID: 11400000, guid: 1286867ad3c4cdd4baacac3373aff92c, type: 2}
   EnterMode: 1
   ExitMode: 1
-  ExitOnAbility: 0
   ExitAbility: -1
 --- !u!1101 &-6341014530839920502
 AnimatorStateTransition:
@@ -1293,103 +1292,103 @@ AnimatorController:
     m_DefaultFloat: 0
     m_DefaultInt: 0
     m_DefaultBool: 0
-    m_Controller: {fileID: 0}
+    m_Controller: {fileID: 9100000}
   - m_Name: StateOn
     m_Type: 9
     m_DefaultFloat: 0
     m_DefaultInt: 0
     m_DefaultBool: 0
-    m_Controller: {fileID: 0}
+    m_Controller: {fileID: 9100000}
   - m_Name: Stance
     m_Type: 3
     m_DefaultFloat: 0
     m_DefaultInt: 0
     m_DefaultBool: 0
-    m_Controller: {fileID: 0}
+    m_Controller: {fileID: 9100000}
   - m_Name: LastStance
     m_Type: 3
     m_DefaultFloat: 0
     m_DefaultInt: 0
     m_DefaultBool: 0
-    m_Controller: {fileID: 0}
+    m_Controller: {fileID: 9100000}
   - m_Name: State
     m_Type: 3
     m_DefaultFloat: 0
     m_DefaultInt: 0
     m_DefaultBool: 0
-    m_Controller: {fileID: 0}
+    m_Controller: {fileID: 9100000}
   - m_Name: LastState
     m_Type: 3
     m_DefaultFloat: 0
     m_DefaultInt: 0
     m_DefaultBool: 0
-    m_Controller: {fileID: 0}
+    m_Controller: {fileID: 9100000}
   - m_Name: Vertical
     m_Type: 1
     m_DefaultFloat: 0
     m_DefaultInt: 0
     m_DefaultBool: 0
-    m_Controller: {fileID: 0}
+    m_Controller: {fileID: 9100000}
   - m_Name: Horizontal
     m_Type: 1
     m_DefaultFloat: 0
     m_DefaultInt: 0
     m_DefaultBool: 0
-    m_Controller: {fileID: 0}
+    m_Controller: {fileID: 9100000}
   - m_Name: StateStatus
     m_Type: 3
     m_DefaultFloat: 0
     m_DefaultInt: 0
     m_DefaultBool: 0
-    m_Controller: {fileID: 0}
+    m_Controller: {fileID: 9100000}
   - m_Name: StateExitStatus
     m_Type: 3
     m_DefaultFloat: 0
     m_DefaultInt: 0
     m_DefaultBool: 0
-    m_Controller: {fileID: 0}
+    m_Controller: {fileID: 9100000}
   - m_Name: Mode
     m_Type: 3
     m_DefaultFloat: 0
     m_DefaultInt: 0
     m_DefaultBool: 0
-    m_Controller: {fileID: 0}
+    m_Controller: {fileID: 9100000}
   - m_Name: ModeStatus
     m_Type: 3
     m_DefaultFloat: 0
     m_DefaultInt: 0
     m_DefaultBool: 0
-    m_Controller: {fileID: 0}
+    m_Controller: {fileID: 9100000}
   - m_Name: Grounded
     m_Type: 4
     m_DefaultFloat: 0
     m_DefaultInt: 0
     m_DefaultBool: 0
-    m_Controller: {fileID: 0}
+    m_Controller: {fileID: 9100000}
   - m_Name: Movement
     m_Type: 4
     m_DefaultFloat: 0
     m_DefaultInt: 0
     m_DefaultBool: 0
-    m_Controller: {fileID: 0}
+    m_Controller: {fileID: 9100000}
   - m_Name: SpeedMultiplier
     m_Type: 1
     m_DefaultFloat: 1
     m_DefaultInt: 0
     m_DefaultBool: 0
-    m_Controller: {fileID: 0}
+    m_Controller: {fileID: 9100000}
   - m_Name: StateFloat
     m_Type: 1
     m_DefaultFloat: 0
     m_DefaultInt: 0
     m_DefaultBool: 0
-    m_Controller: {fileID: 0}
+    m_Controller: {fileID: 9100000}
   - m_Name: Random
     m_Type: 3
     m_DefaultFloat: 0
     m_DefaultInt: 0
     m_DefaultBool: 0
-    m_Controller: {fileID: 0}
+    m_Controller: {fileID: 9100000}
   m_AnimatorLayers:
   - serializedVersion: 5
     m_Name: States
@@ -1442,7 +1441,6 @@ MonoBehaviour:
   ModeID: {fileID: 11400000, guid: b04409080ae7e3c4fa645d8c67b40424, type: 2}
   EnterMode: 1
   ExitMode: 1
-  ExitOnAbility: 0
   ExitAbility: -1
 --- !u!114 &114011624186602462
 MonoBehaviour:
@@ -1459,7 +1457,6 @@ MonoBehaviour:
   ModeID: {fileID: 11400000, guid: 4dc5ca673dc60d346a62529c8a9bd8ff, type: 2}
   EnterMode: 0
   ExitMode: 1
-  ExitOnAbility: 0
   ExitAbility: -1
 --- !u!114 &114016710794448110
 MonoBehaviour:
@@ -1511,7 +1508,6 @@ MonoBehaviour:
   ModeID: {fileID: 11400000, guid: 4dc5ca673dc60d346a62529c8a9bd8ff, type: 2}
   EnterMode: 1
   ExitMode: 1
-  ExitOnAbility: 0
   ExitAbility: -1
 --- !u!114 &114024142913036818
 MonoBehaviour:
@@ -1528,7 +1524,6 @@ MonoBehaviour:
   ModeID: {fileID: 11400000, guid: b04409080ae7e3c4fa645d8c67b40424, type: 2}
   EnterMode: 1
   ExitMode: 1
-  ExitOnAbility: 0
   ExitAbility: -1
 --- !u!114 &114033060607041448
 MonoBehaviour:
@@ -1545,7 +1540,6 @@ MonoBehaviour:
   ModeID: {fileID: 11400000, guid: 4dc5ca673dc60d346a62529c8a9bd8ff, type: 2}
   EnterMode: 1
   ExitMode: 1
-  ExitOnAbility: 0
   ExitAbility: -1
 --- !u!114 &114035529168161908
 MonoBehaviour:
@@ -1770,7 +1764,6 @@ MonoBehaviour:
   ModeID: {fileID: 11400000, guid: 1286867ad3c4cdd4baacac3373aff92c, type: 2}
   EnterMode: 1
   ExitMode: 1
-  ExitOnAbility: 0
   ExitAbility: -1
 --- !u!114 &114072127519668254
 MonoBehaviour:
@@ -1787,7 +1780,6 @@ MonoBehaviour:
   ModeID: {fileID: 11400000, guid: 4dc5ca673dc60d346a62529c8a9bd8ff, type: 2}
   EnterMode: 1
   ExitMode: 0
-  ExitOnAbility: 0
   ExitAbility: -1
 --- !u!114 &114086051620436620
 MonoBehaviour:
@@ -1872,10 +1864,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   AttackTrigger: 1
+  Profile: 0
   AttackActivation:
     minValue: 0.34505007
     maxValue: 0.446737
-  Multiplier: 1
 --- !u!114 &114111011328179200
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1891,7 +1883,6 @@ MonoBehaviour:
   ModeID: {fileID: 11400000, guid: 4dc5ca673dc60d346a62529c8a9bd8ff, type: 2}
   EnterMode: 1
   ExitMode: 0
-  ExitOnAbility: 0
   ExitAbility: -1
 --- !u!114 &114114160015262568
 MonoBehaviour:
@@ -2075,7 +2066,6 @@ MonoBehaviour:
   ModeID: {fileID: 11400000, guid: 4dc5ca673dc60d346a62529c8a9bd8ff, type: 2}
   EnterMode: 1
   ExitMode: 0
-  ExitOnAbility: 0
   ExitAbility: -1
 --- !u!114 &114131374045175570
 MonoBehaviour:
@@ -2092,7 +2082,6 @@ MonoBehaviour:
   ModeID: {fileID: 11400000, guid: 4dc5ca673dc60d346a62529c8a9bd8ff, type: 2}
   EnterMode: 1
   ExitMode: 0
-  ExitOnAbility: 0
   ExitAbility: -1
 --- !u!114 &114134766349825248
 MonoBehaviour:
@@ -2144,7 +2133,6 @@ MonoBehaviour:
   ModeID: {fileID: 11400000, guid: b04409080ae7e3c4fa645d8c67b40424, type: 2}
   EnterMode: 1
   ExitMode: 1
-  ExitOnAbility: 0
   ExitAbility: -1
 --- !u!114 &114160847255346240
 MonoBehaviour:
@@ -2196,7 +2184,6 @@ MonoBehaviour:
   ModeID: {fileID: 11400000, guid: 1286867ad3c4cdd4baacac3373aff92c, type: 2}
   EnterMode: 1
   ExitMode: 1
-  ExitOnAbility: 0
   ExitAbility: -1
 --- !u!114 &114165858691415282
 MonoBehaviour:
@@ -2213,7 +2200,6 @@ MonoBehaviour:
   ModeID: {fileID: 11400000, guid: 4dc5ca673dc60d346a62529c8a9bd8ff, type: 2}
   EnterMode: 0
   ExitMode: 1
-  ExitOnAbility: 0
   ExitAbility: -1
 --- !u!114 &114202078250764354
 MonoBehaviour:
@@ -2230,7 +2216,6 @@ MonoBehaviour:
   ModeID: {fileID: 11400000, guid: b04409080ae7e3c4fa645d8c67b40424, type: 2}
   EnterMode: 1
   ExitMode: 1
-  ExitOnAbility: 0
   ExitAbility: -1
 --- !u!114 &114210769733058682
 MonoBehaviour:
@@ -2247,7 +2232,6 @@ MonoBehaviour:
   ModeID: {fileID: 11400000, guid: 1286867ad3c4cdd4baacac3373aff92c, type: 2}
   EnterMode: 1
   ExitMode: 1
-  ExitOnAbility: 0
   ExitAbility: -1
 --- !u!114 &114220985623809544
 MonoBehaviour:
@@ -2306,7 +2290,6 @@ MonoBehaviour:
   ModeID: {fileID: 11400000, guid: 1286867ad3c4cdd4baacac3373aff92c, type: 2}
   EnterMode: 1
   ExitMode: 1
-  ExitOnAbility: 0
   ExitAbility: -1
 --- !u!114 &114246948097178066
 MonoBehaviour:
@@ -2631,7 +2614,6 @@ MonoBehaviour:
   ModeID: {fileID: 11400000, guid: 4dc5ca673dc60d346a62529c8a9bd8ff, type: 2}
   EnterMode: 0
   ExitMode: 1
-  ExitOnAbility: 0
   ExitAbility: -1
 --- !u!114 &114282323047380292
 MonoBehaviour:
@@ -2648,7 +2630,6 @@ MonoBehaviour:
   ModeID: {fileID: 11400000, guid: 4dc5ca673dc60d346a62529c8a9bd8ff, type: 2}
   EnterMode: 1
   ExitMode: 1
-  ExitOnAbility: 0
   ExitAbility: -1
 --- !u!114 &114292682634360258
 MonoBehaviour:
@@ -2665,7 +2646,6 @@ MonoBehaviour:
   ModeID: {fileID: 11400000, guid: 4dc5ca673dc60d346a62529c8a9bd8ff, type: 2}
   EnterMode: 1
   ExitMode: 0
-  ExitOnAbility: 0
   ExitAbility: -1
 --- !u!114 &114299253088718476
 MonoBehaviour:
@@ -2717,7 +2697,6 @@ MonoBehaviour:
   ModeID: {fileID: 11400000, guid: 4dc5ca673dc60d346a62529c8a9bd8ff, type: 2}
   EnterMode: 1
   ExitMode: 0
-  ExitOnAbility: 0
   ExitAbility: -1
 --- !u!114 &114314042369829046
 MonoBehaviour:
@@ -2878,7 +2857,6 @@ MonoBehaviour:
   ModeID: {fileID: 11400000, guid: 4dc5ca673dc60d346a62529c8a9bd8ff, type: 2}
   EnterMode: 1
   ExitMode: 0
-  ExitOnAbility: 0
   ExitAbility: -1
 --- !u!114 &114352127881808198
 MonoBehaviour:
@@ -2930,7 +2908,6 @@ MonoBehaviour:
   ModeID: {fileID: 11400000, guid: 4dc5ca673dc60d346a62529c8a9bd8ff, type: 2}
   EnterMode: 0
   ExitMode: 1
-  ExitOnAbility: 0
   ExitAbility: -1
 --- !u!114 &114369004234401894
 MonoBehaviour:
@@ -2982,7 +2959,6 @@ MonoBehaviour:
   ModeID: {fileID: 11400000, guid: 4dc5ca673dc60d346a62529c8a9bd8ff, type: 2}
   EnterMode: 1
   ExitMode: 0
-  ExitOnAbility: 0
   ExitAbility: -1
 --- !u!114 &114376417582276010
 MonoBehaviour:
@@ -2999,7 +2975,6 @@ MonoBehaviour:
   ModeID: {fileID: 11400000, guid: b04409080ae7e3c4fa645d8c67b40424, type: 2}
   EnterMode: 1
   ExitMode: 1
-  ExitOnAbility: 0
   ExitAbility: -1
 --- !u!114 &114381029679369952
 MonoBehaviour:
@@ -3120,7 +3095,6 @@ MonoBehaviour:
   ModeID: {fileID: 11400000, guid: 4dc5ca673dc60d346a62529c8a9bd8ff, type: 2}
   EnterMode: 1
   ExitMode: 0
-  ExitOnAbility: 0
   ExitAbility: -1
 --- !u!114 &114418804545122500
 MonoBehaviour:
@@ -3137,7 +3111,6 @@ MonoBehaviour:
   ModeID: {fileID: 11400000, guid: 4dc5ca673dc60d346a62529c8a9bd8ff, type: 2}
   EnterMode: 1
   ExitMode: 0
-  ExitOnAbility: 0
   ExitAbility: -1
 --- !u!114 &114419518676653072
 MonoBehaviour:
@@ -3154,7 +3127,6 @@ MonoBehaviour:
   ModeID: {fileID: 11400000, guid: 4dc5ca673dc60d346a62529c8a9bd8ff, type: 2}
   EnterMode: 1
   ExitMode: 1
-  ExitOnAbility: 0
   ExitAbility: -1
 --- !u!114 &114422623863842662
 MonoBehaviour:
@@ -3171,7 +3143,6 @@ MonoBehaviour:
   ModeID: {fileID: 11400000, guid: b04409080ae7e3c4fa645d8c67b40424, type: 2}
   EnterMode: 1
   ExitMode: 1
-  ExitOnAbility: 0
   ExitAbility: -1
 --- !u!114 &114424072185465208
 MonoBehaviour:
@@ -3188,7 +3159,6 @@ MonoBehaviour:
   ModeID: {fileID: 11400000, guid: b04409080ae7e3c4fa645d8c67b40424, type: 2}
   EnterMode: 1
   ExitMode: 1
-  ExitOnAbility: 0
   ExitAbility: -1
 --- !u!114 &114431621463423968
 MonoBehaviour:
@@ -3251,10 +3221,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   AttackTrigger: 1
+  Profile: 0
   AttackActivation:
     minValue: 0.327128
     maxValue: 0.56163013
-  Multiplier: 1
 --- !u!114 &114434366634907806
 MonoBehaviour:
   m_ObjectHideFlags: 3
@@ -3270,7 +3240,6 @@ MonoBehaviour:
   ModeID: {fileID: 11400000, guid: 4dc5ca673dc60d346a62529c8a9bd8ff, type: 2}
   EnterMode: 0
   ExitMode: 1
-  ExitOnAbility: 0
   ExitAbility: -1
 --- !u!114 &114434668653701532
 MonoBehaviour:
@@ -3285,10 +3254,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   AttackTrigger: 1
+  Profile: 0
   AttackActivation:
     minValue: 0.3041004
     maxValue: 0.49993378
-  Multiplier: 1
 --- !u!114 &114440860322238540
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -3369,7 +3338,6 @@ MonoBehaviour:
   ModeID: {fileID: 11400000, guid: b04409080ae7e3c4fa645d8c67b40424, type: 2}
   EnterMode: 1
   ExitMode: 1
-  ExitOnAbility: 0
   ExitAbility: -1
 --- !u!114 &114475683109805904
 MonoBehaviour:
@@ -3406,7 +3374,6 @@ MonoBehaviour:
   ModeID: {fileID: 11400000, guid: 4dc5ca673dc60d346a62529c8a9bd8ff, type: 2}
   EnterMode: 1
   ExitMode: 0
-  ExitOnAbility: 0
   ExitAbility: -1
 --- !u!114 &114482015382933176
 MonoBehaviour:
@@ -3491,7 +3458,6 @@ MonoBehaviour:
   ModeID: {fileID: 11400000, guid: 4dc5ca673dc60d346a62529c8a9bd8ff, type: 2}
   EnterMode: 1
   ExitMode: 1
-  ExitOnAbility: 0
   ExitAbility: -1
 --- !u!114 &114526764976383804
 MonoBehaviour:
@@ -3508,7 +3474,6 @@ MonoBehaviour:
   ModeID: {fileID: 11400000, guid: 4dc5ca673dc60d346a62529c8a9bd8ff, type: 2}
   EnterMode: 1
   ExitMode: 1
-  ExitOnAbility: 0
   ExitAbility: -1
 --- !u!114 &114528618165693964
 MonoBehaviour:
@@ -3821,7 +3786,6 @@ MonoBehaviour:
   ModeID: {fileID: 11400000, guid: 4dc5ca673dc60d346a62529c8a9bd8ff, type: 2}
   EnterMode: 1
   ExitMode: 0
-  ExitOnAbility: 0
   ExitAbility: -1
 --- !u!114 &114586024520471820
 MonoBehaviour:
@@ -3838,7 +3802,6 @@ MonoBehaviour:
   ModeID: {fileID: 11400000, guid: 4dc5ca673dc60d346a62529c8a9bd8ff, type: 2}
   EnterMode: 1
   ExitMode: 0
-  ExitOnAbility: 0
   ExitAbility: -1
 --- !u!114 &114587630611854072
 MonoBehaviour:
@@ -4067,10 +4030,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   AttackTrigger: 1
+  Profile: 0
   AttackActivation:
     minValue: 0.3041004
     maxValue: 0.49993378
-  Multiplier: 1
 --- !u!114 &114624935718698080
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -4204,7 +4167,6 @@ MonoBehaviour:
   ModeID: {fileID: 11400000, guid: 1286867ad3c4cdd4baacac3373aff92c, type: 2}
   EnterMode: 1
   ExitMode: 1
-  ExitOnAbility: 0
   ExitAbility: -1
 --- !u!114 &114644604069146584
 MonoBehaviour:
@@ -4221,7 +4183,6 @@ MonoBehaviour:
   ModeID: {fileID: 11400000, guid: b04409080ae7e3c4fa645d8c67b40424, type: 2}
   EnterMode: 1
   ExitMode: 1
-  ExitOnAbility: 0
   ExitAbility: -1
 --- !u!114 &114651869856178052
 MonoBehaviour:
@@ -4432,7 +4393,6 @@ MonoBehaviour:
   ModeID: {fileID: 11400000, guid: 4dc5ca673dc60d346a62529c8a9bd8ff, type: 2}
   EnterMode: 0
   ExitMode: 1
-  ExitOnAbility: 0
   ExitAbility: -1
 --- !u!114 &114694830811515326
 MonoBehaviour:
@@ -4449,7 +4409,6 @@ MonoBehaviour:
   ModeID: {fileID: 11400000, guid: 4dc5ca673dc60d346a62529c8a9bd8ff, type: 2}
   EnterMode: 1
   ExitMode: 1
-  ExitOnAbility: 0
   ExitAbility: -1
 --- !u!114 &114698001311734322
 MonoBehaviour:
@@ -4620,7 +4579,6 @@ MonoBehaviour:
   ModeID: {fileID: 11400000, guid: 4dc5ca673dc60d346a62529c8a9bd8ff, type: 2}
   EnterMode: 0
   ExitMode: 1
-  ExitOnAbility: 0
   ExitAbility: -1
 --- !u!114 &114719288928155382
 MonoBehaviour:
@@ -4648,6 +4606,7 @@ MonoBehaviour:
   volume:
     minValue: 1
     maxValue: 1
+  MaxDistance: 10
 --- !u!114 &114721128051969760
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -4756,7 +4715,6 @@ MonoBehaviour:
   ModeID: {fileID: 11400000, guid: 4dc5ca673dc60d346a62529c8a9bd8ff, type: 2}
   EnterMode: 0
   ExitMode: 1
-  ExitOnAbility: 0
   ExitAbility: -1
 --- !u!114 &114724711705693330
 MonoBehaviour:
@@ -4821,7 +4779,6 @@ MonoBehaviour:
   ModeID: {fileID: 11400000, guid: 4dc5ca673dc60d346a62529c8a9bd8ff, type: 2}
   EnterMode: 1
   ExitMode: 1
-  ExitOnAbility: 0
   ExitAbility: -1
 --- !u!114 &114736337954111456
 MonoBehaviour:
@@ -4838,7 +4795,6 @@ MonoBehaviour:
   ModeID: {fileID: 11400000, guid: b04409080ae7e3c4fa645d8c67b40424, type: 2}
   EnterMode: 1
   ExitMode: 1
-  ExitOnAbility: 0
   ExitAbility: -1
 --- !u!114 &114739335473282646
 MonoBehaviour:
@@ -4855,7 +4811,6 @@ MonoBehaviour:
   ModeID: {fileID: 11400000, guid: 4dc5ca673dc60d346a62529c8a9bd8ff, type: 2}
   EnterMode: 1
   ExitMode: 1
-  ExitOnAbility: 0
   ExitAbility: -1
 --- !u!114 &114741372792466700
 MonoBehaviour:
@@ -4872,7 +4827,6 @@ MonoBehaviour:
   ModeID: {fileID: 11400000, guid: 4dc5ca673dc60d346a62529c8a9bd8ff, type: 2}
   EnterMode: 1
   ExitMode: 1
-  ExitOnAbility: 0
   ExitAbility: -1
 --- !u!114 &114743983167510432
 MonoBehaviour:
@@ -4889,7 +4843,6 @@ MonoBehaviour:
   ModeID: {fileID: 11400000, guid: 4dc5ca673dc60d346a62529c8a9bd8ff, type: 2}
   EnterMode: 1
   ExitMode: 1
-  ExitOnAbility: 0
   ExitAbility: -1
 --- !u!114 &114755378051685272
 MonoBehaviour:
@@ -5023,7 +4976,6 @@ MonoBehaviour:
   ModeID: {fileID: 11400000, guid: 4dc5ca673dc60d346a62529c8a9bd8ff, type: 2}
   EnterMode: 1
   ExitMode: 1
-  ExitOnAbility: 0
   ExitAbility: -1
 --- !u!114 &114779598791980954
 MonoBehaviour:
@@ -5055,7 +5007,6 @@ MonoBehaviour:
   ModeID: {fileID: 11400000, guid: 4dc5ca673dc60d346a62529c8a9bd8ff, type: 2}
   EnterMode: 1
   ExitMode: 1
-  ExitOnAbility: 0
   ExitAbility: -1
 --- !u!114 &114790454995270550
 MonoBehaviour:
@@ -5120,7 +5071,6 @@ MonoBehaviour:
   ModeID: {fileID: 11400000, guid: b04409080ae7e3c4fa645d8c67b40424, type: 2}
   EnterMode: 1
   ExitMode: 1
-  ExitOnAbility: 0
   ExitAbility: -1
 --- !u!114 &114803520875746866
 MonoBehaviour:
@@ -5269,7 +5219,6 @@ MonoBehaviour:
   ModeID: {fileID: 11400000, guid: 4dc5ca673dc60d346a62529c8a9bd8ff, type: 2}
   EnterMode: 0
   ExitMode: 1
-  ExitOnAbility: 0
   ExitAbility: -1
 --- !u!114 &114821469774717476
 MonoBehaviour:
@@ -5286,7 +5235,6 @@ MonoBehaviour:
   ModeID: {fileID: 11400000, guid: 4dc5ca673dc60d346a62529c8a9bd8ff, type: 2}
   EnterMode: 0
   ExitMode: 1
-  ExitOnAbility: 0
   ExitAbility: -1
 --- !u!114 &114829261389091426
 MonoBehaviour:
@@ -5303,7 +5251,6 @@ MonoBehaviour:
   ModeID: {fileID: 11400000, guid: b04409080ae7e3c4fa645d8c67b40424, type: 2}
   EnterMode: 1
   ExitMode: 1
-  ExitOnAbility: 0
   ExitAbility: -1
 --- !u!114 &114836029758001516
 MonoBehaviour:
@@ -5340,7 +5287,6 @@ MonoBehaviour:
   ModeID: {fileID: 11400000, guid: 4dc5ca673dc60d346a62529c8a9bd8ff, type: 2}
   EnterMode: 1
   ExitMode: 0
-  ExitOnAbility: 0
   ExitAbility: -1
 --- !u!114 &114857173189984756
 MonoBehaviour:
@@ -5477,7 +5423,6 @@ MonoBehaviour:
   ModeID: {fileID: 11400000, guid: 4dc5ca673dc60d346a62529c8a9bd8ff, type: 2}
   EnterMode: 1
   ExitMode: 1
-  ExitOnAbility: 0
   ExitAbility: -1
 --- !u!114 &114923629427446762
 MonoBehaviour:
@@ -5508,7 +5453,6 @@ MonoBehaviour:
   ModeID: {fileID: 11400000, guid: 4dc5ca673dc60d346a62529c8a9bd8ff, type: 2}
   EnterMode: 1
   ExitMode: 0
-  ExitOnAbility: 0
   ExitAbility: -1
 --- !u!114 &114940113152665060
 MonoBehaviour:
@@ -5560,7 +5504,6 @@ MonoBehaviour:
   ModeID: {fileID: 11400000, guid: 4dc5ca673dc60d346a62529c8a9bd8ff, type: 2}
   EnterMode: 0
   ExitMode: 1
-  ExitOnAbility: 0
   ExitAbility: -1
 --- !u!114 &114945594504574096
 MonoBehaviour:
@@ -5635,7 +5578,6 @@ MonoBehaviour:
   ModeID: {fileID: 11400000, guid: 4dc5ca673dc60d346a62529c8a9bd8ff, type: 2}
   EnterMode: 1
   ExitMode: 1
-  ExitOnAbility: 0
   ExitAbility: -1
 --- !u!114 &114971854300132498
 MonoBehaviour:
@@ -5652,7 +5594,6 @@ MonoBehaviour:
   ModeID: {fileID: 11400000, guid: 4dc5ca673dc60d346a62529c8a9bd8ff, type: 2}
   EnterMode: 1
   ExitMode: 1
-  ExitOnAbility: 0
   ExitAbility: -1
 --- !u!114 &114982120363429170
 MonoBehaviour:
@@ -5667,10 +5608,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   AttackTrigger: 1
+  Profile: 0
   AttackActivation:
     minValue: 0.327128
     maxValue: 0.56163013
-  Multiplier: 1
 --- !u!114 &114989010716054122
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -16870,7 +16811,7 @@ AnimatorState:
   m_IKOnFeet: 0
   m_WriteDefaultValues: 1
   m_Mirror: 0
-  m_SpeedParameterActive: 0
+  m_SpeedParameterActive: 1
   m_MirrorParameterActive: 0
   m_CycleOffsetParameterActive: 0
   m_TimeParameterActive: 0
@@ -18582,11 +18523,11 @@ AnimatorStateMachine:
   - {fileID: 1109616926730803084}
   - {fileID: 1109079873216345832}
   m_StateMachineTransitions:
-  - first: {fileID: 1107216522858425912}
-    second: []
   - first: {fileID: 1107745349488851816}
     second: []
   - first: {fileID: 1107733495780145142}
+    second: []
+  - first: {fileID: 1107216522858425912}
     second: []
   m_StateMachineBehaviours: []
   m_AnyStatePosition: {x: 20, y: -40, z: 0}
@@ -18728,13 +18669,11 @@ AnimatorStateMachine:
   - {fileID: -8562253433954317109}
   m_EntryTransitions: []
   m_StateMachineTransitions:
-  - first: {fileID: 1107725768359318366}
+  - first: {fileID: 1107231746298051510}
     second: []
   - first: {fileID: 1107235611564023184}
     second: []
-  - first: {fileID: 1107584217440580352}
-    second: []
-  - first: {fileID: 1107231746298051510}
+  - first: {fileID: 1107725768359318366}
     second: []
   - first: {fileID: 1107800299632842460}
     second: []
@@ -18742,6 +18681,8 @@ AnimatorStateMachine:
     second:
     - {fileID: 500354873944124698}
   - first: {fileID: 1107112278491900650}
+    second: []
+  - first: {fileID: 1107584217440580352}
     second: []
   m_StateMachineBehaviours: []
   m_AnyStatePosition: {x: 50, y: -130, z: 0}
@@ -21847,7 +21788,6 @@ MonoBehaviour:
   ModeID: {fileID: 11400000, guid: 7888596ce3530b145bc15622fac8a6c4, type: 2}
   EnterMode: 1
   ExitMode: 1
-  ExitOnAbility: 0
   ExitAbility: -1
 --- !u!1101 &1527063817997544888
 AnimatorStateTransition:
@@ -22505,7 +22445,6 @@ MonoBehaviour:
   ModeID: {fileID: 11400000, guid: b04409080ae7e3c4fa645d8c67b40424, type: 2}
   EnterMode: 1
   ExitMode: 1
-  ExitOnAbility: 0
   ExitAbility: -1
 --- !u!1109 &5282594753872686758
 AnimatorTransition:
@@ -22902,7 +22841,6 @@ MonoBehaviour:
   ModeID: {fileID: 11400000, guid: b04409080ae7e3c4fa645d8c67b40424, type: 2}
   EnterMode: 1
   ExitMode: 1
-  ExitOnAbility: 0
   ExitAbility: -1
 --- !u!1101 &9166267629321668015
 AnimatorStateTransition:

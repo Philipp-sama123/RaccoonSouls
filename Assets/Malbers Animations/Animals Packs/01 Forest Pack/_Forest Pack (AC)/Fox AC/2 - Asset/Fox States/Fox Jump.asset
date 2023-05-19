@@ -18,8 +18,13 @@ MonoBehaviour:
     UseConstant: 1
     ConstantValue: 
     Variable: {fileID: 0}
+  m_StateProfile:
+    UseConstant: 1
+    ConstantValue: 0
+    Variable: {fileID: 0}
   Priority: 5
   ResetInputOnFailed: 1
+  ResetLastState: 0
   General:
     modify: 2303
     RootMotion: 1
@@ -83,7 +88,6 @@ MonoBehaviour:
     UseConstant: 1
     ConstantValue: 
     Variable: {fileID: 0}
-  ExitFrame: 1
   ExitOnMain: 1
   EnterCooldown:
     UseConstant: 1
@@ -102,11 +106,11 @@ MonoBehaviour:
   ID: {fileID: 11400000, guid: 9ae07cd2f8f4c054687fecf634f8e5b3, type: 2}
   JumpPressed:
     UseConstant: 1
-    ConstantValue: 1
+    ConstantValue: 0
     Variable: {fileID: 0}
   ForwardPressed:
     UseConstant: 1
-    ConstantValue: 1
+    ConstantValue: 0
     Variable: {fileID: 0}
   JumpPressedLerp: 2
   AirControl:

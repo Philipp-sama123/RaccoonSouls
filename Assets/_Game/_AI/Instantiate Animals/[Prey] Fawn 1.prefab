@@ -396,6 +396,7 @@ Canvas:
   m_OverridePixelPerfect: 0
   m_SortingBucketNormalizedSize: 0
   m_AdditionalShaderChannelsFlag: 25
+  m_UpdateRectTransformForStandalone: 0
   m_SortingLayerID: 0
   m_SortingOrder: 0
   m_TargetDisplay: 0
@@ -875,10 +876,21 @@ Rigidbody:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5910997995488138136}
-  serializedVersion: 2
+  serializedVersion: 4
   m_Mass: 40
   m_Drag: 0
   m_AngularDrag: 0.05
+  m_CenterOfMass: {x: 0, y: 0, z: 0}
+  m_InertiaTensor: {x: 1, y: 1, z: 1}
+  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ImplicitCom: 1
+  m_ImplicitTensor: 1
   m_UseGravity: 0
   m_IsKinematic: 0
   m_Interpolate: 0
@@ -901,9 +913,9 @@ MonoBehaviour:
   SelectedState: 0
   SelectedStance: 0
   ShowStateInInspector: 1
-  Editor_Tabs1: 3
-  Mode_Tabs1: 2
+  Editor_Tabs1: 0
   Editor_Tabs2: 4
+  Mode_Tabs1: 2
   Ability_Tabs: 4
   Editor_EventTabs: 0
   showPivots: 1
@@ -911,6 +923,10 @@ MonoBehaviour:
   debugStances: 0
   debugModes: 0
   debugGizmos: 1
+  Runtime_Tabs1: 0
+  Runtime_Tabs2: 0
+  t: {fileID: 5916104402377069634}
+  InGroundChanger: 0
   states:
   - {fileID: 11400000, guid: 1a2e5401f2345b440ac8715facac1c92, type: 2}
   - {fileID: 11400000, guid: 6762166c60c214a48a2f5b09fc64ac60, type: 2}
@@ -998,6 +1014,9 @@ MonoBehaviour:
         Variable: {fileID: 0}
       Release: 0
       AdditivePosition: 1
+      IgnoreGrounded: 0
+      IgnoreGravity: 0
+      Persistent: 0
       OnEnter:
         m_PersistentCalls:
           m_Calls: []
@@ -1074,6 +1093,9 @@ MonoBehaviour:
         Variable: {fileID: 0}
       Release: 0
       AdditivePosition: 1
+      IgnoreGrounded: 0
+      IgnoreGravity: 0
+      Persistent: 0
       OnEnter:
         m_PersistentCalls:
           m_Calls: []
@@ -1150,6 +1172,9 @@ MonoBehaviour:
         Variable: {fileID: 0}
       Release: 0
       AdditivePosition: 1
+      IgnoreGrounded: 0
+      IgnoreGravity: 0
+      Persistent: 0
       OnEnter:
         m_PersistentCalls:
           m_Calls: []
@@ -1226,6 +1251,9 @@ MonoBehaviour:
         Variable: {fileID: 0}
       Release: 0
       AdditivePosition: 1
+      IgnoreGrounded: 0
+      IgnoreGravity: 0
+      Persistent: 0
       OnEnter:
         m_PersistentCalls:
           m_Calls: []
@@ -1302,6 +1330,9 @@ MonoBehaviour:
         Variable: {fileID: 0}
       Release: 0
       AdditivePosition: 1
+      IgnoreGrounded: 0
+      IgnoreGravity: 0
+      Persistent: 0
       OnEnter:
         m_PersistentCalls:
           m_Calls: []
@@ -1409,6 +1440,9 @@ MonoBehaviour:
         Variable: {fileID: 0}
       Release: 0
       AdditivePosition: 1
+      IgnoreGrounded: 0
+      IgnoreGravity: 0
+      Persistent: 0
       OnEnter:
         m_PersistentCalls:
           m_Calls: []
@@ -1483,6 +1517,9 @@ MonoBehaviour:
         Variable: {fileID: 0}
       Release: 0
       AdditivePosition: 1
+      IgnoreGrounded: 0
+      IgnoreGravity: 0
+      Persistent: 0
       OnEnter:
         m_PersistentCalls:
           m_Calls: []
@@ -1557,6 +1594,9 @@ MonoBehaviour:
         Variable: {fileID: 0}
       Release: 0
       AdditivePosition: 1
+      IgnoreGrounded: 0
+      IgnoreGravity: 0
+      Persistent: 0
       OnEnter:
         m_PersistentCalls:
           m_Calls: []
@@ -1631,6 +1671,9 @@ MonoBehaviour:
         Variable: {fileID: 0}
       Release: 0
       AdditivePosition: 1
+      IgnoreGrounded: 0
+      IgnoreGravity: 0
+      Persistent: 0
       OnEnter:
         m_PersistentCalls:
           m_Calls: []
@@ -1705,6 +1748,9 @@ MonoBehaviour:
         Variable: {fileID: 0}
       Release: 0
       AdditivePosition: 1
+      IgnoreGrounded: 0
+      IgnoreGravity: 0
+      Persistent: 0
       OnEnter:
         m_PersistentCalls:
           m_Calls: []
@@ -1779,6 +1825,9 @@ MonoBehaviour:
         Variable: {fileID: 0}
       Release: 0
       AdditivePosition: 1
+      IgnoreGrounded: 0
+      IgnoreGravity: 0
+      Persistent: 0
       OnEnter:
         m_PersistentCalls:
           m_Calls: []
@@ -1888,6 +1937,9 @@ MonoBehaviour:
         Variable: {fileID: 0}
       Release: 0
       AdditivePosition: 1
+      IgnoreGrounded: 0
+      IgnoreGravity: 0
+      Persistent: 0
       OnEnter:
         m_PersistentCalls:
           m_Calls: []
@@ -1964,6 +2016,9 @@ MonoBehaviour:
         Variable: {fileID: 0}
       Release: 0
       AdditivePosition: 1
+      IgnoreGrounded: 0
+      IgnoreGravity: 0
+      Persistent: 0
       OnEnter:
         m_PersistentCalls:
           m_Calls: []
@@ -2040,6 +2095,9 @@ MonoBehaviour:
         Variable: {fileID: 0}
       Release: 0
       AdditivePosition: 1
+      IgnoreGrounded: 0
+      IgnoreGravity: 0
+      Persistent: 0
       OnEnter:
         m_PersistentCalls:
           m_Calls:
@@ -2140,6 +2198,9 @@ MonoBehaviour:
         Variable: {fileID: 0}
       Release: 0
       AdditivePosition: 1
+      IgnoreGrounded: 0
+      IgnoreGravity: 0
+      Persistent: 0
       OnEnter:
         m_PersistentCalls:
           m_Calls: []
@@ -2196,14 +2257,13 @@ MonoBehaviour:
     m_Source: {fileID: 0}
     ActivationTime: 0
   CloneStates: 1
-  NoParent: 1
   OverrideStartState: {fileID: 0}
   groundLayer:
-    UseConstant: 1
+    UseConstant: 0
     ConstantValue:
       serializedVersion: 2
       m_Bits: 1
-    Variable: {fileID: 0}
+    Variable: {fileID: 11400000, guid: f5cbf9f07429736478d353b1cb49d847, type: 2}
   height: 1.3
   center: {x: 0, y: 0, z: 0}
   currentStance: {fileID: 0}
@@ -2249,12 +2309,11 @@ MonoBehaviour:
     UseConstant: 1
     ConstantValue: {fileID: 0}
     Variable: {fileID: 0}
-  additivePosLog: 0
-  additiveRotLog: 0
   isPlayer:
     UseConstant: 1
     ConstantValue: 0
     Variable: {fileID: 0}
+  AdditiveRotation: {x: 0, y: 0, z: 0, w: 0}
   SmoothVertical:
     UseConstant: 1
     ConstantValue: 0
@@ -2291,8 +2350,13 @@ MonoBehaviour:
     UseConstant: 1
     ConstantValue: Stair
     Variable: {fileID: 0}
-  maxAngleSlope: 65
-  m_deepSlope: 5
+  TerrainSlopeLimit:
+    minValue: -50
+    maxValue: 45
+  SlopeLimit: 50
+  slideThreshold: 10
+  slideAmount: 0.5
+  slideDamp: 15
   Rotator: {fileID: 0}
   RootBone: {fileID: 5910035951059429114}
   grounded:
@@ -2376,10 +2440,6 @@ MonoBehaviour:
   Has_Pivot_Chest: 0
   speedSets:
   - name: Ground
-    states:
-    - {fileID: 11400000, guid: 7370df9c769c2764381ad7c76eb3d949, type: 2}
-    - {fileID: 11400000, guid: 3787b6d94d5454740bf36d57436185b0, type: 2}
-    stances: []
     StartVerticalIndex:
       UseConstant: 1
       ConstantValue: 2
@@ -2400,6 +2460,14 @@ MonoBehaviour:
       UseConstant: 1
       ConstantValue: 0
       Variable: {fileID: 0}
+    m_RootMotionPos:
+      UseConstant: 1
+      ConstantValue: 1
+      Variable: {fileID: 0}
+    m_RootMotionRot:
+      UseConstant: 1
+      ConstantValue: 1
+      Variable: {fileID: 0}
     BackSpeedMult:
       UseConstant: 1
       ConstantValue: 0.5
@@ -2416,6 +2484,10 @@ MonoBehaviour:
       UseConstant: 1
       ConstantValue: 10
       Variable: {fileID: 0}
+    states:
+    - {fileID: 11400000, guid: 7370df9c769c2764381ad7c76eb3d949, type: 2}
+    - {fileID: 11400000, guid: 3787b6d94d5454740bf36d57436185b0, type: 2}
+    stances: []
     Speeds:
     - name: Walk
       Vertical:
@@ -2598,9 +2670,6 @@ MonoBehaviour:
         ConstantValue: 0
         Variable: {fileID: 0}
   - name: Swim
-    states:
-    - {fileID: 11400000, guid: 7e364e53b77644c47aa3abdaa2e2c08c, type: 2}
-    stances: []
     StartVerticalIndex:
       UseConstant: 1
       ConstantValue: 1
@@ -2621,6 +2690,14 @@ MonoBehaviour:
       UseConstant: 1
       ConstantValue: 0
       Variable: {fileID: 0}
+    m_RootMotionPos:
+      UseConstant: 1
+      ConstantValue: 1
+      Variable: {fileID: 0}
+    m_RootMotionRot:
+      UseConstant: 1
+      ConstantValue: 1
+      Variable: {fileID: 0}
     BackSpeedMult:
       UseConstant: 1
       ConstantValue: 0.5
@@ -2637,6 +2714,9 @@ MonoBehaviour:
       UseConstant: 1
       ConstantValue: 10
       Variable: {fileID: 0}
+    states:
+    - {fileID: 11400000, guid: 7e364e53b77644c47aa3abdaa2e2c08c, type: 2}
+    stances: []
     Speeds:
     - name: Swim
       Vertical:
@@ -2787,9 +2867,9 @@ MonoBehaviour:
     UseConstant: 1
     ConstantValue: 10
     Variable: {fileID: 0}
-  m_gravityTimeLimit:
+  m_clampGravitySpeed:
     UseConstant: 1
-    ConstantValue: 0
+    ConstantValue: 20
     Variable: {fileID: 0}
   ground_Changes_Gravity:
     UseConstant: 1
@@ -2828,9 +2908,6 @@ MonoBehaviour:
   platform: {fileID: 0}
   colliders: []
   OnAnimationChange:
-    m_PersistentCalls:
-      m_Calls: []
-  OnMaxSlopeReached:
     m_PersistentCalls:
       m_Calls: []
   OnInputLocked:
@@ -2876,6 +2953,9 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   OnStateChange:
+    m_PersistentCalls:
+      m_Calls: []
+  OnStateProfile:
     m_PersistentCalls:
       m_Calls: []
   OnModeStart:
@@ -2987,6 +3067,8 @@ MonoBehaviour:
       ConstantValue: 0
       Variable: {fileID: 0}
     resetTo: 1
+    isPercent: 1
+    debug: 0
     OnStatFull:
       m_PersistentCalls:
         m_Calls: []
@@ -3044,6 +3126,9 @@ MonoBehaviour:
             m_BoolArgument: 0
           m_CallState: 2
     OnValueChange:
+      m_PersistentCalls:
+        m_Calls: []
+    OnMaxValueChange:
       m_PersistentCalls:
         m_Calls: []
     OnDegenerate:
@@ -3107,6 +3192,8 @@ MonoBehaviour:
       ConstantValue: 1.5
       Variable: {fileID: 0}
     resetTo: 1
+    isPercent: 1
+    debug: 0
     OnStatFull:
       m_PersistentCalls:
         m_Calls: []
@@ -3202,6 +3289,9 @@ MonoBehaviour:
     OnValueChange:
       m_PersistentCalls:
         m_Calls: []
+    OnMaxValueChange:
+      m_PersistentCalls:
+        m_Calls: []
     OnDegenerate:
       m_PersistentCalls:
         m_Calls: []
@@ -3264,6 +3354,8 @@ MonoBehaviour:
       ConstantValue: 0
       Variable: {fileID: 0}
     resetTo: 1
+    isPercent: 1
+    debug: 0
     OnStatFull:
       m_PersistentCalls:
         m_Calls: []
@@ -3285,6 +3377,9 @@ MonoBehaviour:
       m_PersistentCalls:
         m_Calls: []
     OnValueChange:
+      m_PersistentCalls:
+        m_Calls: []
+    OnMaxValueChange:
       m_PersistentCalls:
         m_Calls: []
     OnDegenerate:
@@ -3335,7 +3430,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   character: {fileID: 0}
-  reaction: {fileID: 11400000, guid: 7df8fcdc62330414baaef5c677115f0c, type: 2}
+  reaction:
+    rid: 1000
+  damagerReaction:
+    rid: -2
+  ignoreDamagerReaction:
+    UseConstant: 1
+    ConstantValue: 0
+    Variable: {fileID: 0}
   stats: {fileID: 6025502823818546734}
   multiplier:
     UseConstant: 1
@@ -3412,7 +3514,26 @@ MonoBehaviour:
       m_PersistentCalls:
         m_Calls: []
   elements: []
+  profiles: []
   Editor_Tabs1: 1
+  First_Change: 1
+  references:
+    version: 2
+    RefIds:
+    - rid: -2
+      type: {class: , ns: , asm: }
+    - rid: 1000
+      type: {class: ModeReaction, ns: MalbersAnimations.Reactions, asm: MalbersAnimations}
+      data:
+        Active: 1
+        type: 0
+        ID: {fileID: 11400000, guid: b04409080ae7e3c4fa645d8c67b40424, type: 2}
+        Ability: -99
+        HasCoolDown: 1
+        coolDown: 0
+        abilityStatus: 0
+        AbilityTime: 3
+        ModePower: 0
 --- !u!114 &7500994388980932485
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3672,16 +3793,17 @@ MonoBehaviour:
     ConstantValue: {fileID: 0}
     Variable: {fileID: 0}
   DestroyHitEffect: 0
-  interactorID:
-    UseConstant: 1
-    ConstantValue: 0
-    Variable: {fileID: 0}
   dontHitOwner:
     UseConstant: 1
     ConstantValue: 1
     Variable: {fileID: 0}
-  CustomReaction: {fileID: 0}
+  CustomReaction:
+    rid: -2
   element: {fileID: 0}
+  interactorID:
+    UseConstant: 1
+    ConstantValue: 0
+    Variable: {fileID: 0}
   interact:
     UseConstant: 1
     ConstantValue: 1
@@ -3697,9 +3819,17 @@ MonoBehaviour:
   statModifier:
     ID: {fileID: 11400000, guid: d6b3e636d59a6c547a2cad40b69f4432, type: 2}
     modify: 3
-    Value:
+    MinValue:
+      UseConstant: 1
+      ConstantValue: 1
+      Variable: {fileID: 0}
+    MaxValue:
       UseConstant: 1
       ConstantValue: 10
+      Variable: {fileID: 0}
+    enable:
+      UseConstant: 1
+      ConstantValue: 1
       Variable: {fileID: 0}
   m_cChance:
     UseConstant: 1
@@ -3713,6 +3843,10 @@ MonoBehaviour:
     UseConstant: 1
     ConstantValue: 50
     Variable: {fileID: 0}
+  minForce:
+    UseConstant: 1
+    ConstantValue: 20
+    Variable: {fileID: 0}
   forceMode: 0
   OnHit:
     m_PersistentCalls:
@@ -3721,6 +3855,9 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   OnHitInteractable:
+    m_PersistentCalls:
+      m_Calls: []
+  OnProfileChanged:
     m_PersistentCalls:
       m_Calls: []
   animator: {fileID: 6007699052108852066}
@@ -3732,26 +3869,109 @@ MonoBehaviour:
     UseConstant: 1
     ConstantValue: 0
     Variable: {fileID: 0}
+  Profiles: []
+  DefaultProfile:
+    Name: 
+    modify: 0
+    interact:
+      UseConstant: 1
+      ConstantValue: 0
+      Variable: {fileID: 0}
+    interactorID:
+      UseConstant: 1
+      ConstantValue: 0
+      Variable: {fileID: 0}
+    react:
+      UseConstant: 1
+      ConstantValue: 0
+      Variable: {fileID: 0}
+    pureDamage:
+      UseConstant: 1
+      ConstantValue: 0
+      Variable: {fileID: 0}
+    statModifier:
+      ID: {fileID: 0}
+      modify: 0
+      MinValue:
+        UseConstant: 1
+        ConstantValue: 1
+        Variable: {fileID: 0}
+      MaxValue:
+        UseConstant: 1
+        ConstantValue: 10
+        Variable: {fileID: 0}
+      enable:
+        UseConstant: 1
+        ConstantValue: 1
+        Variable: {fileID: 0}
+    m_cChance:
+      UseConstant: 1
+      ConstantValue: 0
+      Variable: {fileID: 0}
+    cMultiplier:
+      UseConstant: 1
+      ConstantValue: 0
+      Variable: {fileID: 0}
+    maxForce:
+      UseConstant: 1
+      ConstantValue: 0
+      Variable: {fileID: 0}
+    minForce:
+      UseConstant: 1
+      ConstantValue: 0
+      Variable: {fileID: 0}
+    forceMode: 0
+    m_HitEffect:
+      UseConstant: 1
+      ConstantValue: {fileID: 0}
+      Variable: {fileID: 0}
+    CustomReaction:
+      rid: -2
+    element: {fileID: 0}
   debug: 0
   Trigger: {fileID: 555317192659848159}
   SelfStatEnter:
     ID: {fileID: 0}
     modify: 0
-    Value:
+    MinValue:
+      UseConstant: 1
+      ConstantValue: 1
+      Variable: {fileID: 0}
+    MaxValue:
+      UseConstant: 1
+      ConstantValue: 10
+      Variable: {fileID: 0}
+    enable:
       UseConstant: 1
       ConstantValue: 1
       Variable: {fileID: 0}
   SelfStatExit:
     ID: {fileID: 0}
     modify: 0
-    Value:
+    MinValue:
+      UseConstant: 1
+      ConstantValue: 1
+      Variable: {fileID: 0}
+    MaxValue:
+      UseConstant: 1
+      ConstantValue: 10
+      Variable: {fileID: 0}
+    enable:
       UseConstant: 1
       ConstantValue: 1
       Variable: {fileID: 0}
   EnemyStatExit:
     ID: {fileID: 0}
     modify: 0
-    Value:
+    MinValue:
+      UseConstant: 1
+      ConstantValue: 1
+      Variable: {fileID: 0}
+    MaxValue:
+      UseConstant: 1
+      ConstantValue: 10
+      Variable: {fileID: 0}
+    enable:
       UseConstant: 1
       ConstantValue: 1
       Variable: {fileID: 0}
@@ -3763,6 +3983,11 @@ MonoBehaviour:
       m_Calls: []
   DebugColor: {r: 1, g: 0.25, b: 0, a: 0.15}
   Editor_Tabs1: 0
+  references:
+    version: 2
+    RefIds:
+    - rid: -2
+      type: {class: , ns: , asm: }
 --- !u!65 &555317192659848159
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -3771,9 +3996,17 @@ BoxCollider:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5911090749013874376}
   m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
   m_IsTrigger: 0
+  m_ProvidesContacts: 0
   m_Enabled: 0
-  serializedVersion: 2
+  serializedVersion: 3
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &5911098135406221182
@@ -3849,8 +4082,17 @@ CapsuleCollider:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5912387333483610834}
   m_Material: {fileID: 13400000, guid: 54174b87a6301064ea8788686f85bda8, type: 2}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
   m_IsTrigger: 0
+  m_ProvidesContacts: 0
   m_Enabled: 1
+  serializedVersion: 2
   m_Radius: 0.18
   m_Height: 0.52
   m_Direction: 0
@@ -4055,8 +4297,17 @@ CapsuleCollider:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5912487859693034144}
   m_Material: {fileID: 13400000, guid: 54174b87a6301064ea8788686f85bda8, type: 2}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
   m_IsTrigger: 0
+  m_ProvidesContacts: 0
   m_Enabled: 1
+  serializedVersion: 2
   m_Radius: 0.14363378
   m_Height: 0.33209532
   m_Direction: 1
@@ -4069,8 +4320,17 @@ CapsuleCollider:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5912487859693034144}
   m_Material: {fileID: 13400000, guid: 54174b87a6301064ea8788686f85bda8, type: 2}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
   m_IsTrigger: 0
+  m_ProvidesContacts: 0
   m_Enabled: 1
+  serializedVersion: 2
   m_Radius: 0.08494901
   m_Height: 0.23094752
   m_Direction: 1
@@ -4390,8 +4650,17 @@ CapsuleCollider:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5912520558223959560}
   m_Material: {fileID: 13400000, guid: 54174b87a6301064ea8788686f85bda8, type: 2}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
   m_IsTrigger: 0
+  m_ProvidesContacts: 0
   m_Enabled: 1
+  serializedVersion: 2
   m_Radius: 0.13
   m_Height: 0.44904405
   m_Direction: 0
@@ -4598,9 +4867,17 @@ SphereCollider:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5912598083711203840}
   m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
   m_IsTrigger: 1
+  m_ProvidesContacts: 0
   m_Enabled: 1
-  serializedVersion: 2
+  serializedVersion: 3
   m_Radius: 0.03
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!114 &6024827106926006064
@@ -4991,8 +5268,17 @@ CapsuleCollider:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5912771214479958922}
   m_Material: {fileID: 13400000, guid: 54174b87a6301064ea8788686f85bda8, type: 2}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
   m_IsTrigger: 0
+  m_ProvidesContacts: 0
   m_Enabled: 1
+  serializedVersion: 2
   m_Radius: 0.27
   m_Height: 0.6068916
   m_Direction: 0
@@ -5038,8 +5324,17 @@ CapsuleCollider:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5912779765443512720}
   m_Material: {fileID: 13400000, guid: 54174b87a6301064ea8788686f85bda8, type: 2}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
   m_IsTrigger: 0
+  m_ProvidesContacts: 0
   m_Enabled: 1
+  serializedVersion: 2
   m_Radius: 0.28636178
   m_Height: 0.73
   m_Direction: 0
@@ -5168,8 +5463,17 @@ CapsuleCollider:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5912807865114384792}
   m_Material: {fileID: 13400000, guid: 54174b87a6301064ea8788686f85bda8, type: 2}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
   m_IsTrigger: 0
+  m_ProvidesContacts: 0
   m_Enabled: 1
+  serializedVersion: 2
   m_Radius: 0.07388878
   m_Height: 0.48155677
   m_Direction: 0
@@ -5333,8 +5637,17 @@ CapsuleCollider:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5912889779975596666}
   m_Material: {fileID: 13400000, guid: 54174b87a6301064ea8788686f85bda8, type: 2}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
   m_IsTrigger: 0
+  m_ProvidesContacts: 0
   m_Enabled: 1
+  serializedVersion: 2
   m_Radius: 0.23
   m_Height: 0.72
   m_Direction: 0
@@ -5380,9 +5693,17 @@ BoxCollider:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5912899854533078886}
   m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
   m_IsTrigger: 1
+  m_ProvidesContacts: 0
   m_Enabled: 0
-  serializedVersion: 2
+  serializedVersion: 3
   m_Size: {x: 1.012528, y: 0.98520553, z: 0.76605207}
   m_Center: {x: -0.00000081720634, y: -0.18923834, z: 0.3746179}
 --- !u!114 &6025440958138591028
@@ -5415,16 +5736,17 @@ MonoBehaviour:
     ConstantValue: {fileID: 0}
     Variable: {fileID: 0}
   DestroyHitEffect: 0
-  interactorID:
-    UseConstant: 1
-    ConstantValue: 0
-    Variable: {fileID: 0}
   dontHitOwner:
     UseConstant: 1
     ConstantValue: 1
     Variable: {fileID: 0}
-  CustomReaction: {fileID: 0}
+  CustomReaction:
+    rid: -2
   element: {fileID: 0}
+  interactorID:
+    UseConstant: 1
+    ConstantValue: 0
+    Variable: {fileID: 0}
   interact:
     UseConstant: 1
     ConstantValue: 1
@@ -5440,9 +5762,17 @@ MonoBehaviour:
   statModifier:
     ID: {fileID: 11400000, guid: d6b3e636d59a6c547a2cad40b69f4432, type: 2}
     modify: 3
-    Value:
+    MinValue:
+      UseConstant: 1
+      ConstantValue: 1
+      Variable: {fileID: 0}
+    MaxValue:
       UseConstant: 1
       ConstantValue: 10
+      Variable: {fileID: 0}
+    enable:
+      UseConstant: 1
+      ConstantValue: 1
       Variable: {fileID: 0}
   m_cChance:
     UseConstant: 1
@@ -5456,6 +5786,10 @@ MonoBehaviour:
     UseConstant: 1
     ConstantValue: 50
     Variable: {fileID: 0}
+  minForce:
+    UseConstant: 1
+    ConstantValue: 20
+    Variable: {fileID: 0}
   forceMode: 0
   OnHit:
     m_PersistentCalls:
@@ -5464,6 +5798,9 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   OnHitInteractable:
+    m_PersistentCalls:
+      m_Calls: []
+  OnProfileChanged:
     m_PersistentCalls:
       m_Calls: []
   animator: {fileID: 6007699052108852066}
@@ -5475,26 +5812,109 @@ MonoBehaviour:
     UseConstant: 1
     ConstantValue: 0
     Variable: {fileID: 0}
+  Profiles: []
+  DefaultProfile:
+    Name: 
+    modify: 0
+    interact:
+      UseConstant: 1
+      ConstantValue: 0
+      Variable: {fileID: 0}
+    interactorID:
+      UseConstant: 1
+      ConstantValue: 0
+      Variable: {fileID: 0}
+    react:
+      UseConstant: 1
+      ConstantValue: 0
+      Variable: {fileID: 0}
+    pureDamage:
+      UseConstant: 1
+      ConstantValue: 0
+      Variable: {fileID: 0}
+    statModifier:
+      ID: {fileID: 0}
+      modify: 0
+      MinValue:
+        UseConstant: 1
+        ConstantValue: 1
+        Variable: {fileID: 0}
+      MaxValue:
+        UseConstant: 1
+        ConstantValue: 10
+        Variable: {fileID: 0}
+      enable:
+        UseConstant: 1
+        ConstantValue: 1
+        Variable: {fileID: 0}
+    m_cChance:
+      UseConstant: 1
+      ConstantValue: 0
+      Variable: {fileID: 0}
+    cMultiplier:
+      UseConstant: 1
+      ConstantValue: 0
+      Variable: {fileID: 0}
+    maxForce:
+      UseConstant: 1
+      ConstantValue: 0
+      Variable: {fileID: 0}
+    minForce:
+      UseConstant: 1
+      ConstantValue: 0
+      Variable: {fileID: 0}
+    forceMode: 0
+    m_HitEffect:
+      UseConstant: 1
+      ConstantValue: {fileID: 0}
+      Variable: {fileID: 0}
+    CustomReaction:
+      rid: -2
+    element: {fileID: 0}
   debug: 0
   Trigger: {fileID: 5972774326958011702}
   SelfStatEnter:
     ID: {fileID: 0}
     modify: 0
-    Value:
+    MinValue:
+      UseConstant: 1
+      ConstantValue: 1
+      Variable: {fileID: 0}
+    MaxValue:
+      UseConstant: 1
+      ConstantValue: 10
+      Variable: {fileID: 0}
+    enable:
       UseConstant: 1
       ConstantValue: 1
       Variable: {fileID: 0}
   SelfStatExit:
     ID: {fileID: 0}
     modify: 0
-    Value:
+    MinValue:
+      UseConstant: 1
+      ConstantValue: 1
+      Variable: {fileID: 0}
+    MaxValue:
+      UseConstant: 1
+      ConstantValue: 10
+      Variable: {fileID: 0}
+    enable:
       UseConstant: 1
       ConstantValue: 1
       Variable: {fileID: 0}
   EnemyStatExit:
     ID: {fileID: 0}
     modify: 0
-    Value:
+    MinValue:
+      UseConstant: 1
+      ConstantValue: 1
+      Variable: {fileID: 0}
+    MaxValue:
+      UseConstant: 1
+      ConstantValue: 10
+      Variable: {fileID: 0}
+    enable:
       UseConstant: 1
       ConstantValue: 1
       Variable: {fileID: 0}
@@ -5506,6 +5926,11 @@ MonoBehaviour:
       m_Calls: []
   DebugColor: {r: 1, g: 0.25, b: 0, a: 0.15}
   Editor_Tabs1: 0
+  references:
+    version: 2
+    RefIds:
+    - rid: -2
+      type: {class: , ns: , asm: }
 --- !u!1 &5912901058750483548
 GameObject:
   m_ObjectHideFlags: 0
@@ -5642,9 +6067,17 @@ SphereCollider:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5912994798819308478}
   m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
   m_IsTrigger: 1
+  m_ProvidesContacts: 0
   m_Enabled: 1
-  serializedVersion: 2
+  serializedVersion: 3
   m_Radius: 0.03
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!114 &6024809591146279982
@@ -5723,8 +6156,17 @@ CapsuleCollider:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5913007404073058652}
   m_Material: {fileID: 13400000, guid: 54174b87a6301064ea8788686f85bda8, type: 2}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
   m_IsTrigger: 0
+  m_ProvidesContacts: 0
   m_Enabled: 1
+  serializedVersion: 2
   m_Radius: 0.07388878
   m_Height: 0.48155677
   m_Direction: 0
@@ -5906,9 +6348,17 @@ SphereCollider:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5913048260489447544}
   m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
   m_IsTrigger: 1
+  m_ProvidesContacts: 0
   m_Enabled: 1
-  serializedVersion: 2
+  serializedVersion: 3
   m_Radius: 0.03
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!114 &6024694364040063620
@@ -5988,9 +6438,17 @@ SphereCollider:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5913123441942105416}
   m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
   m_IsTrigger: 1
+  m_ProvidesContacts: 0
   m_Enabled: 1
-  serializedVersion: 2
+  serializedVersion: 3
   m_Radius: 0.03
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!114 &6025106190511121464
@@ -6234,6 +6692,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   agent: {fileID: 3385423026941224658}
   animal: {fileID: 6024714867243589448}
+  disableInput: 1
   StopAgentOn:
   - {fileID: 11400000, guid: 8078fbdb01991b44b9c1351f444b5efe, type: 2}
   - {fileID: 11400000, guid: c44e7e8d6840aa243b6c33ec85052763, type: 2}
@@ -6242,7 +6701,6 @@ MonoBehaviour:
   stoppingDistance: 0.6
   PointStoppingDistance: 0.6
   slowingDistance: 1
-  OffMeshAlignment: 0.15
   LookAtOffset: 1
   slowingLimit: 0.3
   target: {fileID: 0}
@@ -6378,6 +6836,7 @@ PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Modification:
+    serializedVersion: 3
     m_TransformParent: {fileID: 2502109276428946120}
     m_Modifications:
     - target: {fileID: 1454807473737458, guid: 6108438f5e38d0b4b8fed06af6b74254, type: 3}
@@ -6457,6 +6916,12 @@ PrefabInstance:
       value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 1865283712709958, guid: 6108438f5e38d0b4b8fed06af6b74254, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 4933107482728810529}
   m_SourcePrefab: {fileID: 100100000, guid: 6108438f5e38d0b4b8fed06af6b74254, type: 3}
 --- !u!4 &5261778573051312250 stripped
 Transform:
@@ -6480,14 +6945,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 474bcb49853aa07438625e644c072ee6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_Version: 1
+  m_Version: 3
   m_UsePipelineSettings: 1
   m_AdditionalLightsShadowResolutionTier: 2
   m_LightLayerMask: 1
+  m_RenderingLayers: 1
   m_CustomShadowLayers: 0
   m_ShadowLayerMask: 1
+  m_ShadowRenderingLayers: 1
   m_LightCookieSize: {x: 1, y: 1}
   m_LightCookieOffset: {x: 0, y: 0}
+  m_SoftShadowQuality: 1
 --- !u!1 &5264648996823794172 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 1454807473737458, guid: 6108438f5e38d0b4b8fed06af6b74254, type: 3}
@@ -6498,6 +6966,7 @@ PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Modification:
+    serializedVersion: 3
     m_TransformParent: {fileID: 2502109276428946120}
     m_Modifications:
     - target: {fileID: 1454807473737458, guid: 6108438f5e38d0b4b8fed06af6b74254, type: 3}
@@ -6577,6 +7046,12 @@ PrefabInstance:
       value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 1865283712709958, guid: 6108438f5e38d0b4b8fed06af6b74254, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 5099779005551929399}
   m_SourcePrefab: {fileID: 100100000, guid: 6108438f5e38d0b4b8fed06af6b74254, type: 3}
 --- !u!4 &5604476042415594170 stripped
 Transform:
@@ -6605,19 +7080,23 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 474bcb49853aa07438625e644c072ee6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_Version: 1
+  m_Version: 3
   m_UsePipelineSettings: 1
   m_AdditionalLightsShadowResolutionTier: 2
   m_LightLayerMask: 1
+  m_RenderingLayers: 1
   m_CustomShadowLayers: 0
   m_ShadowLayerMask: 1
+  m_ShadowRenderingLayers: 1
   m_LightCookieSize: {x: 1, y: 1}
   m_LightCookieOffset: {x: 0, y: 0}
+  m_SoftShadowQuality: 1
 --- !u!1001 &9206626946554305775
 PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Modification:
+    serializedVersion: 3
     m_TransformParent: {fileID: 2502109277151410110}
     m_Modifications:
     - target: {fileID: 1497030318103322, guid: 3313c584bfb0ca54584fe5b29871dfc2, type: 3}
@@ -6669,6 +7148,9 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 3313c584bfb0ca54584fe5b29871dfc2, type: 3}
 --- !u!4 &9208467226180272329 stripped
 Transform:

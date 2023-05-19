@@ -18,7 +18,12 @@ MonoBehaviour:
     UseConstant: 1
     ConstantValue: Sneak
     Variable: {fileID: 0}
+  m_StateProfile:
+    UseConstant: 1
+    ConstantValue: 0
+    Variable: {fileID: 0}
   Priority: 7
+  ResetInputOnFailed: 1
   General:
     modify: 4095
     RootMotion: 1
@@ -90,15 +95,21 @@ MonoBehaviour:
   UseSendMessage: 0
   IncludeChildren: 1
   AllowExitFromAnim: 1
+  IncludeSleepState: 1
   SleepFromState: []
   SleepFromMode: []
   QueueFrom: []
+  ResetFrom: []
   SleepFromStance: []
   stances:
   - {fileID: 11400000, guid: 87ae38bfe93fc3f449ecd25863e2a6fe, type: 2}
   TryLoop:
     UseConstant: 1
     ConstantValue: 5
+    Variable: {fileID: 0}
+  Duration:
+    UseConstant: 1
+    ConstantValue: 0
     Variable: {fileID: 0}
   EnterTag:
     UseConstant: 1
@@ -108,7 +119,6 @@ MonoBehaviour:
     UseConstant: 1
     ConstantValue: ClimbExit
     Variable: {fileID: 0}
-  ExitFrame: 1
   ExitOnMain: 1
   EnterCooldown:
     UseConstant: 1
@@ -119,10 +129,11 @@ MonoBehaviour:
     ConstantValue: 1
     Variable: {fileID: 0}
   CanStrafe: 0
+  StrafeAnimations: 1
   MovementStrafe: 1
   IdleStrafe: 1
   debug: 1
-  Editor_Tabs1: 3
+  Editor_Tabs1: 1
   ID: {fileID: 11400000, guid: 975403cc10f8cec46a3caa6ed4e3d6c5, type: 2}
   ClimbLayer:
     UseConstant: 1
@@ -138,6 +149,7 @@ MonoBehaviour:
   ClimbChest: {x: 0, y: 0.65, z: 0}
   ClimbHip: {x: 0, y: 0.19, z: 0}
   ClimbRayLength: 0.64
+  DisablePivotChest: 1
   m_rayRadius: 0.08
   WallDistance: 0.15
   AlignSmoothness: 10
@@ -145,9 +157,12 @@ MonoBehaviour:
   InnerCorner: 0.4
   OuterCornerSpeed: 0.4
   ExitSlope: 30
+  HitTransform: ClimbHit
+  UseLedgeDetection: 1
   RayLedgeOffset: {x: 0, y: 0.32, z: 0}
   RayLedgeLength: 0.35
   LedgeExitDistance: 0.1
+  MinLedgeAngle: 65
   ClimbLedge: 1
   ClimbOff: 2
   ClimbDown: 3
